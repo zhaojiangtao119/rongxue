@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v7.widget.LinearLayoutCompat xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/rv_topic_item_id"
+    android:layout_width="match_parent"
+    android:layout_height="125dp"
+    android:orientation="horizontal">
+
+
+    <android.support.v7.widget.LinearLayoutCompat
+        android:id="@+id/user_info"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_marginTop="2dp"
+        android:layout_weight="1"
+        android:background="@android:color/white"
+        android:orientation="vertical">
+
+
+        <android.support.v7.widget.AppCompatImageView
+            android:id="@+id/user_avatar"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:layout_gravity="center"
+            android:src="@mipmap/ic_launcher" />
+
+        <android.support.v7.widget.AppCompatTextView
+            android:id="@+id/user_name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:gravity="center"
+            android:text="name"
+            android:textColor="@android:color/black"
+            android:textSize="16sp"
+            android:textStyle="bold" />
+    </android.support.v7.widget.LinearLayoutCompat>
+
+    <android.support.v7.widget.LinearLayoutCompat
+        android:layout_width="0dp"
+        android:layout_height="120dp"
+        android:layout_marginLeft="3dp"
+        android:layout_marginTop="2dp"
+        android:layout_weight="4"
+        android:background="@android:color/white"
+        android:orientation="vertical">
+
+        <android.support.v7.widget.AppCompatTextView
+            android:id="@+id/topic_content"
+            android:layout_width="match_parent"
+            android:layout_height="100dp"
+            android:text="Content"
+            android:textColor="@android:color/black"
+            android:textSize="14sp" />
+
+        <android.support.v7.widget.LinearLayoutCompat
+            android:id="@+id/topic_info"
+            android:layout_width="match_parent"
+            android:layout_height="20dp"
+            android:orientation="horizontal">
+
+            <android.support.v7.widget.AppCompatTextView
+                android:id="@+id/topic_create_time"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="2"
+                android:gravity="center"
+                android:text="time"
+                android:textColor="@android:color/black"
+                android:textSize="12dp" />
+
+            <android.support.v7.widget.LinearLayoutCompat
+                android:id="@+id/topic_comment"
+                android:layout_width="0dp"
+                android:layout_height="20dp"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:orientation="horizontal">
+
+                <com.joanzapata.iconify.widget.IconTextView
+                    android:id="@+id/topic_reply_num_icon"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:gravity="center"
+                    android:text="{fa-comment-o}" />
+
+                <android.support.v7.widget.AppCompatTextView
+                    android:id="@+id/topic_reply_num"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_marginLeft="5dp"
+                    android:gravity="center_vertical"
+                    android:text="50" />
+            </android.support.v7.widget.LinearLayoutCompat>
+
+            <android.support.v7.widget.LinearLayoutCompat
+                android:id="@+id/topic_like"
+                android:layout_width="0dp"
+                android:layout_height="20dp"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:orientation="horizontal">
+
+                <com.joanzapata.iconify.widget.IconTextView
+                    android:id="@+id/topic_like_num_icon"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:gravity="center"
+                    android:text="{fa-thumbs-o-up}" />
+
+                <android.support.v7.widget.AppCompatTextView
+                    android:id="@+id/topic_like_num"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_marginLeft="5dp"
+                    android:gravity="center_vertical"
+                    android:text="50" />
+            </android.support.v7.widget.LinearLayoutCompat>
+        </android.support.v7.widget.LinearLayoutCompat>
+    </android.support.v7.widget.LinearLayoutCompat>
+</android.support.v7.widget.LinearLayoutCompat>
