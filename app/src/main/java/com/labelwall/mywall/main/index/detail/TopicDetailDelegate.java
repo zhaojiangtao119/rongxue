@@ -34,6 +34,7 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.OnClick;
+import de.hdodenhof.circleimageview.CircleImageView;
 import me.yokeyword.fragmentation.anim.DefaultHorizontalAnimator;
 import me.yokeyword.fragmentation.anim.FragmentAnimator;
 
@@ -56,7 +57,7 @@ public class TopicDetailDelegate extends WallDelegate {
     @BindView(R2.id.user_name)
     AppCompatTextView mUsername;
     @BindView(R2.id.user_avatar)
-    AppCompatImageView mUserAvatar;
+    CircleImageView mUserAvatar;
     @BindView(R2.id.topic_title)
     AppCompatTextView mTopicTitle;
     @BindView(R2.id.topic_image)

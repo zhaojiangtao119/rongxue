@@ -26,7 +26,7 @@
             android:background="@android:color/white"
             android:orientation="vertical">
 
-            <android.support.v7.widget.AppCompatImageView
+            <de.hdodenhof.circleimageview.CircleImageView
                 android:id="@+id/user_avatar"
                 android:layout_width="60dp"
                 android:layout_height="60dp"

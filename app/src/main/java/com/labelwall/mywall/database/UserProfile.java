@@ -8,7 +8,7 @@ import java.util.Date;
 
 /**
  * Created by Administrator on 2018-01-05.
- * 登录用户的实体
+ * 登录用户的实体，对于数据库中的表
  */
 //表名是user_profile
 @Entity(nameInDb = "user_profile")

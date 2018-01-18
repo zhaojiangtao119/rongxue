@@ -13,9 +13,14 @@ android {
         versionName "1.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
 
+        ndk {
+            //选择要添加的对应cpu类型的.so库。
+            abiFilters 'armeabi', 'armeabi-v7a', 'armeabi-v8a', 'x86', 'x86_64', 'mips', 'mips64'
+        }
+
         manifestPlaceholders = [
                 JPUSH_PKGNAME: applicationId,
-                JPUSH_APPKEY : "26a34a494a1d5dc03b133b24",
+                JPUSH_APPKEY : "8cf6b1624024a6f51e957a48",
                 JPUSH_CHANNEL: "developer-default",
         ]
     }
@@ -112,7 +117,7 @@ dependencies {
     //工具包
     compile 'com.blankj:utilcode:1.7.1'
 
-    //???
+    //极光推送
     compile 'cn.jiguang.sdk:jpush:3.0.1'
     compile 'cn.jiguang.sdk:jcore:1.1.0'
 

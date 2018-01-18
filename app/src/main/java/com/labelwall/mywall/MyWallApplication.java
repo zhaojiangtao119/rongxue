@@ -11,6 +11,8 @@ import com.labelwall.mywall.util.icon.FontEcModule;
 import com.labelwall.mywall.util.net.interceptor.DebugInterceptor;
 import com.labelwall.mywall.util.qiniu.QnUploadHelper;
 
+import cn.jpush.android.api.JPushInterface;
+
 /**
  * Created by Administrator on 2018-01-03.
  */
@@ -35,10 +37,13 @@ public class MyWallApplication extends Application {
                 .withIcon(new FontAwesomeModule())//font awesome Module
                 .withIcon(new FontEcModule())//自定义的字体图标
                 .withInterceptor(new DebugInterceptor("location", R.raw.test))
-                .withApiHost("http://kzmzs6.natappfree.cc/zhaopin/")
+                .withApiHost("http://xdx7dg.natappfree.cc/zhaopin/")
                 .configure();
         //初始化数据库
         DataBaseManager.getInstance().init(this);
+
+        JPushInterface.setDebugMode(true);
+        JPushInterface.init(this);
 
         initStetho();
     }

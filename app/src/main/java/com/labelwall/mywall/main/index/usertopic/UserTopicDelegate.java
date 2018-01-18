@@ -29,6 +29,7 @@ import com.labelwall.mywall.util.net.RestClient;
 import com.labelwall.mywall.util.net.callback.ISuccess;
 
 import butterknife.BindView;
+import de.hdodenhof.circleimageview.CircleImageView;
 import me.yokeyword.fragmentation.anim.DefaultHorizontalAnimator;
 import me.yokeyword.fragmentation.anim.FragmentAnimator;
 import retrofit2.http.OPTIONS;
@@ -43,7 +44,7 @@ public class UserTopicDelegate extends WallDelegate {
     private int mUserId = -1;
 
     @BindView(R2.id.user_avatar)
-    AppCompatImageView mUserAvatar;
+    CircleImageView mUserAvatar;
     @BindView(R2.id.user_name)
     AppCompatTextView mUsername;
     @BindView(R2.id.user_school)

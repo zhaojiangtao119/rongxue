@@ -11,13 +11,18 @@ import org.greenrobot.greendao.database.Database;
 
 public class ReleaseOpenHelper extends DaoMaster.OpenHelper {
 
-    //name:就是要创建或要打开的数据库的名称
+    /**
+     *
+     * @param context
+     * @param name 就是要创建或要打开的数据库的名称
+     */
     public ReleaseOpenHelper(Context context, String name) {
         super(context, name);
     }
 
     /**
      * 创建或打开DB
+     *
      * @param db
      */
     @Override

@@ -19,6 +19,8 @@ import com.labelwall.mywall.delegates.bottom.BottomItemDelegate;
 import com.labelwall.mywall.main.user.list.ListAdapter;
 import com.labelwall.mywall.main.user.list.ListBean;
 import com.labelwall.mywall.main.user.list.ListItemType;
+import com.labelwall.mywall.main.user.profile.UserProfileDelegate;
+import com.labelwall.mywall.main.user.settings.SettingsDelegate;
 import com.labelwall.mywall.ui.camera.CameraHandler;
 import com.labelwall.mywall.util.callback.CallbackManager;
 import com.labelwall.mywall.util.callback.CallbackType;
@@ -110,6 +112,7 @@ public class UserDelegate extends BottomItemDelegate {
                 .setItemType(ListItemType.ITEM_NORMAL_NO_HINT)
                 .setId(UserSettingItem.USER_PROFILE)
                 .setText(UserSettingItem.USER_PROFILE_VALUE)
+                .setDelegate(new UserProfileDelegate())
                 .build();
         final ListBean address = new ListBean.builder()
                 .setItemType(ListItemType.ITEM_NORMAL_NO_HINT)
@@ -120,6 +123,7 @@ public class UserDelegate extends BottomItemDelegate {
                 .setItemType(ListItemType.ITEM_NORMAL_NO_HINT)
                 .setId(UserSettingItem.SYSTEM)
                 .setText(UserSettingItem.SYSTEM_VALUE)
+                .setDelegate(new SettingsDelegate())
                 .build();
         final List<ListBean> data = new ArrayList<>();
         data.add(userProfile);

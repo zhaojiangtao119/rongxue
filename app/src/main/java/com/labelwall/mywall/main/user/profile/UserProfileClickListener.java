@@ -58,7 +58,7 @@ public class UserProfileClickListener extends SimpleClickListener {
         switch (id) {
             /*case 1:
                 break;*/
-            case 2:
+            case UserProfileSettingItem.GENDER:
                 getGenderDialog(new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
@@ -69,7 +69,7 @@ public class UserProfileClickListener extends SimpleClickListener {
                     }
                 });
                 break;
-            case 3:
+            case UserProfileSettingItem.BIRTHDAY:
                 final DateDialogUtil dateDialogUtil = new DateDialogUtil();
                 dateDialogUtil.setDataListener(new DateDialogUtil.IDateListener() {
                     @Override
@@ -81,13 +81,13 @@ public class UserProfileClickListener extends SimpleClickListener {
                 });
                 dateDialogUtil.showDialog(DELEGATE.getContext());
                 break;
-            case 4:
+            case UserProfileSettingItem.PHONE:
                 setUserProfile(tv, "phone");
                 break;
-            case 5:
+            case UserProfileSettingItem.EMAIL:
                 setUserProfile(tv, "email");
                 break;
-            case 6:
+            case UserProfileSettingItem.LOCATION:
                 break;
             default:
                 break;

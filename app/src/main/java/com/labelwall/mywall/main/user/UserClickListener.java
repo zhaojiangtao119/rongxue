@@ -7,6 +7,7 @@ import com.chad.library.adapter.base.listener.SimpleClickListener;
 import com.labelwall.mywall.delegates.base.WallDelegate;
 import com.labelwall.mywall.main.user.list.ListBean;
 import com.labelwall.mywall.main.user.profile.UserProfileDelegate;
+import com.labelwall.mywall.main.user.settings.SettingsDelegate;
 
 import retrofit2.http.DELETE;
 
@@ -32,13 +33,14 @@ public class UserClickListener extends SimpleClickListener {
                 DELEGATE.getParentDelegate().getSupportDelegate().start(new UserProfileDelegate());
                 break;
             case UserSettingItem.ADDRESS:
+                DELEGATE.getParentDelegate().getSupportDelegate().start(new SettingsDelegate());
                 break;
             case UserSettingItem.SYSTEM:
+                DELEGATE.getParentDelegate().getSupportDelegate().start(new SettingsDelegate());
                 break;
             default:
                 break;
         }
-
     }
 
     @Override
