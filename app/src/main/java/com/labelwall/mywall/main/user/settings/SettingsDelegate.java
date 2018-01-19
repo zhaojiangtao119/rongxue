@@ -68,7 +68,7 @@ public class SettingsDelegate extends WallDelegate {
         mRecyclerView.setLayoutManager(manager);
         final ListAdapter adapter = new ListAdapter(data);
         mRecyclerView.setAdapter(adapter);
-        mRecyclerView.addOnItemTouchListener(new SettingsClickListener());
+        mRecyclerView.addOnItemTouchListener(new SettingsClickListener(this));
     }
 
     @Override

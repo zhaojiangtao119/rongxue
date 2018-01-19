@@ -30,4 +30,11 @@
     <string name="dialog_delete">删除</string>
     <string name="dialog_not_delete">待定</string>
 
+    <!--User Setting modal-->
+    <string name="my_orders">我的订单</string>
+    <string name="my_orders_all">全部订单</string>
+    <string name="user_profile">用户信息</string>
+    <string name="system_setting">系统设置</string>
+
+
 </resources>

@@ -38,7 +38,8 @@ dependencies {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
     compile 'com.android.support:appcompat-v7:25.3.1'
-    compile 'com.android.support.constraint:constraint-layout:1.0.2'
+    //compile 'com.android.support.constraint:constraint-layout:1.0.2-alpha8'
+    compile 'com.android.support.constraint:constraint-layout:1.0.0-alpha8'
     testCompile 'junit:junit:4.12'
 
     //Android Support包
@@ -123,4 +124,9 @@ dependencies {
 
     //圆形图片
     compile 'de.hdodenhof:circleimageview:2.1.0'
+
+    //pickerView选择省市县
+    compile 'com.contrarywind:Android-PickerView:3.2.5'
+
+    compile 'com.google.code.gson:gson:2.7'
 }

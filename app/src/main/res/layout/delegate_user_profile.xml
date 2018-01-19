@@ -6,8 +6,18 @@
 
     <android.support.v7.widget.Toolbar
         android:layout_width="match_parent"
-        android:layout_height="40dp"
-        android:background="@color/app_title" />
+        android:layout_height="60dp"
+        android:background="@color/app_title">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center|bottom"
+            android:text="@string/user_profile"
+            android:textColor="@android:color/black"
+            android:textSize="20sp"
+            android:layout_marginBottom="5dp"/>
+    </android.support.v7.widget.Toolbar>
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/rv_user_profile"

@@ -1,25 +1,32 @@
 package com.labelwall.mywall.main.user.profile;
 
 import android.content.DialogInterface;
+import android.graphics.Color;
 import android.preference.DialogPreference;
 import android.support.v7.app.AlertDialog;
 import android.view.View;
 import android.widget.TextView;
 
+import com.bigkoo.pickerview.OptionsPickerView;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.listener.SimpleClickListener;
+import com.google.gson.Gson;
 import com.labelwall.mywall.R;
 import com.labelwall.mywall.database.DataBaseManager;
 import com.labelwall.mywall.database.UserProfile;
 import com.labelwall.mywall.delegates.base.WallDelegate;
 import com.labelwall.mywall.main.user.list.ListBean;
+import com.labelwall.mywall.main.user.profile.location.JsonBean;
+import com.labelwall.mywall.main.user.profile.location.LocationJsonReader;
 import com.labelwall.mywall.ui.date.DateDialogUtil;
 import com.labelwall.mywall.util.storage.WallPreference;
 import com.labelwall.mywall.util.storage.WallTagType;
 
 import org.greenrobot.greendao.annotation.Id;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 /**
  * Created by Administrator on 2018-01-17.
@@ -31,23 +38,17 @@ public class UserProfileClickListener extends SimpleClickListener {
     private String[] mGenders = new String[]{"男", "女", "保密"};
     private long mUserId = WallPreference.getCurrentUserId(WallTagType.CURRENT_USER_ID.name());
 
-    /*private long mUserId = 0;
-    private String mEmail = null;
-    private String mPhone = null;
-    private Date mDchoolDate = null;
-    private String mSchoolName = null;
-    private String mLocationProvince = null;
-    private String mLocationCity = null;
-    private String mLocationCounty = null;
-    private Integer mProvinceId = null;
-    private Integer mCityId = null;
-    private Integer mCountyId = null;
-    private Integer mSchoolId = null;
-    private Integer mGender = null;
-    private String mBirthday = null;*/
+    private final ArrayList<JsonBean> OPTION1;
+    private final ArrayList<ArrayList<String>> OPTION2;
+    private final ArrayList<ArrayList<ArrayList<String>>> OPTION3;
 
-    public UserProfileClickListener(WallDelegate delegate) {
+    public UserProfileClickListener(WallDelegate delegate, ArrayList<JsonBean> option1,
+                                    ArrayList<ArrayList<String>> option2,
+                                    ArrayList<ArrayList<ArrayList<String>>> option3) {
         this.DELEGATE = delegate;
+        this.OPTION1 = option1;
+        this.OPTION2 = option2;
+        this.OPTION3 = option3;
     }
 
     @Override
@@ -88,6 +89,7 @@ public class UserProfileClickListener extends SimpleClickListener {
                 setUserProfile(tv, "email");
                 break;
             case UserProfileSettingItem.LOCATION:
+                showPickerView(tv);
                 break;
             default:
                 break;
@@ -117,6 +119,34 @@ public class UserProfileClickListener extends SimpleClickListener {
             }
         });
         dialog.beginProfileDialog();
+    }
+
+    private void showPickerView(final TextView view) {
+        OptionsPickerView pvOptions = new OptionsPickerView.Builder(DELEGATE.getContext(), new OptionsPickerView.OnOptionsSelectListener() {
+            @Override
+            public void onOptionsSelect(int options1, int options2, int options3, View v) {
+                //确定选择的回调监听
+                //返回的分别是三个级别的选中位置
+                String location;
+                if (OPTION1.get(options1).getPickerViewText().equals(OPTION2.get(options1).get(options2))) {
+                    location = OPTION1.get(options1).getPickerViewText() + "-" +
+                            OPTION3.get(options1).get(options2).get(options3);
+                } else {
+                    location = OPTION1.get(options1).getPickerViewText() + "-" +
+                            OPTION2.get(options1).get(options2) + "-" +
+                            OPTION3.get(options1).get(options2).get(options3);
+                }
+                view.setText(location);
+                //TODO 修改Greendao数据库
+            }
+        }).setTitleText("")
+                .setDividerColor(Color.GRAY)
+                .setTextColorCenter(Color.GRAY)
+                .setContentTextSize(20)
+                .setOutSideCancelable(false)
+                .build();
+        pvOptions.setPicker(OPTION1, OPTION2, OPTION3);
+        pvOptions.show();
     }
 
     private void updateGreenDaoUserProfile(String feild, String userInfo) {

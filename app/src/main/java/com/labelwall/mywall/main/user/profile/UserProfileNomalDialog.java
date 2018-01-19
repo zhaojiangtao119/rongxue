@@ -30,7 +30,7 @@ public class UserProfileNomalDialog implements View.OnClickListener {
         final Window window = DIALOG.getWindow();
         if (window != null) {
             window.setContentView(R.layout.dialog_setting_profile);
-            window.setGravity(Gravity.CENTER);
+            window.setGravity(Gravity.TOP);
             window.setWindowAnimations(R.style.anim_panel_up_from_buttom);
             window.setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
             window.clearFlags(WindowManager.LayoutParams.FLAG_ALT_FOCUSABLE_IM);
