@@ -129,4 +129,6 @@ dependencies {
     compile 'com.contrarywind:Android-PickerView:3.2.5'
 
     compile 'com.google.code.gson:gson:2.7'
+
+    compile 'com.github.promeg:tinypinyin:1.0.0'
 }

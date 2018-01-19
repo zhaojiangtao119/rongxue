@@ -91,6 +91,9 @@ public class UserProfileClickListener extends SimpleClickListener {
             case UserProfileSettingItem.LOCATION:
                 showPickerView(tv);
                 break;
+            case 7:
+                DELEGATE.getSupportDelegate().start(bean.getDelegate());
+                break;
             default:
                 break;
         }

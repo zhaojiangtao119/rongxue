@@ -18,6 +18,7 @@ import com.labelwall.mywall.main.user.list.ListBean;
 import com.labelwall.mywall.main.user.list.ListItemType;
 import com.labelwall.mywall.main.user.profile.location.JsonBean;
 import com.labelwall.mywall.main.user.profile.location.LocationJsonReader;
+import com.labelwall.mywall.main.user.profile.location.RecyclerViewDelegate;
 import com.labelwall.mywall.util.storage.WallPreference;
 import com.labelwall.mywall.util.storage.WallTagType;
 
@@ -101,6 +102,12 @@ public class UserProfileDelegate extends WallDelegate {
                         + mUserprofile.getLocationCity() + "-"
                         + mUserprofile.getLocationCounty())
                 .build();
+        final ListBean location2 = new ListBean.builder()
+                .setItemType(ListItemType.ITEM_NORMAL)
+                .setId(7)
+                .setDelegate(new RecyclerViewDelegate())
+                .setText("ItemDecoration")
+                .build();
         final List<ListBean> data = new ArrayList<>();
         data.add(username);
         data.add(gender);
@@ -108,6 +115,7 @@ public class UserProfileDelegate extends WallDelegate {
         data.add(phone);
         data.add(email);
         data.add(location);
+        data.add(location2);
         final LinearLayoutManager manager = new LinearLayoutManager(getContext());
         mRecyclerView.setLayoutManager(manager);
         final ListAdapter adapter = new ListAdapter(data);

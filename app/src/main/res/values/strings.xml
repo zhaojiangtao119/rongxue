@@ -35,6 +35,7 @@
     <string name="my_orders_all">全部订单</string>
     <string name="user_profile">用户信息</string>
     <string name="system_setting">系统设置</string>
+    <string name="user_location">用户地址</string>
 
 
 </resources>
