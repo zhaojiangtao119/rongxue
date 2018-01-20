@@ -2,6 +2,7 @@ package com.labelwall.mywall.main.sort.content;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.view.View;
@@ -22,9 +23,18 @@ public class ContentDelegate extends WallDelegate {
 
     @BindView(R2.id.rv_cintent_list)
     RecyclerView mRecyclerView = null;
+    @BindView(R2.id.srl_content_product)
+    SwipeRefreshLayout mRefreshLayout = null;
+
+
 
     private static final String ARG_CONTENT_ID = "CONTENT_ID";
     private int mContentId = -1;
+
+    private ContentAdapter mAdapter = null;
+    private ContentDataConverter mConverter = new ContentDataConverter();
+
+    private ContentRefreshHandler mRefreshHandler = null;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -50,23 +60,32 @@ public class ContentDelegate extends WallDelegate {
 
     @Override
     public void onBindView(@Nullable Bundle savedInstanceState, View rootView) {
+        mRefreshHandler = ContentRefreshHandler
+                .create(mRefreshLayout, mRecyclerView, new ContentDataConverter(), mContentId);
+        initRefreshLayout();
+        initRecyclerView();
+    }
+
+    @Override
+    public void onLazyInitView(@Nullable Bundle savedInstanceState) {
+        super.onLazyInitView(savedInstanceState);
+        mRefreshHandler.uploadContentProductFirst();
+    }
+
+    private void initRefreshLayout() {
+        mRefreshLayout.setColorSchemeResources(
+                android.R.color.holo_blue_bright,
+                android.R.color.holo_orange_light,
+                android.R.color.holo_red_light
+        );
+        mRefreshLayout.setProgressViewOffset(true, 80, 100);
+    }
+
+    private void initRecyclerView() {
         //定义瀑布流，垂直方向吗，每行2个
         final StaggeredGridLayoutManager manager =
                 new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL);
         mRecyclerView.setLayoutManager(manager);
     }
 
-    private void initData() {
-        RestClient.builder()
-                .url("")
-                .params("", "")
-                .success(new ISuccess() {
-                    @Override
-                    public void onSuccess(String response) {
-
-                    }
-                })
-                .build()
-                .post();
-    }
 }

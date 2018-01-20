@@ -44,13 +44,15 @@ public class SortRecyclerAdapter extends BaseMultiItemQuickAdapter<MultipleItemE
                 final AppCompatTextView nameView = holder.getView(R.id.tv_vertical_item_name);
                 final View line = holder.getView(R.id.view_line);
                 final View itemView = holder.itemView;
+                //获得当前点击的item的position
+                final int currentPosition = holder.getAdapterPosition();
+                final int contentId = getData().get(currentPosition).getField(VerticalListField.ID);
 
                 //建议使用匿名内部类的方式实现单击监听
                 itemView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        //获得当前点击的item的position
-                        final int currentPosition = holder.getAdapterPosition();
+
                         //判断当前点击的item的position与上一个点击item的postion是否相等
                         if (mProPosition != currentPosition) {
                             //更新上一个点击的item的tag为false
@@ -62,9 +64,6 @@ public class SortRecyclerAdapter extends BaseMultiItemQuickAdapter<MultipleItemE
                             notifyItemChanged(currentPosition);
                             //将当前的item的position赋值给mProPosition
                             mProPosition = currentPosition;
-
-                            final int contentId = getData().get(currentPosition).getField(VerticalListField.ID);
-                            
                             showContent(contentId);
                         }
                     }
@@ -81,8 +80,10 @@ public class SortRecyclerAdapter extends BaseMultiItemQuickAdapter<MultipleItemE
                     nameView.setTextColor(ContextCompat.getColor(mContext, R.color.app_title));
                     line.setBackgroundColor(ContextCompat.getColor(mContext, R.color.app_title));
                     itemView.setBackgroundColor(Color.WHITE);
+                    showContent(contentId);
                 }
                 holder.setText(R.id.tv_vertical_item_name, name);
+
                 break;
             default:
                 break;

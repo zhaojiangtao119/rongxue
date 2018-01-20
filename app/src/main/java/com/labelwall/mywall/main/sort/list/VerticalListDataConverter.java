@@ -18,6 +18,13 @@ public class VerticalListDataConverter extends DataConverter {
 
     @Override
     public ArrayList<MultipleItemEntity> convert() {
+        MultipleItemEntity entityFirst = MultipleItemEntity.builder()
+                .setItemType(ItemType.VERTICAL_MENU_LIST)
+                .setField(VerticalListField.ID, 0)
+                .setField(VerticalListField.NAME, "全部")
+                .setField(MultipleFields.TAG, false)//点击标记
+                .build();
+        ENTITIES.add(entityFirst);
         final JSONArray productCategoryArray = JSON.parseObject(getJsonData()).getJSONArray("data");
         final int size = productCategoryArray.size();
         for (int i = 0; i < size; i++) {
