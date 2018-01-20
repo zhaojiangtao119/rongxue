@@ -7,6 +7,7 @@ package com.labelwall.mywall.util.callback;
 public enum CallbackType {
 
     ON_CROP,
-    IMAGES
+    IMAGES,
+    CONTENT_PRODUCT_ID,
 
 }

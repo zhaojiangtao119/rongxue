@@ -26,14 +26,17 @@ public class ContentRefreshHandler implements SwipeRefreshLayout.OnRefreshListen
     private final ContentDataConverter CONVERTER;
     private final PagingBean BEAN;
     private final int CONTENT_ID;
+    //private final String KEYWORD;
 
     private ContentRefreshHandler(SwipeRefreshLayout refreshLayout, RecyclerView recyclerView,
-                                  ContentDataConverter converter, PagingBean bean, int contentId) {
+                                  ContentDataConverter converter, PagingBean bean,
+                                  int contentId) {
         this.REFRESH_LAYOUT = refreshLayout;
         this.RECYCLER_VIEW = recyclerView;
         this.CONVERTER = converter;
         this.BEAN = bean;
         this.CONTENT_ID = contentId;
+        //this.KEYWORD = keyword;
         REFRESH_LAYOUT.setOnRefreshListener(this);
     }
 
@@ -54,6 +57,7 @@ public class ContentRefreshHandler implements SwipeRefreshLayout.OnRefreshListen
         RestClient.builder()
                 .url("product/get_product_list/" + BEAN.getPageIndex() + "/6")
                 .params("categoryId", CONTENT_ID)
+                //.params("keyword",KEYWORD)
                 .refreshLayout(REFRESH_LAYOUT)
                 .success(new ISuccess() {
                     @Override

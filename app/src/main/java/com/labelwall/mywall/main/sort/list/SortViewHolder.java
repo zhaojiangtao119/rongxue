@@ -1,4 +1,4 @@
-package com.labelwall.mywall.main.sort;
+package com.labelwall.mywall.main.sort.list;
 
 import android.view.View;
 

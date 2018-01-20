@@ -26,14 +26,13 @@ public class ContentDelegate extends WallDelegate {
     @BindView(R2.id.srl_content_product)
     SwipeRefreshLayout mRefreshLayout = null;
 
-
-
     private static final String ARG_CONTENT_ID = "CONTENT_ID";
+    private static final String ARG_PRODUCT_KEYWORD = "KEYWORD";
     private int mContentId = -1;
+    //private String mKeyword = null;
 
     private ContentAdapter mAdapter = null;
     private ContentDataConverter mConverter = new ContentDataConverter();
-
     private ContentRefreshHandler mRefreshHandler = null;
 
     @Override
@@ -42,12 +41,14 @@ public class ContentDelegate extends WallDelegate {
         final Bundle args = getArguments();
         if (args != null) {
             mContentId = args.getInt(ARG_CONTENT_ID);
+            //mKeyword = args.getString(ARG_PRODUCT_KEYWORD);
         }
     }
 
     public static ContentDelegate newInstance(int countId) {
         final Bundle args = new Bundle();//使用bundle存储contentId
         args.putInt(ARG_CONTENT_ID, countId);
+        //args.putString(ARG_PRODUCT_KEYWORD, keyword);
         final ContentDelegate contentDelegate = new ContentDelegate();
         contentDelegate.setArguments(args);//设置contentId
         return contentDelegate;

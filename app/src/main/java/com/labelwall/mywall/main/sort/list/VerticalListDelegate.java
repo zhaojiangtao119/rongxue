@@ -10,7 +10,6 @@ import com.labelwall.mywall.R;
 import com.labelwall.mywall.R2;
 import com.labelwall.mywall.delegates.base.WallDelegate;
 import com.labelwall.mywall.main.sort.SortDelegate;
-import com.labelwall.mywall.main.sort.SortRecyclerAdapter;
 import com.labelwall.mywall.ui.recycler.MultipleItemEntity;
 import com.labelwall.mywall.util.net.RestClient;
 import com.labelwall.mywall.util.net.callback.ISuccess;
