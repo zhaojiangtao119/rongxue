@@ -77,6 +77,17 @@ public class UserDelegate extends BottomItemDelegate {
 
     @Override
     public void onBindView(@Nullable Bundle savedInstanceState, View rootView) {
+
+    }
+
+    /**
+     * 修改为懒加载
+     *
+     * @param savedInstanceState
+     */
+    @Override
+    public void onLazyInitView(@Nullable Bundle savedInstanceState) {
+        super.onLazyInitView(savedInstanceState);
         //加载用户的基本信息
         findCurrentUserProfile();
         //加载recyclerView的item

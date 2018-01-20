@@ -7,13 +7,11 @@ import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
-import android.widget.TextView;
 
 import com.labelwall.mywall.R;
 import com.labelwall.mywall.R2;
 import com.labelwall.mywall.delegates.base.WallDelegate;
 import com.labelwall.mywall.main.user.profile.location.decoration.TitleItemDecoration;
-import com.labelwall.mywall.main.user.profile.location.decoration.TitleItemDecoration2;
 
 import java.util.ArrayList;
 import java.util.List;

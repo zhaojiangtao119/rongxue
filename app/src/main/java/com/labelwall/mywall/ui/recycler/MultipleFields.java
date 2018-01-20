@@ -8,5 +8,5 @@ package com.labelwall.mywall.ui.recycler;
 public enum MultipleFields {
 
     ITEM_TYPE,
-
+    TAG,
 }
