@@ -14,7 +14,6 @@ import com.labelwall.mywall.main.sort.list.VerticalListDelegate;
 import com.labelwall.mywall.util.callback.CallbackManager;
 import com.labelwall.mywall.util.callback.CallbackType;
 import com.labelwall.mywall.util.callback.IGlobalCallback;
-import com.qiniu.android.utils.StringUtils;
 
 import butterknife.BindView;
 import butterknife.OnClick;
@@ -51,10 +50,8 @@ public class SortDelegate extends BottomItemDelegate {
         if (mContentId == -1) {
             mContentId = 0;
         }
-        if (StringUtils.isBlank(mKeyword)) {
-            mKeyword = null;
-        }
-        getSupportDelegate().loadRootFragment(R.id.sort_content_container, ContentDelegate.newInstance(mContentId, mKeyword));
+        getSupportDelegate().loadRootFragment(R.id.sort_content_container,
+                ContentDelegate.newInstance(mContentId, mKeyword));
     }
 
     @Override

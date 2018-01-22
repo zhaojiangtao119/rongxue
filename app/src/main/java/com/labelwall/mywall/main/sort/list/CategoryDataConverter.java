@@ -14,14 +14,14 @@ import java.util.ArrayList;
  * Created by Administrator on 2018-01-19.
  */
 
-public class VerticalListDataConverter extends DataConverter {
+public class CategoryDataConverter extends DataConverter {
 
     @Override
     public ArrayList<MultipleItemEntity> convert() {
         MultipleItemEntity entityFirst = MultipleItemEntity.builder()
                 .setItemType(ItemType.VERTICAL_MENU_LIST)
-                .setField(VerticalListField.ID, 0)
-                .setField(VerticalListField.NAME, "全部")
+                .setField(CategoryListField.ID, 0)
+                .setField(CategoryListField.NAME, "全部")
                 .setField(MultipleFields.TAG, false)//点击标记
                 .build();
         ENTITIES.add(entityFirst);
@@ -34,8 +34,8 @@ public class VerticalListDataConverter extends DataConverter {
 
             final MultipleItemEntity entity = MultipleItemEntity.builder()
                     .setItemType(ItemType.VERTICAL_MENU_LIST)
-                    .setField(VerticalListField.ID, id)
-                    .setField(VerticalListField.NAME, name)
+                    .setField(CategoryListField.ID, id)
+                    .setField(CategoryListField.NAME, name)
                     .setField(MultipleFields.TAG, false)//点击标记
                     .build();
             ENTITIES.add(entity);

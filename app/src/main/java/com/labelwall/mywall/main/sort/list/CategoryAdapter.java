@@ -4,7 +4,6 @@ import android.graphics.Color;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.AppCompatEditText;
 import android.support.v7.widget.AppCompatTextView;
-import android.util.Log;
 import android.view.View;
 
 import com.chad.library.adapter.base.BaseMultiItemQuickAdapter;
@@ -27,7 +26,7 @@ import me.yokeyword.fragmentation.SupportHelper;
  * Created by Administrator on 2018-01-19.
  */
 
-public class SortRecyclerAdapter extends BaseMultiItemQuickAdapter<MultipleItemEntity, SortViewHolder> {
+public class CategoryAdapter extends BaseMultiItemQuickAdapter<MultipleItemEntity, CategoryViewHolder> {
 
     private final SortDelegate DELEGATE;
     private AppCompatEditText mProductKeyword;
@@ -35,7 +34,7 @@ public class SortRecyclerAdapter extends BaseMultiItemQuickAdapter<MultipleItemE
 
     private int mProPosition = 0;//上一个position
 
-    public SortRecyclerAdapter(List<MultipleItemEntity> data, SortDelegate delegate) {
+    public CategoryAdapter(List<MultipleItemEntity> data, SortDelegate delegate) {
         super(data);
         this.DELEGATE = delegate;
 
@@ -44,23 +43,23 @@ public class SortRecyclerAdapter extends BaseMultiItemQuickAdapter<MultipleItemE
     }
 
     @Override
-    protected void convert(final SortViewHolder holder, final MultipleItemEntity itemEntity) {
+    protected void convert(final CategoryViewHolder holder, final MultipleItemEntity itemEntity) {
         switch (holder.getItemViewType()) {
             case ItemType.VERTICAL_MENU_LIST:
-                final String name = itemEntity.getField(VerticalListField.NAME);
+                final String name = itemEntity.getField(CategoryListField.NAME);
                 final boolean isClicked = itemEntity.getField(MultipleFields.TAG);
                 final AppCompatTextView nameView = holder.getView(R.id.tv_vertical_item_name);
                 final View line = holder.getView(R.id.view_line);
                 final View itemView = holder.itemView;
+
                 //获得当前点击的item的position
                 final int currentPosition = holder.getAdapterPosition();
-                final int contentId = getData().get(currentPosition).getField(VerticalListField.ID);
-
+                final int contentId = getData().get(currentPosition).getField(CategoryListField.ID);
                 //建议使用匿名内部类的方式实现单击监听
                 itemView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        //获取搜索的关键字
+                        //获取搜索的关键字，通过SortDelegate
                         View view = DELEGATE.getView();
                         AppCompatEditText mProductKeyword = (AppCompatEditText) view.findViewById(R.id.product_keyword);
                         mKeyword = mProductKeyword.getText().toString();
@@ -80,7 +79,7 @@ public class SortRecyclerAdapter extends BaseMultiItemQuickAdapter<MultipleItemE
                         }
                     }
                 });
-                //判断是否点击了该item
+                //判断是否点击了该item，来设置Item的样式
                 if (!isClicked) {
                     //没有点击该Item
                     line.setVisibility(View.INVISIBLE);

@@ -27,7 +27,7 @@ public class VerticalListDelegate extends WallDelegate {
     @BindView(R2.id.rv_vertical_list)
     RecyclerView mRecyclerView = null;
 
-    private SortRecyclerAdapter mAdapter = null;
+    private CategoryAdapter mAdapter = null;
 
 
     @Override
@@ -37,7 +37,7 @@ public class VerticalListDelegate extends WallDelegate {
 
     @Override
     public void onBindView(@Nullable Bundle savedInstanceState, View rootView) {
-        initRecyclerView();
+
     }
 
     private void initRecyclerView() {
@@ -50,6 +50,7 @@ public class VerticalListDelegate extends WallDelegate {
     public void onLazyInitView(@Nullable Bundle savedInstanceState) {
         super.onLazyInitView(savedInstanceState);
         //加载verticalList数据
+        initRecyclerView();
         uploadCategory();
     }
 
@@ -61,9 +62,9 @@ public class VerticalListDelegate extends WallDelegate {
                     @Override
                     public void onSuccess(String response) {
                         final List<MultipleItemEntity> entityList =
-                                new VerticalListDataConverter().setJsonData(response).convert();
+                                new CategoryDataConverter().setJsonData(response).convert();
                         final SortDelegate delegate = getParentDelegate();
-                        mAdapter = new SortRecyclerAdapter(entityList, delegate);
+                        mAdapter = new CategoryAdapter(entityList, delegate);
                         mRecyclerView.setAdapter(mAdapter);
                     }
                 })

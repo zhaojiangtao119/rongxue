@@ -2,6 +2,7 @@ package com.labelwall.mywall.main.sort.content;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
@@ -10,6 +11,7 @@ import android.view.View;
 import com.labelwall.mywall.R;
 import com.labelwall.mywall.R2;
 import com.labelwall.mywall.delegates.base.WallDelegate;
+import com.labelwall.mywall.ui.recycler.BaseDecoration;
 
 import butterknife.BindView;
 
@@ -85,6 +87,6 @@ public class ContentDelegate extends WallDelegate {
         final StaggeredGridLayoutManager manager =
                 new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL);
         mRecyclerView.setLayoutManager(manager);
+        //设置分割线
     }
-
 }
