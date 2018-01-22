@@ -26,24 +26,24 @@ public class ContentRefreshHandler implements SwipeRefreshLayout.OnRefreshListen
     private final ContentDataConverter CONVERTER;
     private final PagingBean BEAN;
     private final int CONTENT_ID;
-    //private final String KEYWORD;
+    private String KEYWORD;
 
     private ContentRefreshHandler(SwipeRefreshLayout refreshLayout, RecyclerView recyclerView,
                                   ContentDataConverter converter, PagingBean bean,
-                                  int contentId) {
+                                  int contentId, String keyword) {
         this.REFRESH_LAYOUT = refreshLayout;
         this.RECYCLER_VIEW = recyclerView;
         this.CONVERTER = converter;
         this.BEAN = bean;
         this.CONTENT_ID = contentId;
-        //this.KEYWORD = keyword;
+        this.KEYWORD = keyword;
         REFRESH_LAYOUT.setOnRefreshListener(this);
     }
 
     public static ContentRefreshHandler create(SwipeRefreshLayout refreshLayout, RecyclerView recyclerView,
-                                               ContentDataConverter converter, int contentId) {
+                                               ContentDataConverter converter, int contentId, String keyowrd) {
         return new ContentRefreshHandler(refreshLayout, recyclerView,
-                converter, new PagingBean(), contentId);
+                converter, new PagingBean(), contentId, keyowrd);
     }
 
 
@@ -54,10 +54,13 @@ public class ContentRefreshHandler implements SwipeRefreshLayout.OnRefreshListen
     }
 
     public void uploadContentProductFirst() {
+        if(KEYWORD == null){
+            KEYWORD = "";
+        }
         RestClient.builder()
                 .url("product/get_product_list/" + BEAN.getPageIndex() + "/6")
                 .params("categoryId", CONTENT_ID)
-                //.params("keyword",KEYWORD)
+                .params("keyword",KEYWORD)
                 .refreshLayout(REFRESH_LAYOUT)
                 .success(new ISuccess() {
                     @Override

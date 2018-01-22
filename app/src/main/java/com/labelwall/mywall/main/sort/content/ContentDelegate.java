@@ -10,8 +10,6 @@ import android.view.View;
 import com.labelwall.mywall.R;
 import com.labelwall.mywall.R2;
 import com.labelwall.mywall.delegates.base.WallDelegate;
-import com.labelwall.mywall.util.net.RestClient;
-import com.labelwall.mywall.util.net.callback.ISuccess;
 
 import butterknife.BindView;
 
@@ -29,7 +27,7 @@ public class ContentDelegate extends WallDelegate {
     private static final String ARG_CONTENT_ID = "CONTENT_ID";
     private static final String ARG_PRODUCT_KEYWORD = "KEYWORD";
     private int mContentId = -1;
-    //private String mKeyword = null;
+    private String mKeyword = null;
 
     private ContentAdapter mAdapter = null;
     private ContentDataConverter mConverter = new ContentDataConverter();
@@ -41,14 +39,14 @@ public class ContentDelegate extends WallDelegate {
         final Bundle args = getArguments();
         if (args != null) {
             mContentId = args.getInt(ARG_CONTENT_ID);
-            //mKeyword = args.getString(ARG_PRODUCT_KEYWORD);
+            mKeyword = args.getString(ARG_PRODUCT_KEYWORD);
         }
     }
 
-    public static ContentDelegate newInstance(int countId) {
+    public static ContentDelegate newInstance(int countId, String keyword) {
         final Bundle args = new Bundle();//使用bundle存储contentId
         args.putInt(ARG_CONTENT_ID, countId);
-        //args.putString(ARG_PRODUCT_KEYWORD, keyword);
+        args.putString(ARG_PRODUCT_KEYWORD, keyword);
         final ContentDelegate contentDelegate = new ContentDelegate();
         contentDelegate.setArguments(args);//设置contentId
         return contentDelegate;
@@ -62,7 +60,7 @@ public class ContentDelegate extends WallDelegate {
     @Override
     public void onBindView(@Nullable Bundle savedInstanceState, View rootView) {
         mRefreshHandler = ContentRefreshHandler
-                .create(mRefreshLayout, mRecyclerView, new ContentDataConverter(), mContentId);
+                .create(mRefreshLayout, mRecyclerView, new ContentDataConverter(), mContentId, mKeyword);
         initRefreshLayout();
         initRecyclerView();
     }
