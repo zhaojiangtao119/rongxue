@@ -45,6 +45,7 @@ public class ContentDelegate extends WallDelegate {
         }
     }
 
+    //存储信息CategoryId与keyword在Bundle中
     public static ContentDelegate newInstance(int countId, String keyword) {
         final Bundle args = new Bundle();//使用bundle存储contentId
         args.putInt(ARG_CONTENT_ID, countId);
@@ -61,8 +62,9 @@ public class ContentDelegate extends WallDelegate {
 
     @Override
     public void onBindView(@Nullable Bundle savedInstanceState, View rootView) {
+        final WallDelegate wallDelegate = getParentDelegate().getParentDelegate();
         mRefreshHandler = ContentRefreshHandler
-                .create(mRefreshLayout, mRecyclerView, new ContentDataConverter(), mContentId, mKeyword);
+                .create(wallDelegate, mRefreshLayout, mRecyclerView, new ContentDataConverter(), mContentId, mKeyword);
         initRefreshLayout();
         initRecyclerView();
     }

@@ -1,5 +1,7 @@
 package com.labelwall.mywall.main.index;
 
+import android.content.res.ColorStateList;
+import android.graphics.Color;
 import android.net.Uri;
 import android.nfc.Tag;
 import android.os.Bundle;
@@ -105,6 +107,15 @@ public class IndexDelegate extends BottomItemDelegate {
     }
 
     private void createTabControl() {
+        //Tab是平均分开的
+        //mTabLayout.setTabMode(TabLayout.MODE_FIXED);
+        //设置选择线的颜色
+        //mTabLayout.setSelectedTabIndicatorColor(ContextCompat.getColor(_mActivity,R.color.app_background));
+        //设置tab名称的颜色
+        mTabLayout.setTabTextColors(ColorStateList.valueOf(Color.BLACK));
+        //设置背景色
+        //mTabLayout.setBackgroundColor(Color.WHITE);
+
         final int size = mTitles.size();
         for (int i = 0; i < size; i++) {
             mTabLayout.addTab(mTabLayout.newTab().setText(mTitles.get(i)));

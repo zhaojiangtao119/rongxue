@@ -42,7 +42,7 @@ public class SortDelegate extends BottomItemDelegate {
                 });
         mKeyword = mProductKeyword.getText().toString();
         Log.e("关键字：", mKeyword);
-        //加载数据
+        //加载数据搜索后的数据
         uploadSearchData();
     }
 

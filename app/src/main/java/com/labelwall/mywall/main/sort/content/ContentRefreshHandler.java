@@ -6,6 +6,7 @@ import android.util.Log;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
+import com.labelwall.mywall.delegates.base.WallDelegate;
 import com.labelwall.mywall.ui.recycler.MultipleItemEntity;
 import com.labelwall.mywall.ui.refresh.PagingBean;
 import com.labelwall.mywall.util.net.RestClient;
@@ -20,6 +21,7 @@ import java.util.List;
 
 public class ContentRefreshHandler implements SwipeRefreshLayout.OnRefreshListener {
 
+    private final WallDelegate DELEGATE;
     private final SwipeRefreshLayout REFRESH_LAYOUT;
     private final RecyclerView RECYCLER_VIEW;
     private ContentAdapter mAdapter = null;
@@ -28,9 +30,10 @@ public class ContentRefreshHandler implements SwipeRefreshLayout.OnRefreshListen
     private final int CONTENT_ID;
     private String KEYWORD;
 
-    private ContentRefreshHandler(SwipeRefreshLayout refreshLayout, RecyclerView recyclerView,
+    private ContentRefreshHandler(WallDelegate delegate, SwipeRefreshLayout refreshLayout, RecyclerView recyclerView,
                                   ContentDataConverter converter, PagingBean bean,
                                   int contentId, String keyword) {
+        this.DELEGATE = delegate;
         this.REFRESH_LAYOUT = refreshLayout;
         this.RECYCLER_VIEW = recyclerView;
         this.CONVERTER = converter;
@@ -40,9 +43,9 @@ public class ContentRefreshHandler implements SwipeRefreshLayout.OnRefreshListen
         REFRESH_LAYOUT.setOnRefreshListener(this);
     }
 
-    public static ContentRefreshHandler create(SwipeRefreshLayout refreshLayout, RecyclerView recyclerView,
+    public static ContentRefreshHandler create(WallDelegate delegate, SwipeRefreshLayout refreshLayout, RecyclerView recyclerView,
                                                ContentDataConverter converter, int contentId, String keyowrd) {
-        return new ContentRefreshHandler(refreshLayout, recyclerView,
+        return new ContentRefreshHandler(delegate, refreshLayout, recyclerView,
                 converter, new PagingBean(), contentId, keyowrd);
     }
 
@@ -54,18 +57,18 @@ public class ContentRefreshHandler implements SwipeRefreshLayout.OnRefreshListen
     }
 
     public void uploadContentProductFirst() {
-        if(KEYWORD == null){
+        if (KEYWORD == null) {
             KEYWORD = "";
         }
         RestClient.builder()
                 .url("product/get_product_list/" + BEAN.getPageIndex() + "/6")
                 .params("categoryId", CONTENT_ID)
-                .params("keyword",KEYWORD)
+                .params("keyword", KEYWORD)
                 .refreshLayout(REFRESH_LAYOUT)
                 .success(new ISuccess() {
                     @Override
                     public void onSuccess(String response) {
-                        mAdapter = ContentAdapter.create(CONVERTER.setJsonData(response));
+                        mAdapter = ContentAdapter.create(CONVERTER.setJsonData(response), DELEGATE);
                         RECYCLER_VIEW.setAdapter(mAdapter);
                         BEAN.addIndex();
                     }

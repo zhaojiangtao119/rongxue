@@ -39,6 +39,7 @@ public class ContentDataConverter extends DataConverter {
                         .setField(ContentDataField.MAINIMAGE, mainImg)
                         .build();
                 ENTITIES.add(entity);
+
             }
         }
         return ENTITIES;

@@ -37,5 +37,11 @@
     <string name="system_setting">系统设置</string>
     <string name="user_location">用户地址</string>
 
-
+    <!--product-->
+    <string name="product_search_hint">请输入关键字</string>
+    <!--product detail-->
+    <string name="goods_detail">商品详情</string>
+    <string name="add_cart">加入购物车</string>
+    <string name="shop_cart">购物车</string>
+    <string name="like_goods">喜欢</string>
 </resources>
