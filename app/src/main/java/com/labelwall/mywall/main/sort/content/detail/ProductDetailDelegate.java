@@ -20,20 +20,29 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.bigkoo.convenientbanner.ConvenientBanner;
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.bumptech.glide.request.RequestOptions;
+import com.daimajia.androidanimations.library.YoYo;
 import com.joanzapata.iconify.widget.IconTextView;
 import com.labelwall.mywall.R;
 import com.labelwall.mywall.R2;
 import com.labelwall.mywall.delegates.base.WallDelegate;
+import com.labelwall.mywall.ui.animation.BezierAnimation;
+import com.labelwall.mywall.ui.animation.BezierUtil;
 import com.labelwall.mywall.ui.banner.HolderCreator;
 import com.labelwall.mywall.ui.widget.CircleTextView;
 import com.labelwall.mywall.util.net.RestClient;
 import com.labelwall.mywall.util.net.callback.ISuccess;
+import com.labelwall.mywall.util.storage.WallPreference;
+import com.labelwall.mywall.util.storage.WallTagType;
 
-import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
+import butterknife.OnClick;
+import de.hdodenhof.circleimageview.CircleImageView;
 import me.yokeyword.fragmentation.anim.DefaultHorizontalAnimator;
 import me.yokeyword.fragmentation.anim.FragmentAnimator;
 
@@ -42,7 +51,8 @@ import me.yokeyword.fragmentation.anim.FragmentAnimator;
  */
 
 public class ProductDetailDelegate extends WallDelegate implements
-        AppBarLayout.OnOffsetChangedListener {
+        AppBarLayout.OnOffsetChangedListener,
+        BezierUtil.AnimationListener {
 
     private final int PRODUCT_ID;
 
@@ -69,9 +79,58 @@ public class ProductDetailDelegate extends WallDelegate implements
     @BindView(R2.id.icon_shop_cart)
     IconTextView mIconShopCart = null;
 
+    private String mProductThumbUrl = null;
+    private int mShopCount = 0;
+
+    private final RequestOptions OPTIONS = new RequestOptions()
+            .diskCacheStrategy(DiskCacheStrategy.ALL)
+            .centerCrop()
+            .dontAnimate()
+            .override(100, 100);
+
+    @OnClick(R2.id.rl_add_shop_cart)
+    void onClickAddShopCart() {
+        //商品加入购物车
+        final CircleImageView animImg = new CircleImageView(getContext());
+        Glide.with(this)
+                .load(mProductThumbUrl)
+                .apply(OPTIONS)
+                .into(animImg);
+        BezierAnimation.addCart(this, mRlAddShopCart, mIconShopCart, animImg, this);
+    }
+
+    @Override
+    public void onAnimationEnd() {
+        //商品加入购物车动画结束后，
+        YoYo.with(new ScaleUpAnimator())
+                .duration(500)
+                .playOn(mIconShopCart);
+        mShopCount++;
+        //TODO 请求服务器将添加到购物的商品信息写入DB,参数userId,count,productId
+        final long userId = WallPreference.getCurrentUserId(WallTagType.CURRENT_USER_ID.name());
+        RestClient.builder()
+                .url("shopcart/app_add_cart")
+                .params("userId", userId)
+                .params("quantity", 1)
+                .params("productId", PRODUCT_ID)
+                .success(new ISuccess() {
+                    @Override
+                    public void onSuccess(String response) {
+                        final JSONObject data = JSON.parseObject(response);
+                        final int status = data.getInteger("status");
+                        if (status == 0) {
+                            mCircleTextView.setVisibility(View.VISIBLE);
+                            mCircleTextView.setText(String.valueOf(mShopCount));
+                        }
+                    }
+                })
+                .build()
+                .post();
+    }
+
+
     public ProductDetailDelegate(int productId) {
         this.PRODUCT_ID = productId;
-        Log.e("商品id:", String.valueOf(productId));
     }
 
     @Override
@@ -83,6 +142,7 @@ public class ProductDetailDelegate extends WallDelegate implements
     public void onBindView(@Nullable Bundle savedInstanceState, View rootView) {
         mCollapsingToolbarLayout.setContentScrimColor(ContextCompat.getColor(_mActivity, R.color.app_background));
         mAppBar.addOnOffsetChangedListener(this);
+        mCircleTextView.setCircleBackground(Color.RED);
         initData();
         initTabLayout();
     }
@@ -101,7 +161,6 @@ public class ProductDetailDelegate extends WallDelegate implements
                         final JSONObject data = JSON.parseObject(response).getJSONObject("data");
                         initBanner(data);
                         initProductInfo(data);
-
                     }
                 })
                 .build()
@@ -110,10 +169,13 @@ public class ProductDetailDelegate extends WallDelegate implements
 
 
     private void initBanner(JSONObject data) {
-        final String image = data.getString("mainImage");
+        if (mShopCount == 0) {
+            mCircleTextView.setVisibility(View.GONE);
+        }
+        mProductThumbUrl = data.getString("mainImage");
         final List<String> images = new ArrayList<>();
         for (int i = 0; i < 3; i++) {
-            images.add(image.toString());
+            images.add(mProductThumbUrl.toString());
         }
         mBanner
                 .setPages(new HolderCreator(), images)
@@ -145,4 +207,5 @@ public class ProductDetailDelegate extends WallDelegate implements
     public FragmentAnimator onCreateFragmentAnimator() {
         return new DefaultHorizontalAnimator();
     }
+
 }

@@ -1,15 +1,17 @@
 package com.labelwall.mywall.main;
 
 import android.graphics.Color;
+import android.support.v4.content.ContextCompat;
 
+import com.labelwall.mywall.R;
 import com.labelwall.mywall.delegates.bottom.BaseBottomDelegate;
 import com.labelwall.mywall.delegates.bottom.BottomItemDelegate;
 import com.labelwall.mywall.delegates.bottom.BottomTabBean;
 import com.labelwall.mywall.delegates.bottom.ItemBuilder;
+import com.labelwall.mywall.main.cart.ShopCartDelegate;
 import com.labelwall.mywall.main.user.UserDelegate;
 import com.labelwall.mywall.main.compass.CompassDelegate;
 import com.labelwall.mywall.main.index.IndexDelegate;
-import com.labelwall.mywall.main.search.SearchDelegate;
 import com.labelwall.mywall.main.sort.SortDelegate;
 
 import java.util.LinkedHashMap;
@@ -27,7 +29,7 @@ public class WallBottomDelegate extends BaseBottomDelegate {
         items.put(new BottomTabBean("{fa-home}", ""), new IndexDelegate());
         items.put(new BottomTabBean("{fa-sort}", ""), new SortDelegate());
         items.put(new BottomTabBean("{fa-compass}", ""), new CompassDelegate());
-        items.put(new BottomTabBean("{fa-search}", ""), new SearchDelegate());
+        items.put(new BottomTabBean("{fa-shopping-cart}", ""), new ShopCartDelegate());
         items.put(new BottomTabBean("{fa-user}", ""), new UserDelegate());
         return builder.addItem(items).build();
     }
@@ -39,6 +41,7 @@ public class WallBottomDelegate extends BaseBottomDelegate {
 
     @Override
     public int setClickedColor() {
-        return Color.parseColor("#ffff8800");
+        return ContextCompat.getColor(_mActivity, R.color.app_title);
+        //return Color.parseColor("#ffff8800");
     }
 }

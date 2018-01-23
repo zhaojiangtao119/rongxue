@@ -9,4 +9,5 @@ public enum  ContentDataField {
     NAME,
     SUBTITLE,
     MAINIMAGE
+
 }
