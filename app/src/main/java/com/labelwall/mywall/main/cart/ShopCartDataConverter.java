@@ -46,6 +46,7 @@ public class ShopCartDataConverter extends DataConverter {
                     .setField(ShopCartDataField.MAIN_IMAGE, productMainImage)
                     .setField(ShopCartDataField.IS_CHECKED, isChecked)
                     .setField(ShopCartDataField.PRODUCT_ID, productId)
+                    .setField(ShopCartDataField.POSITION, i)
                     .build();
             ENTITIES.add(entity);
         }

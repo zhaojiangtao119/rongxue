@@ -6,7 +6,6 @@ import android.support.v7.widget.AppCompatImageView;
 import android.support.v7.widget.AppCompatTextView;
 import android.view.View;
 
-import com.alibaba.fastjson.JSONObject;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.RequestOptions;
@@ -105,9 +104,11 @@ public class ShopCartAdapter extends
                     @Override
                     public void onClick(View v) {
                         final Integer currentCount = itemEntity.getField(ShopCartDataField.QUANTITY);
-                        //TODO 请求服务端数量减一，请求参数userId,productId,quantity
-                        Integer updateProductNum = currentCount - 1;
-                        uploadShopCartProductNum(updateProductNum, productId);
+                        if (currentCount > 1) {//商品减少数量不能小于1
+                            //TODO 请求服务端数量减一，请求参数userId,productId,quantity
+                            Integer updateProductNum = currentCount - 1;
+                            uploadShopCartProductNum(updateProductNum, productId);
+                        }
                     }
                 });
                 //商品数量减一
@@ -129,6 +130,7 @@ public class ShopCartAdapter extends
     private void clickChecked(int productId, String url) {
         RestClient.builder()
                 .url("app/shopcart/" + url)
+                .loader(mContext)
                 .params("userId", userId)
                 .params("productId", productId)
                 .success(new ISuccess() {
@@ -151,6 +153,7 @@ public class ShopCartAdapter extends
     private void uploadShopCartProductNum(Integer updateProductNum, Integer productId) {
         RestClient.builder()
                 .url("app/shopcart/app_update_quantity")
+                .loader(mContext)
                 .params("userId", userId)
                 .params("productId", productId)
                 .params("quantity", updateProductNum)
@@ -177,6 +180,4 @@ public class ShopCartAdapter extends
             super(view);
         }
     }
-
-
 }

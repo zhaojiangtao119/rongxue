@@ -89,7 +89,7 @@ public class TopicDetailDelegate extends WallDelegate {
     @OnClick(R.id.user_info)
     void onClick() {
         if (mUserId != -1) {
-            start(UserTopicDelegate.create(mUserId));
+            getSupportDelegate().start(UserTopicDelegate.create(mUserId));
         }
     }
 

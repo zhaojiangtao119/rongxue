@@ -7,6 +7,7 @@ import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.AppCompatTextView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.ViewStubCompat;
 import android.view.View;
 import android.widget.Toast;
 
@@ -24,6 +25,8 @@ import com.labelwall.mywall.util.storage.WallPreference;
 import com.labelwall.mywall.util.storage.WallTagType;
 
 import java.util.ArrayList;
+import java.util.List;
+import java.util.WeakHashMap;
 
 import butterknife.BindView;
 import butterknife.OnClick;
@@ -34,22 +37,31 @@ import butterknife.OnClick;
 
 public class ShopCartDelegate extends BottomItemDelegate
         implements ISuccess {
+    private int mCurrentItemCount = 0;
+    private int mTotalCount = 0;
 
     @BindView(R2.id.rv_shop_cart_item)
     RecyclerView mRecyclerView = null;
     @BindView(R2.id.shop_cart_total_price)
-    AppCompatTextView mShopCartTotalPrice = null;
+    AppCompatTextView mTVShopCartTotalPrice = null;
     @BindView(R2.id.icon_cart_select_all)
     IconTextView mSelectAll = null;
+    @BindView(R2.id.tv_top_shop_cart_clear)
+    AppCompatTextView mClearShopCart = null;
+    @BindView(R2.id.tv_top_shop_cart_clear_selected)
+    AppCompatTextView mClearSelectShopCart = null;
+    @BindView(R2.id.stub_no_item)
+    ViewStubCompat mStubNoItem = null;
 
     private ShopCartAdapter mAdapter = null;
-    private boolean isCheckedAll = false;
-    private double shopCartTotalPrice = 0.00;
-    private long userId = WallPreference.getCurrentUserId(WallTagType.CURRENT_USER_ID.name());
+    private boolean mIsCheckedAll = false;
+    private double mShopCartTotalPrice = 0.00;
+    private long mUserId = WallPreference.getCurrentUserId(WallTagType.CURRENT_USER_ID.name());
+    private boolean mStubIsInflate = false;
 
     @OnClick
     void onClickSelectAll() {
-        if (isCheckedAll) {//判断是否全部选中
+        if (mIsCheckedAll) {//判断是否全部选中
             //若是全部选中，则取消全部选中
             mSelectAll.setTextColor(Color.GRAY);
             clickSelectAll("app_un_select_all");
@@ -62,7 +74,8 @@ public class ShopCartDelegate extends BottomItemDelegate
     private void clickSelectAll(String url) {
         RestClient.builder()
                 .url("app/shopcart/" + url)
-                .params("userId", userId)
+                .loader(getContext())
+                .params("userId", mUserId)
                 .success(new ISuccess() {
                     @Override
                     public void onSuccess(String response) {
@@ -74,6 +87,85 @@ public class ShopCartDelegate extends BottomItemDelegate
                 .build()
                 .put();
     }
+
+    @OnClick(R2.id.tv_top_shop_cart_clear_selected)
+    void onClickRemoveSelectedItem() {
+        //获取adapter中的数据
+        final List<MultipleItemEntity> data = mAdapter.getData();
+        //获取要删除的数据
+        List<MultipleItemEntity> deleteEntities = new ArrayList<>();
+        for (MultipleItemEntity entity : data) {
+            final Integer isChecked = entity.getField(ShopCartDataField.IS_CHECKED);
+            if (isChecked == 1) {
+                //item是选中状态
+                deleteEntities.add(entity);
+            }
+        }
+        for (MultipleItemEntity entity : deleteEntities) {
+            int removePosition;
+            final int entityPosition = entity.getField(ShopCartDataField.POSITION);
+            if (entityPosition > mCurrentItemCount - 1) {
+                removePosition = entityPosition - (mTotalCount - mCurrentItemCount);
+            } else {
+                removePosition = entityPosition;
+            }
+            if (removePosition <= mAdapter.getItemCount()) {
+                mAdapter.remove(removePosition);
+                mCurrentItemCount = mAdapter.getItemCount();
+                //更新数据
+                mAdapter.notifyItemRangeChanged(removePosition, mAdapter.getItemCount());
+            }
+        }
+        checkItemCount();
+    }
+
+    @OnClick(R2.id.tv_top_shop_cart_clear)
+    void onClickClearAll() {
+        mAdapter.getData().clear();
+        mAdapter.notifyDataSetChanged();
+        checkItemCount();
+    }
+
+    private void checkItemCount() {//判断购物车是否为null
+        final int itemCount = mAdapter.getItemCount();
+        if (itemCount == 0) {
+            mStubNoItem.setOnInflateListener(new ViewStubCompat.OnInflateListener() {
+                @Override
+                public void onInflate(ViewStubCompat stub, View inflated) {
+                    mStubIsInflate = true;
+                }
+            });
+            if (!mStubIsInflate) {
+                //只能初始化一次mStubNoItem.inflate();
+                final View stubView = mStubNoItem.inflate();
+                final AppCompatTextView tvToBye =
+                        (AppCompatTextView) stubView.findViewById(R.id.tv_stub_to_buy);
+                tvToBye.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        //TODO
+                        Toast.makeText(getContext(), "要去购物", Toast.LENGTH_SHORT).show();
+                    }
+                });
+            }
+            mStubNoItem.setVisibility(View.VISIBLE);
+            mRecyclerView.setVisibility(View.GONE);
+        } else {
+            mRecyclerView.setVisibility(View.VISIBLE);
+            mStubNoItem.setVisibility(View.GONE);
+        }
+    }
+
+    @OnClick(R2.id.tv_shop_cart_pay)
+    void onClickPay() {//结算购物车，创建订单
+        final String orderUrl = "";
+        final WeakHashMap<String, Object> orderParams = new WeakHashMap<>();
+        orderParams.put("userId", 123);
+        orderParams.put("amount", 0.01);
+        orderParams.put("comment", "测试支付");
+
+    }
+
 
     @Override
     public Object setLayout() {
@@ -94,10 +186,9 @@ public class ShopCartDelegate extends BottomItemDelegate
     @Override
     public void onLazyInitView(@Nullable Bundle savedInstanceState) {
         super.onLazyInitView(savedInstanceState);
-        final long userId = WallPreference.getCurrentUserId(WallTagType.CURRENT_USER_ID.name());
         //加载数据
         RestClient.builder()
-                .url("app/shopcart/app_get_cart_list/" + userId)
+                .url("app/shopcart/app_get_cart_list/" + mUserId)
                 .success(this)
                 .build()
                 .get();
@@ -113,10 +204,10 @@ public class ShopCartDelegate extends BottomItemDelegate
     private void uploadShopCartProduct(ArrayList<MultipleItemEntity> data) {
         if (data != null && data.size() > 0) {
             MultipleItemEntity entity = data.get(0);
-            shopCartTotalPrice = entity.getField(ShopCartDataField.TOTAL_PRICE);
-            isCheckedAll = entity.getField(ShopCartDataField.ALLCHECKED);
-            mShopCartTotalPrice.setText("￥" + String.valueOf(shopCartTotalPrice));
-            if (isCheckedAll) {//判断是否全部选中
+            mShopCartTotalPrice = entity.getField(ShopCartDataField.TOTAL_PRICE);
+            mIsCheckedAll = entity.getField(ShopCartDataField.ALLCHECKED);
+            mTVShopCartTotalPrice.setText("￥" + String.valueOf(mShopCartTotalPrice));
+            if (mIsCheckedAll) {//判断是否全部选中
                 mSelectAll.setTextColor(ContextCompat.getColor(_mActivity, R.color.app_title));
             } else {
                 mSelectAll.setTextColor(Color.GRAY);
@@ -126,5 +217,27 @@ public class ShopCartDelegate extends BottomItemDelegate
         mRecyclerView.setLayoutManager(manager);
         mAdapter = new ShopCartAdapter(data, this);
         mRecyclerView.setAdapter(mAdapter);
+        checkItemCount();
     }
+
+   /* @Override
+    public void onStart() {
+        super.onStart();
+        //加载数据
+        RestClient.builder()
+                .url("app/shopcart/app_get_cart_list/" + mUserId)
+                .success(this)
+                .build()
+                .get();
+    }*/
+
+   /* @Override
+    public void onResume() {
+        super.onResume();
+        RestClient.builder()
+                .url("app/shopcart/app_get_cart_list/" + mUserId)
+                .success(this)
+                .build()
+                .get();
+    }*/
 }

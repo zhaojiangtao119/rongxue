@@ -20,6 +20,7 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 
 import butterknife.BindView;
+import me.yokeyword.fragmentation.ISupportFragment;
 import me.yokeyword.fragmentation.SupportFragment;
 
 /**
@@ -79,8 +80,8 @@ public abstract class BaseBottomDelegate extends WallDelegate implements View.On
 
         //初始化delegate（fragment）使用fragmentation的方式，
         // 将delegate初始化到bottom_bar_delegate_container
-        final SupportFragment[] delegateArray = ITEM_DELEGATES.toArray(new SupportFragment[size]);
-        loadMultipleRootFragment(R.id.bottom_bar_delegate_container, mIndexDelegate, delegateArray);
+        final ISupportFragment[] delegateArray = ITEM_DELEGATES.toArray(new ISupportFragment[size]);
+        getSupportDelegate().loadMultipleRootFragment(R.id.bottom_bar_delegate_container, mIndexDelegate, delegateArray);
 
         //初始化BottomBar
         for (int i = 0; i < size; i++) {
@@ -102,12 +103,11 @@ public abstract class BaseBottomDelegate extends WallDelegate implements View.On
                 itemIcon.setTextColor(mClickedColor);
                 itemTitle.setTextColor(mClickedColor);
 
-                showHideFragment(ITEM_DELEGATES.get(mCurrentDelegate));
+                getSupportDelegate().showHideFragment(ITEM_DELEGATES.get(mCurrentDelegate));
                 //当前的页面标识改变为tag
                 mCurrentDelegate = i;
             }
         }
-
     }
 
     /**

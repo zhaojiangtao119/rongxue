@@ -61,7 +61,7 @@ public class IndexDelegate extends BottomItemDelegate {
     @OnClick(R2.id.tv_add_topic)
     void onClickAddTopic() {
         WallDelegate parentDelegate = getParentDelegate();
-        parentDelegate.start(new CreateTopicDelegate());
+        parentDelegate.getSupportDelegate().start(new CreateTopicDelegate());
         /*CallbackManager.getInstance().addCallback(CallbackType.ON_CROP, new IGlobalCallback<Uri>() {
             @Override
             public void executeCallback(Uri args) {

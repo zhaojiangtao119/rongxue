@@ -56,17 +56,17 @@ public class IndexItemClickListener extends SimpleClickListener {
                 viewId == R.id.topic_create_time) {
             int topicId = (int) view.getTag();
             final TopicDetailDelegate topicDetailDelegate = TopicDetailDelegate.create(topicId);
-            DELEGATE.start(topicDetailDelegate);
+            DELEGATE.getSupportDelegate().start(topicDetailDelegate);
         } else if (viewId == R.id.topic_image) {
             //TODO
             int topicId = (int) ((LinearLayoutCompat) view.getParent()).getTag();
             final TopicDetailDelegate topicDetailDelegate = TopicDetailDelegate.create(topicId);
-            DELEGATE.start(topicDetailDelegate);
+            DELEGATE.getSupportDelegate().start(topicDetailDelegate);
         } else if (viewId == R.id.user_info) {
             int userId = (int) view.getTag();
             if (DELEGATE instanceof WallBottomDelegate) {
                 final UserTopicDelegate userTopicDelegate = UserTopicDelegate.create(userId);
-                DELEGATE.start(userTopicDelegate);
+                DELEGATE.getSupportDelegate().start(userTopicDelegate);
             }
         } else if (viewId == R.id.topic_like) {
             LinearLayoutCompat textView = (LinearLayoutCompat) view;

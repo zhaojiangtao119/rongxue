@@ -73,7 +73,7 @@ public class SignUpDelegate extends WallDelegate {
 
     @OnClick(R2.id.tc_link_sign_in)
     void onClickSignInLink() {
-        start(new SignInDelegate());
+        getSupportDelegate().start(new SignInDelegate());
     }
 
     @Override

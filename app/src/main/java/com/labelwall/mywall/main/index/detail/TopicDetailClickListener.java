@@ -40,7 +40,7 @@ public class TopicDetailClickListener extends SimpleClickListener {
         if(viewId == R.id.user_info){
             final int userId = (int) view.getTag();
             final UserTopicDelegate userTopicDelegate = UserTopicDelegate.create(userId);
-            DELEGATE.start(userTopicDelegate);
+            DELEGATE.getSupportDelegate().start(userTopicDelegate);
         }
     }
 

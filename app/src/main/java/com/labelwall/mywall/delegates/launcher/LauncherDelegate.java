@@ -79,7 +79,7 @@ public class LauncherDelegate extends WallDelegate implements ITimerLisenter {
      */
     private void checkIsShowScroll() {
         if (!WallPreference.getAppFlag(ScrollLauncherTag.HAS_FRIST_LAUNCHER_APP.name())) {
-            start(new LauncherScrollDelegate(), SINGLETASK);//启动轮播图
+            getSupportDelegate().start(new LauncherScrollDelegate(), SINGLETASK);//启动轮播图
         } else {
             //todo 检查用户是否已经登陆
             AccountManager.checkAccount(new IUserChecker() {
