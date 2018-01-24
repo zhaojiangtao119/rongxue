@@ -30,7 +30,7 @@ public class ShopCartDataConverter extends DataConverter {
             final String productSubtitle = cartProduct.getString("productSubtitle");
             final String productMainImage = cartProduct.getString("productMainImage");
             //1-选中了该商品，0-未选中该商品
-            final int isChecked = cartProduct.getInteger("productChecked");
+            final Integer isChecked = cartProduct.getInteger("productChecked");
             final int cartProductId = cartProduct.getInteger("id");
             final int productId = cartProduct.getInteger("productId");
 

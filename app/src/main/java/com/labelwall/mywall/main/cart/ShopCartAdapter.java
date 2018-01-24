@@ -1,10 +1,12 @@
 package com.labelwall.mywall.main.cart;
 
+import android.graphics.Color;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.AppCompatImageView;
 import android.support.v7.widget.AppCompatTextView;
 import android.view.View;
 
+import com.alibaba.fastjson.JSONObject;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.RequestOptions;
@@ -15,6 +17,13 @@ import com.labelwall.mywall.R;
 import com.labelwall.mywall.ui.recycler.ItemType;
 import com.labelwall.mywall.ui.recycler.MultipleFields;
 import com.labelwall.mywall.ui.recycler.MultipleItemEntity;
+import com.labelwall.mywall.util.callback.CallbackManager;
+import com.labelwall.mywall.util.callback.CallbackType;
+import com.labelwall.mywall.util.callback.IGlobalCallback;
+import com.labelwall.mywall.util.net.RestClient;
+import com.labelwall.mywall.util.net.callback.ISuccess;
+import com.labelwall.mywall.util.storage.WallPreference;
+import com.labelwall.mywall.util.storage.WallTagType;
 
 import java.util.List;
 
@@ -26,7 +35,7 @@ public class ShopCartAdapter extends
         BaseMultiItemQuickAdapter<MultipleItemEntity, ShopCartAdapter.ShopCartViewHolder> {
 
     private final ShopCartDelegate DELEGATE;
-
+    final long userId = WallPreference.getCurrentUserId(WallTagType.CURRENT_USER_ID.name());
     private final RequestOptions OPTIONS = new RequestOptions()
             .diskCacheStrategy(DiskCacheStrategy.ALL)
             .centerCrop()
@@ -39,7 +48,7 @@ public class ShopCartAdapter extends
     }
 
     @Override
-    protected void convert(ShopCartViewHolder holder, MultipleItemEntity itemEntity) {
+    protected void convert(ShopCartViewHolder holder, final MultipleItemEntity itemEntity) {
         switch (holder.getItemViewType()) {
             case ItemType.SHOP_CART:
                 final int productId = itemEntity.getField(ShopCartDataField.PRODUCT_ID);
@@ -50,7 +59,7 @@ public class ShopCartAdapter extends
                 final double totalPrice = itemEntity.getField(ShopCartDataField.TOTAL_PRICE);
                 final double productPrice = itemEntity.getField(ShopCartDataField.PRODUCT_PRICE);
                 final int quantity = itemEntity.getField(ShopCartDataField.QUANTITY);
-                final int isChecked = itemEntity.getField(ShopCartDataField.IS_CHECKED);
+                final Integer isChecked = itemEntity.getField(ShopCartDataField.IS_CHECKED);
                 //取出控件
                 final AppCompatImageView imgThumb = holder.getView(R.id.image_item_shop_cart);
                 final AppCompatTextView tvTitle = holder.getView(R.id.tv_item_shop_cart_title);
@@ -60,9 +69,29 @@ public class ShopCartAdapter extends
                 final IconTextView iconPlus = holder.getView(R.id.icon_item_plus);
                 final AppCompatTextView tvCount = holder.getView(R.id.tv_item_shop_cart_count);
                 final IconTextView iconIsSelected = holder.getView(R.id.icon_item_shop_cart);
-                if (isChecked == 1) {//判断当前商品是否选中
+
+                if (isChecked == 1) {
+                    //判断当前商品是否选中
                     iconIsSelected.setTextColor(ContextCompat.getColor(DELEGATE.getContext(), R.color.app_title));
+                } else {
+                    iconIsSelected.setTextColor(Color.GRAY);
                 }
+                //添加选中的点击事件
+                iconIsSelected.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        final Integer currentSelect = itemEntity.getField(ShopCartDataField.IS_CHECKED);
+                        if (currentSelect == 1) {
+                            iconIsSelected.setTextColor(Color.GRAY);
+                            //TODO 请求服务器取消该商品的选择，请求参数：productId,userId
+                            clickChecked(productId, "app_un_select");
+                        } else {
+                            iconIsSelected.setTextColor(ContextCompat.getColor(DELEGATE.getContext(), R.color.app_title));
+                            //TODO 请求服务器选择该商品，请求参数：productId,userId
+                            clickChecked(productId, "app_select");
+                        }
+                    }
+                });
                 tvTitle.setText(name);
                 tvDesc.setText(subtitle);
                 tvPrice.setText("￥" + String.valueOf(productPrice));
@@ -71,10 +100,75 @@ public class ShopCartAdapter extends
                         .load(img)
                         .apply(OPTIONS)
                         .into(imgThumb);
+                //商品数量减一
+                iconMinus.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        final Integer currentCount = itemEntity.getField(ShopCartDataField.QUANTITY);
+                        //TODO 请求服务端数量减一，请求参数userId,productId,quantity
+                        Integer updateProductNum = currentCount - 1;
+                        uploadShopCartProductNum(updateProductNum, productId);
+                    }
+                });
+                //商品数量减一
+                iconPlus.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        final Integer currentCount = itemEntity.getField(ShopCartDataField.QUANTITY);
+                        //TODO 请求服务端数量加一
+                        Integer updateProductNum = currentCount + 1;
+                        uploadShopCartProductNum(updateProductNum, productId);
+                    }
+                });
                 break;
             default:
                 break;
         }
+    }
+
+    private void clickChecked(int productId, String url) {
+        RestClient.builder()
+                .url("app/shopcart/" + url)
+                .params("userId", userId)
+                .params("productId", productId)
+                .success(new ISuccess() {
+                    @Override
+                    public void onSuccess(String response) {
+                        final List<MultipleItemEntity> data =
+                                new ShopCartDataConverter().setJsonData(response).convert();
+                        //返回的新数据存储在全局回调中
+                        final IGlobalCallback<List<MultipleItemEntity>> callback =
+                                CallbackManager.getInstance().getCallback(CallbackType.SHOP_CART_PRODUCTS);
+                        if (callback != null) {
+                            callback.executeCallback(data);
+                        }
+                    }
+                })
+                .build()
+                .put();
+    }
+
+    private void uploadShopCartProductNum(Integer updateProductNum, Integer productId) {
+        RestClient.builder()
+                .url("app/shopcart/app_update_quantity")
+                .params("userId", userId)
+                .params("productId", productId)
+                .params("quantity", updateProductNum)
+                .success(new ISuccess() {
+                    @Override
+                    public void onSuccess(String response) {
+                        final List<MultipleItemEntity> data =
+                                new ShopCartDataConverter().setJsonData(response).convert();
+                        //返回的新数据存储在全局回调中
+                        final IGlobalCallback<List<MultipleItemEntity>> callback =
+                                CallbackManager.getInstance().getCallback(CallbackType.SHOP_CART_PRODUCTS);
+                        if (callback != null) {
+                            callback.executeCallback(data);
+                        }
+                    }
+                })
+                .build()
+                .put();
     }
 
     public class ShopCartViewHolder extends BaseViewHolder {
@@ -83,4 +177,6 @@ public class ShopCartAdapter extends
             super(view);
         }
     }
+
+
 }

@@ -9,5 +9,5 @@ public enum CallbackType {
     ON_CROP,
     IMAGES,
     CONTENT_PRODUCT_ID,
-
+    SHOP_CART_PRODUCTS
 }
