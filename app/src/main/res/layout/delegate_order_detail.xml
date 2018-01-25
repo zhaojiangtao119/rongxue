@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v7.widget.LinearLayoutCompat xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/topic_category"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:background="@android:color/holo_green_light">
+
+        <android.support.v7.widget.AppCompatTextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:text="@string/order_detail_title"
+            android:textColor="@android:color/black"
+            android:textSize="20sp" />
+    </android.support.v7.widget.Toolbar>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1">
+
+        <android.support.v7.widget.AppCompatTextView
+            android:id="@+id/tv_order_no"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="25dp"
+            android:layout_marginTop="10dp"
+            android:text="@string/order_no"
+            android:textColor="@android:color/darker_gray"
+            android:textSize="16sp" />
+
+        <android.support.v7.widget.AppCompatTextView
+            android:id="@+id/tv_order_no_value"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBaseline="@+id/tv_order_no"
+            android:layout_margin="10dp"
+            android:layout_toRightOf="@+id/tv_order_no"
+            android:text="123456789"
+            android:textColor="@android:color/black"
+            android:textSize="20sp" />
+
+        <android.support.v7.widget.AppCompatTextView
+            android:id="@+id/tv_order_payment"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignRight="@+id/tv_order_no"
+            android:layout_below="@+id/tv_order_no"
+            android:layout_marginTop="10dp"
+            android:text="@string/order_payment"
+            android:textColor="@android:color/darker_gray"
+            android:textSize="16sp" />
+
+        <android.support.v7.widget.AppCompatTextView
+            android:id="@+id/tv_order_payment_value"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBaseline="@+id/tv_order_payment"
+            android:layout_alignLeft="@+id/tv_order_no_value"
+            android:layout_margin="10dp"
+            android:layout_toRightOf="@+id/tv_order_payment"
+            android:text="￥123.00"
+            android:textColor="@android:color/black"
+            android:textSize="20sp" />
+    </RelativeLayout>
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/rv_order_product_item"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="3"
+        android:paddingTop="5dp" />
+
+    <android.support.v7.widget.LinearLayoutCompat
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:gravity="right|center_vertical">
+
+        <android.support.v7.widget.AppCompatButton
+            android:id="@+id/btn_cancel_order"
+            android:layout_width="100dp"
+            android:layout_height="40dp"
+            android:layout_marginRight="15dp"
+            android:background="@drawable/button_style"
+            android:gravity="center"
+            android:text="@string/order_cancel"
+            android:textColor="@android:color/black"
+            android:textSize="18sp" />
+
+        <android.support.v7.widget.AppCompatButton
+            android:id="@+id/btn_pay_order"
+            android:layout_width="100dp"
+            android:layout_height="40dp"
+            android:layout_marginRight="15dp"
+            android:background="@drawable/button_style"
+            android:gravity="center"
+            android:text="@string/order_pay"
+            android:textColor="@android:color/black"
+            android:textSize="18sp" />
+    </android.support.v7.widget.LinearLayoutCompat>
+
+
+</android.support.v7.widget.LinearLayoutCompat>

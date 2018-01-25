@@ -8,7 +8,6 @@ import android.support.v7.widget.AppCompatTextView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.ViewStubCompat;
-import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
@@ -17,8 +16,9 @@ import com.alibaba.fastjson.JSONObject;
 import com.joanzapata.iconify.widget.IconTextView;
 import com.labelwall.mywall.R;
 import com.labelwall.mywall.R2;
+import com.labelwall.mywall.delegates.base.WallDelegate;
 import com.labelwall.mywall.delegates.bottom.BottomItemDelegate;
-import com.labelwall.mywall.ui.recycler.DataConverter;
+import com.labelwall.mywall.main.cart.order.OrderDetailDelegate;
 import com.labelwall.mywall.ui.recycler.MultipleItemEntity;
 import com.labelwall.mywall.util.callback.CallbackManager;
 import com.labelwall.mywall.util.callback.CallbackType;
@@ -32,7 +32,6 @@ import com.labelwall.mywall.util.storage.WallTagType;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.WeakHashMap;
 
 import butterknife.BindView;
 import butterknife.OnClick;
@@ -42,7 +41,7 @@ import butterknife.OnClick;
  */
 
 public class ShopCartDelegate extends BottomItemDelegate
-        implements ISuccess, IAIPayResultListener {
+        implements ISuccess{
     private int mCurrentItemCount = 0;
     private int mTotalCount = 0;
 
@@ -213,12 +212,11 @@ public class ShopCartDelegate extends BottomItemDelegate
 
     @OnClick(R2.id.tv_shop_cart_pay)
     void onClickPay() {//结算购物车，创建订单
-        //请求服务器创建订单
         createOrder();
     }
 
     private void createOrder() {
-        //TODO 请求服务创建订单,返回订单号
+        //TODO 请求服务创建订单，跳转到生成的订单详情页面，在订单详情页面进行支付
         RestClient.builder()
                 .url("app/order/add")
                 .params("userId", mUserId)
@@ -226,13 +224,11 @@ public class ShopCartDelegate extends BottomItemDelegate
                     @Override
                     public void onSuccess(String response) {
                         final JSONObject data = JSON.parseObject(response);
-                        final Long mOrderNo = data.getLong("data");
-                        if (mOrderNo != null) {
-                            //进行具体的订单支付
-                            FastPay.create(ShopCartDelegate.this)
-                                    .setPayResultListener(ShopCartDelegate.this)
-                                    .setOrderId(mOrderNo)
-                                    .beginPayDialog();
+                        final Integer status = data.getInteger("status");
+                        if (status == 0) {//订单生成成功
+                            final WallDelegate wallDelegate = getParentDelegate();
+                            wallDelegate.getSupportDelegate().start(new OrderDetailDelegate(data));
+
                         }
                     }
                 })
@@ -292,31 +288,6 @@ public class ShopCartDelegate extends BottomItemDelegate
         mAdapter = new ShopCartAdapter(data, this);
         mRecyclerView.setAdapter(mAdapter);
         checkItemCount();
-    }
-
-    @Override
-    public void onPaySuccess() {
-
-    }
-
-    @Override
-    public void onPaying() {
-
-    }
-
-    @Override
-    public void onPayFail() {
-
-    }
-
-    @Override
-    public void onPayCancel() {
-
-    }
-
-    @Override
-    public void onPayConnectError() {
-
     }
 
     @Override

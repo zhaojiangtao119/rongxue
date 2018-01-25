@@ -15,6 +15,7 @@ public enum  ShopCartDataField {
     MAIN_IMAGE,
     IS_CHECKED,
     PRODUCT_ID,
-    POSITION
+    POSITION,
+    PRODUCT_TOTAL_PRICE
 
 }
