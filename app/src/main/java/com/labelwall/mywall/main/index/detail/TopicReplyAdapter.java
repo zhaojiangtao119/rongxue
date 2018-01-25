@@ -45,5 +45,4 @@ public class TopicReplyAdapter extends BaseMultiItemQuickAdapter<MultipleItemEnt
     protected void convert(TopicReplyViewHolder holder, MultipleItemEntity itemEntity) {
         holder.bindData(mContext, holder, itemEntity);
     }
-
 }

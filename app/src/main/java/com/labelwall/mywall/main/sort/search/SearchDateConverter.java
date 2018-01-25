@@ -16,12 +16,12 @@ import java.util.ArrayList;
 public class SearchDateConverter extends DataConverter {
 
     //保存搜索历史记录
-    private static final String TAG_SEARCH_HISTORY = "search_history";
+    public static final String TAG_SEARCH_HISTORY = "search_history";
 
     @Override
     public ArrayList<MultipleItemEntity> convert() {
         final String jsonStr = WallPreference.getCustomAppProfile(TAG_SEARCH_HISTORY);
-        if (jsonStr.equals("")) {
+        if (!jsonStr.equals("")) {
             final JSONArray array = JSON.parseArray(jsonStr);
             final int size = array.size();
             for (int i = 0; i < size; i++) {
