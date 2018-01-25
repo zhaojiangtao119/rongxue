@@ -14,6 +14,8 @@ import com.labelwall.mywall.main.sort.content.ContentDelegate;
 import com.labelwall.mywall.ui.recycler.ItemType;
 import com.labelwall.mywall.ui.recycler.MultipleFields;
 import com.labelwall.mywall.ui.recycler.MultipleItemEntity;
+import com.labelwall.mywall.ui.recycler.MultipleRecyclerViewAdapter;
+import com.labelwall.mywall.ui.recycler.MultipleRecyclerViewHolder;
 import com.labelwall.mywall.util.callback.CallbackManager;
 import com.labelwall.mywall.util.callback.CallbackType;
 import com.labelwall.mywall.util.callback.IGlobalCallback;
@@ -26,7 +28,7 @@ import me.yokeyword.fragmentation.SupportHelper;
  * Created by Administrator on 2018-01-19.
  */
 
-public class CategoryAdapter extends BaseMultiItemQuickAdapter<MultipleItemEntity, CategoryViewHolder> {
+public class CategoryAdapter extends MultipleRecyclerViewAdapter {
 
     private final SortDelegate DELEGATE;
     private AppCompatEditText mProductKeyword;
@@ -43,7 +45,8 @@ public class CategoryAdapter extends BaseMultiItemQuickAdapter<MultipleItemEntit
     }
 
     @Override
-    protected void convert(final CategoryViewHolder holder, final MultipleItemEntity itemEntity) {
+    protected void convert(MultipleRecyclerViewHolder holder, final MultipleItemEntity itemEntity) {
+        super.convert(holder, itemEntity);
         switch (holder.getItemViewType()) {
             case ItemType.VERTICAL_MENU_LIST:
                 final String name = itemEntity.getField(CategoryListField.NAME);

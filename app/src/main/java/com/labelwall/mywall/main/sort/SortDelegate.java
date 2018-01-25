@@ -12,6 +12,7 @@ import com.labelwall.mywall.R2;
 import com.labelwall.mywall.delegates.bottom.BottomItemDelegate;
 import com.labelwall.mywall.main.sort.content.ContentDelegate;
 import com.labelwall.mywall.main.sort.list.VerticalListDelegate;
+import com.labelwall.mywall.main.sort.search.SearchDelegate;
 import com.labelwall.mywall.util.callback.CallbackManager;
 import com.labelwall.mywall.util.callback.CallbackType;
 import com.labelwall.mywall.util.callback.IGlobalCallback;
@@ -23,7 +24,7 @@ import butterknife.OnClick;
  * Created by Administrator on 2018-01-04.
  */
 
-public class SortDelegate extends BottomItemDelegate {
+public class SortDelegate extends BottomItemDelegate implements View.OnFocusChangeListener {
 
     @BindView(R2.id.product_keyword)
     AppCompatEditText mProductKeyword = null;
@@ -74,6 +75,8 @@ public class SortDelegate extends BottomItemDelegate {
                 Toast.makeText(_mActivity, "扫描结果：" + args, Toast.LENGTH_SHORT).show();
             }
         });
+        //searchView的点击事件
+        mProductKeyword.setOnFocusChangeListener(this);
     }
 
     @Override
@@ -82,5 +85,13 @@ public class SortDelegate extends BottomItemDelegate {
         final VerticalListDelegate verticalListDelegate = new VerticalListDelegate();
         getSupportDelegate().loadRootFragment(R.id.vertical_list_container, verticalListDelegate);
         getSupportDelegate().loadRootFragment(R.id.sort_content_container, ContentDelegate.newInstance(0, mKeyword));
+    }
+
+    @Override
+    public void onFocusChange(View v, boolean hasFocus) {
+        /*if (hasFocus) {//搜索框已经进入焦点模式
+            //开启searchDelegate
+            getParentDelegate().getSupportDelegate().start(new SearchDelegate());
+        }*/
     }
 }

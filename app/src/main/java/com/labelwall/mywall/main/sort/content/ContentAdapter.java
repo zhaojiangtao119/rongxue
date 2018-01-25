@@ -15,6 +15,8 @@ import com.labelwall.mywall.ui.recycler.DataConverter;
 import com.labelwall.mywall.ui.recycler.ItemType;
 import com.labelwall.mywall.ui.recycler.MultipleFields;
 import com.labelwall.mywall.ui.recycler.MultipleItemEntity;
+import com.labelwall.mywall.ui.recycler.MultipleRecyclerViewAdapter;
+import com.labelwall.mywall.ui.recycler.MultipleRecyclerViewHolder;
 
 import java.util.List;
 
@@ -22,7 +24,7 @@ import java.util.List;
  * Created by Administrator on 2018-01-20.
  */
 
-public class ContentAdapter extends BaseMultiItemQuickAdapter<MultipleItemEntity, ContentAdapter.ContentViewHolder> {
+public class ContentAdapter extends MultipleRecyclerViewAdapter {
 
     private final WallDelegate DELEGATE;
     private RequestOptions OPTIONS = new RequestOptions()
@@ -41,7 +43,8 @@ public class ContentAdapter extends BaseMultiItemQuickAdapter<MultipleItemEntity
     }
 
     @Override
-    protected void convert(ContentViewHolder helper, MultipleItemEntity item) {
+    protected void convert(MultipleRecyclerViewHolder helper, MultipleItemEntity item) {
+        super.convert(helper, item);
         switch (helper.getItemViewType()) {
             case ItemType.PRODUCT_CONTENT:
                 final int productId = item.getField(MultipleFields.ID);
@@ -66,12 +69,4 @@ public class ContentAdapter extends BaseMultiItemQuickAdapter<MultipleItemEntity
                 break;
         }
     }
-
-    public class ContentViewHolder extends BaseViewHolder {
-
-        public ContentViewHolder(View view) {
-            super(view);
-        }
-    }
-
 }

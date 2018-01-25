@@ -15,6 +15,8 @@ import com.labelwall.mywall.delegates.base.WallDelegate;
 import com.labelwall.mywall.main.cart.ShopCartDataField;
 import com.labelwall.mywall.ui.recycler.ItemType;
 import com.labelwall.mywall.ui.recycler.MultipleItemEntity;
+import com.labelwall.mywall.ui.recycler.MultipleRecyclerViewAdapter;
+import com.labelwall.mywall.ui.recycler.MultipleRecyclerViewHolder;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -23,7 +25,7 @@ import java.util.List;
  * Created by Administrator on 2018-01-25.
  */
 
-public class OrderProductAdapter extends BaseMultiItemQuickAdapter<MultipleItemEntity, OrderProductAdapter.OrderProductViewHolder> {
+public class OrderProductAdapter extends MultipleRecyclerViewAdapter {
 
     private final WallDelegate DELEGATE;
 
@@ -39,7 +41,8 @@ public class OrderProductAdapter extends BaseMultiItemQuickAdapter<MultipleItemE
     }
 
     @Override
-    protected void convert(OrderProductViewHolder helper, MultipleItemEntity item) {
+    protected void convert(MultipleRecyclerViewHolder helper, MultipleItemEntity item) {
+        super.convert(helper, item);
         switch (helper.getItemViewType()) {
             case ItemType.ORDER_PRODUCT:
                 final int productId = item.getField(ShopCartDataField.PRODUCT_ID);
@@ -68,12 +71,4 @@ public class OrderProductAdapter extends BaseMultiItemQuickAdapter<MultipleItemE
                 break;
         }
     }
-
-    public class OrderProductViewHolder extends BaseViewHolder {
-
-        public OrderProductViewHolder(View view) {
-            super(view);
-        }
-    }
-
 }

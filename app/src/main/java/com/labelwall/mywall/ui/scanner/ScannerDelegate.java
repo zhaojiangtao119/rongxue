@@ -9,6 +9,7 @@ import com.labelwall.mywall.ui.camera.RequestCode;
 import com.labelwall.mywall.util.callback.CallbackManager;
 import com.labelwall.mywall.util.callback.CallbackType;
 import com.labelwall.mywall.util.callback.IGlobalCallback;
+import com.labelwall.mywall.util.log.WallLogger;
 
 import me.dm7.barcodescanner.zbar.Result;
 import me.dm7.barcodescanner.zbar.ZBarScannerView;
@@ -62,6 +63,7 @@ public class ScannerDelegate extends WallDelegate implements ZBarScannerView.Res
 
     @Override
     public void handleResult(Result result) {
+        WallLogger.e("扫描结果：", result.getContents());
         @SuppressWarnings("unchecked")
         final IGlobalCallback<String> callback = CallbackManager
                 .getInstance()

@@ -9,4 +9,5 @@ public enum MultipleFields {
     ID,
     ITEM_TYPE,
     TAG,
+    TEXT,
 }

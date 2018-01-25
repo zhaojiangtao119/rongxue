@@ -16,6 +16,8 @@ import com.labelwall.mywall.R;
 import com.labelwall.mywall.ui.recycler.ItemType;
 import com.labelwall.mywall.ui.recycler.MultipleFields;
 import com.labelwall.mywall.ui.recycler.MultipleItemEntity;
+import com.labelwall.mywall.ui.recycler.MultipleRecyclerViewAdapter;
+import com.labelwall.mywall.ui.recycler.MultipleRecyclerViewHolder;
 import com.labelwall.mywall.util.callback.CallbackManager;
 import com.labelwall.mywall.util.callback.CallbackType;
 import com.labelwall.mywall.util.callback.IGlobalCallback;
@@ -30,8 +32,7 @@ import java.util.List;
  * Created by Administrator on 2018-01-23.
  */
 
-public class ShopCartAdapter extends
-        BaseMultiItemQuickAdapter<MultipleItemEntity, ShopCartAdapter.ShopCartViewHolder> {
+public class ShopCartAdapter extends MultipleRecyclerViewAdapter{
 
     private final ShopCartDelegate DELEGATE;
     final long userId = WallPreference.getCurrentUserId(WallTagType.CURRENT_USER_ID.name());
@@ -47,7 +48,8 @@ public class ShopCartAdapter extends
     }
 
     @Override
-    protected void convert(ShopCartViewHolder holder, final MultipleItemEntity itemEntity) {
+    protected void convert(MultipleRecyclerViewHolder holder, final MultipleItemEntity itemEntity) {
+        super.convert(holder, itemEntity);
         switch (holder.getItemViewType()) {
             case ItemType.SHOP_CART:
                 final int productId = itemEntity.getField(ShopCartDataField.PRODUCT_ID);
@@ -172,12 +174,5 @@ public class ShopCartAdapter extends
                 })
                 .build()
                 .put();
-    }
-
-    public class ShopCartViewHolder extends BaseViewHolder {
-
-        public ShopCartViewHolder(View view) {
-            super(view);
-        }
     }
 }
