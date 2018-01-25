@@ -150,7 +150,7 @@ public class AutoPhotoLayout extends LinearLayoutCompat {
                 if (window != null) {
                     window.setContentView(R.layout.dialog_image_click_panel);
                     window.setGravity(Gravity.BOTTOM);
-                    window.setWindowAnimations(R.style.anim_panel_up_from_buttom);
+                    window.setWindowAnimations(R.style.anim_panel_up_from_bottom);
                     window.setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
                     final WindowManager.LayoutParams params = window.getAttributes();
                     params.width = WindowManager.LayoutParams.MATCH_PARENT;

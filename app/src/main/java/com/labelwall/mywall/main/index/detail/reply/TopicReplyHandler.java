@@ -37,7 +37,7 @@ public class TopicReplyHandler implements View.OnClickListener {
         if (window != null) {
             window.setContentView(R.layout.dialog_create_topic_reply);
             window.setGravity(Gravity.BOTTOM);
-            window.setWindowAnimations(R.style.anim_panel_up_from_buttom);
+            window.setWindowAnimations(R.style.anim_panel_up_from_bottom);
             window.setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
 
             //设置对话框属性

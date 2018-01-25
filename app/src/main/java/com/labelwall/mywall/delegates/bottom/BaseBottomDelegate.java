@@ -50,6 +50,10 @@ public abstract class BaseBottomDelegate extends WallDelegate implements View.On
     @ColorInt
     public abstract int setClickedColor();
 
+    public ArrayList<BottomItemDelegate> getItemDelegates() {
+        return ITEM_DELEGATES;
+    }
+
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

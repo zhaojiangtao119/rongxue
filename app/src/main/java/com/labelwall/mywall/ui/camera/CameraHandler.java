@@ -43,7 +43,7 @@ public class CameraHandler implements View.OnClickListener {
             //设置对话框样式
             window.setContentView(R.layout.dialog_camera_panel);
             window.setGravity(Gravity.BOTTOM);
-            window.setWindowAnimations(R.style.anim_panel_up_from_buttom);
+            window.setWindowAnimations(R.style.anim_panel_up_from_bottom);
             window.setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));//背景透明
             //设置属性
             final WindowManager.LayoutParams params = window.getAttributes();

@@ -20,9 +20,10 @@
     </style>
 
     <!--dialog进入与消失的动画-->
-    <style name="anim_panel_up_from_buttom" parent="@android:style/Animation">
+    <style name="anim_panel_up_from_bottom" parent="@android:style/Animation">
         <item name="android:windowEnterAnimation">@anim/push_bottom_in</item>
         <item name="android:windowExitAnimation">@anim/push_bottom_out</item>
     </style>
+
 
 </resources>
