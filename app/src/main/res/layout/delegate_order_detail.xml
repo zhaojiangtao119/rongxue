@@ -7,14 +7,15 @@
     <android.support.v7.widget.Toolbar
         android:id="@+id/topic_category"
         android:layout_width="match_parent"
-        android:layout_height="40dp"
+        android:layout_height="60dp"
         android:background="@android:color/holo_green_light">
 
         <android.support.v7.widget.AppCompatTextView
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:layout_gravity="center"
-            android:gravity="center"
+            android:layout_marginBottom="5dp"
+            android:gravity="bottom"
             android:text="@string/order_detail_title"
             android:textColor="@android:color/black"
             android:textSize="20sp" />

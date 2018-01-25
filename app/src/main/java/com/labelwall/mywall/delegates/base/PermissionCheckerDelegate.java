@@ -5,6 +5,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
+import android.os.Bundle;
 import android.preference.DialogPreference;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
@@ -15,6 +16,7 @@ import android.widget.Toast;
 import com.labelwall.mywall.ui.camera.CameraImageBean;
 import com.labelwall.mywall.ui.camera.RequestCode;
 import com.labelwall.mywall.ui.camera.WallCamera;
+import com.labelwall.mywall.ui.scanner.ScannerDelegate;
 import com.labelwall.mywall.util.callback.CallbackManager;
 import com.labelwall.mywall.util.callback.CallbackType;
 import com.labelwall.mywall.util.callback.IGlobalCallback;
@@ -46,6 +48,16 @@ public abstract class PermissionCheckerDelegate extends BaseDelegate {
         PermissionCheckerDelegatePermissionsDispatcher.startCameraWithCheck(this);//请求相机的权限
         PermissionCheckerDelegatePermissionsDispatcher.checkWriteWithCheck(this);//请求sd卡写权限
         PermissionCheckerDelegatePermissionsDispatcher.checkRedWithCheck(this);//请求sd卡的读权限
+    }
+
+    //扫描二维码（不直接调用）
+    @NeedsPermission(Manifest.permission.CAMERA)
+    void startScan(BaseDelegate delegate) {
+        delegate.getSupportDelegate().startForResult(new ScannerDelegate(), RequestCode.SCAN);
+    }
+
+    public void startScanWithCheck(BaseDelegate delegate) {
+        PermissionCheckerDelegatePermissionsDispatcher.startScanWithCheck(this, delegate);
     }
 
     @OnPermissionDenied(Manifest.permission.CAMERA)
@@ -117,6 +129,7 @@ public abstract class PermissionCheckerDelegate extends BaseDelegate {
                     //剪裁的回调处理（全局的回调），将剪裁的图片存储在全局的回调中
                     final Uri cropUri = UCrop.getOutput(data);
                     //将剪裁的图片uri存储在全局的回调中
+                    @SuppressWarnings("unchecked")
                     final IGlobalCallback<Uri> callback = CallbackManager
                             .getInstance()
                             .getCallback(CallbackType.ON_CROP);
@@ -130,7 +143,6 @@ public abstract class PermissionCheckerDelegate extends BaseDelegate {
                 default:
                     break;
             }
-
         }
     }
 
@@ -141,7 +153,6 @@ public abstract class PermissionCheckerDelegate extends BaseDelegate {
 
     @NeedsPermission(Manifest.permission.READ_EXTERNAL_STORAGE)
     void checkRed() {
-
     }
 
     @OnPermissionDenied(Manifest.permission.WRITE_EXTERNAL_STORAGE)

@@ -114,4 +114,6 @@ dependencies {
 
     //支付宝的架包
     compile files('libs/alipaySdk-20161222.jar')
+    //二维码扫描
+    compile 'me.dm7.barcodescanner:zbar:1.9.8'
 }

@@ -128,6 +128,15 @@ public abstract class BaseBottomDelegate extends WallDelegate implements View.On
         }
     }
 
+    public void changeColor(int tabIndex) {
+        resetColor();
+        final RelativeLayout item = (RelativeLayout) mBottomBar.getChildAt(tabIndex);
+        final IconTextView itemIcon = (IconTextView) item.getChildAt(0);
+        itemIcon.setTextColor(mClickedColor);
+        final AppCompatTextView itemTitle = (AppCompatTextView) item.getChildAt(1);
+        itemTitle.setTextColor(mClickedColor);
+    }
+
     @Override
     public void onClick(View v) {
         final int tag = (int) v.getTag();//获取当前被点击view的tag标识

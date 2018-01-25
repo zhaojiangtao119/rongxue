@@ -14,11 +14,17 @@ import com.alibaba.fastjson.JSONObject;
 import com.labelwall.mywall.R;
 import com.labelwall.mywall.R2;
 import com.labelwall.mywall.delegates.base.WallDelegate;
+import com.labelwall.mywall.delegates.bottom.BottomItemDelegate;
+import com.labelwall.mywall.main.WallBottomDelegate;
 import com.labelwall.mywall.main.cart.ShopCartDataField;
 import com.labelwall.mywall.ui.recycler.ItemType;
 import com.labelwall.mywall.ui.recycler.MultipleItemEntity;
+import com.labelwall.mywall.util.net.RestClient;
+import com.labelwall.mywall.util.net.callback.ISuccess;
 import com.labelwall.mywall.util.pay.FastPay;
 import com.labelwall.mywall.util.pay.IAIPayResultListener;
+import com.labelwall.mywall.util.storage.WallPreference;
+import com.labelwall.mywall.util.storage.WallTagType;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -46,10 +52,31 @@ public class OrderDetailDelegate extends WallDelegate implements IAIPayResultLis
     private final JSONObject ORDERINFO;
     private OrderProductAdapter mAdapter = null;
     private Long mOrderNo = null;
+    private final long USER_ID = WallPreference.getCurrentUserId(WallTagType.CURRENT_USER_ID.name());
 
     @OnClick(R2.id.btn_cancel_order)
     void onClickCancelOrder() {
-        //取消订单
+        //取消订单，orderNo，userId
+        RestClient.builder()
+                .url("")
+                .params("orderNo", mOrderNo)
+                .params("userId", USER_ID)
+                .success(new ISuccess() {
+                    @Override
+                    public void onSuccess(String response) {
+                        //取消订单后，跳转到购物车先
+                        final int shopCartTab = 3;
+                        final WallBottomDelegate wallBottomDelegate = getParentDelegate();
+                        final BottomItemDelegate shopCartDelegate =
+                                wallBottomDelegate.getItemDelegates().get(shopCartTab);
+                        wallBottomDelegate.getSupportDelegate()
+                                .showHideFragment(shopCartDelegate, OrderDetailDelegate.this);
+                        wallBottomDelegate.changeColor(shopCartTab);
+                    }
+                })
+                .build()
+                .put();
+
     }
 
     @OnClick(R2.id.btn_pay_order)

@@ -18,6 +18,7 @@ import com.labelwall.mywall.R;
 import com.labelwall.mywall.R2;
 import com.labelwall.mywall.delegates.base.WallDelegate;
 import com.labelwall.mywall.delegates.bottom.BottomItemDelegate;
+import com.labelwall.mywall.main.WallBottomDelegate;
 import com.labelwall.mywall.main.cart.order.OrderDetailDelegate;
 import com.labelwall.mywall.ui.recycler.MultipleItemEntity;
 import com.labelwall.mywall.util.callback.CallbackManager;
@@ -190,17 +191,25 @@ public class ShopCartDelegate extends BottomItemDelegate
                 }
             });
             if (!mStubIsInflate) {
-                //只能初始化一次mStubNoItem.inflate();
-                final View stubView = mStubNoItem.inflate();
-                final AppCompatTextView tvToBye =
-                        (AppCompatTextView) stubView.findViewById(R.id.tv_stub_to_buy);
-                tvToBye.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        //TODO
-                        Toast.makeText(getContext(), "要去购物", Toast.LENGTH_SHORT).show();
-                    }
-                });
+                    //只能初始化一次mStubNoItem.inflate();
+                    final View stubView = mStubNoItem.inflate();
+                    final AppCompatTextView tvToBye =
+                            (AppCompatTextView) stubView.findViewById(R.id.tv_stub_to_buy);
+                    tvToBye.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            //TODO
+                            //Toast.makeText(getContext(), "要去购物", Toast.LENGTH_SHORT).show();
+                            //跳转到商品页面
+                            final int sortTab = 1;
+                            final WallBottomDelegate wallBottomDelegate = getParentDelegate();
+                            final BottomItemDelegate sortDelegate = wallBottomDelegate.getItemDelegates().get(sortTab);
+                            wallBottomDelegate
+                                    .getSupportDelegate()
+                                    .showHideFragment(sortDelegate, ShopCartDelegate.this);
+                            wallBottomDelegate.changeColor(sortTab);
+                        }
+                    });
             }
             mStubNoItem.setVisibility(View.VISIBLE);
             mRecyclerView.setVisibility(View.GONE);

@@ -5,6 +5,7 @@ import android.support.annotation.Nullable;
 import android.support.v7.widget.AppCompatEditText;
 import android.util.Log;
 import android.view.View;
+import android.widget.Toast;
 
 import com.labelwall.mywall.R;
 import com.labelwall.mywall.R2;
@@ -29,6 +30,11 @@ public class SortDelegate extends BottomItemDelegate {
 
     private int mContentId = -1;
     private String mKeyword = null;
+
+    @OnClick(R2.id.icon_sort_scan)
+    void onClickScanQrCode() {//启动二维码扫描
+        startScanWithCheck(this.getParentDelegate());
+    }
 
     @OnClick(R2.id.product_keyword_search)
     void onClickProductSearch() {
@@ -61,7 +67,13 @@ public class SortDelegate extends BottomItemDelegate {
 
     @Override
     public void onBindView(@Nullable Bundle savedInstanceState, View rootView) {
-
+        //二维码扫描结果的回调
+        CallbackManager.getInstance().addCallback(CallbackType.ON_SCAN, new IGlobalCallback<String>() {
+            @Override
+            public void executeCallback(String args) {
+                Toast.makeText(_mActivity, "扫描结果：" + args, Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
     @Override
