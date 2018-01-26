@@ -69,7 +69,8 @@
                 android:layout_marginLeft="10dp"
                 android:gravity="center"
                 android:text="{fa-chevron-right}"
-                android:textColor="@android:color/darker_gray" />
+                android:textColor="@android:color/darker_gray"
+                />
         </RelativeLayout>
 
         <LinearLayout

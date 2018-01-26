@@ -11,6 +11,7 @@ import android.view.View;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.RequestOptions;
+import com.joanzapata.iconify.widget.IconTextView;
 import com.labelwall.mywall.R;
 import com.labelwall.mywall.R2;
 import com.labelwall.mywall.database.DataBaseManager;
@@ -19,6 +20,7 @@ import com.labelwall.mywall.delegates.bottom.BottomItemDelegate;
 import com.labelwall.mywall.main.user.list.ListAdapter;
 import com.labelwall.mywall.main.user.list.ListBean;
 import com.labelwall.mywall.main.user.list.ListItemType;
+import com.labelwall.mywall.main.user.order.OrderListDelegate;
 import com.labelwall.mywall.main.user.profile.UserProfileDelegate;
 import com.labelwall.mywall.main.user.settings.SettingsDelegate;
 import com.labelwall.mywall.ui.camera.CameraHandler;
@@ -42,13 +44,13 @@ import de.hdodenhof.circleimageview.CircleImageView;
 public class UserDelegate extends BottomItemDelegate {
 
     @BindView(R2.id.img_user_avatar)
-    CircleImageView mUserAvatar;
+    CircleImageView mUserAvatar = null;
     @BindView(R2.id.tv_user_name)
-    AppCompatTextView mUsername;
+    AppCompatTextView mUsername = null;
     @BindView(R2.id.rv_personal_setting)
-    RecyclerView mRecyclerView;
+    RecyclerView mRecyclerView = null;
 
-    private long mUserId = -1l;
+    private long mUserId = WallPreference.getCurrentUserId(WallTagType.CURRENT_USER_ID.name());
     private UserProfile mUserProfile = null;
 
     private static final RequestOptions OPTIONS = new RequestOptions()
@@ -68,6 +70,11 @@ public class UserDelegate extends BottomItemDelegate {
                         .into(mUserAvatar);
             }
         });
+    }
+
+    @OnClick(R2.id.tc_all_account_arrow)
+    void onClickOrderList() {
+        getParentDelegate().getSupportDelegate().start(new OrderListDelegate());
     }
 
     @Override
@@ -95,7 +102,6 @@ public class UserDelegate extends BottomItemDelegate {
     }
 
     private void findCurrentUserProfile() {
-        mUserId = WallPreference.getCurrentUserId(WallTagType.CURRENT_USER_ID.name());
         if (mUserId != -1) {
             //greenDao中获取用户信息
             List<UserProfile> userProfileList = DataBaseManager

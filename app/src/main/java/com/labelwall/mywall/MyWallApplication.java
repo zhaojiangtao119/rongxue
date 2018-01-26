@@ -37,7 +37,7 @@ public class MyWallApplication extends Application {
                 .withIcon(new FontAwesomeModule())//font awesome Module
                 .withIcon(new FontEcModule())//自定义的字体图标
                 .withInterceptor(new DebugInterceptor("location", R.raw.test))
-                .withApiHost("http://4j9juf.natappfree.cc/zhaopin/")
+                .withApiHost("http://ykkg59.natappfree.cc/zhaopin/")
                 .configure();
         //初始化数据库
         DataBaseManager.getInstance().init(this);

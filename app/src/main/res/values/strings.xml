@@ -59,4 +59,7 @@
     <string name="order_payment">应付金额</string>
     <string name="order_cancel">取消订单</string>
     <string name="order_pay">付款</string>
+
+    <!--order list-->
+    <string name="order_list_title">订单列表</string>
 </resources>
