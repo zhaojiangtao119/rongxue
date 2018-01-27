@@ -17,6 +17,7 @@ import com.labelwall.mywall.R2;
 import com.labelwall.mywall.database.DataBaseManager;
 import com.labelwall.mywall.database.UserProfile;
 import com.labelwall.mywall.delegates.bottom.BottomItemDelegate;
+import com.labelwall.mywall.main.user.address.AdressDelegate;
 import com.labelwall.mywall.main.user.list.ListAdapter;
 import com.labelwall.mywall.main.user.list.ListBean;
 import com.labelwall.mywall.main.user.list.ListItemType;
@@ -73,7 +74,7 @@ public class UserDelegate extends BottomItemDelegate {
     }
 
     @OnClick(R2.id.tc_all_account_arrow)
-    void onClickOrderList() {
+    void onClickOrderList() {//加载所有的订单
         getParentDelegate().getSupportDelegate().start(new OrderListDelegate());
     }
 
@@ -135,6 +136,7 @@ public class UserDelegate extends BottomItemDelegate {
                 .setItemType(ListItemType.ITEM_NORMAL_NO_HINT)
                 .setId(UserSettingItem.ADDRESS)
                 .setText(UserSettingItem.ADDRESS_VALUE)
+                .setDelegate(new AdressDelegate())
                 .build();
         final ListBean systems = new ListBean.builder()
                 .setItemType(ListItemType.ITEM_NORMAL_NO_HINT)

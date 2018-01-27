@@ -33,7 +33,7 @@ public class UserClickListener extends SimpleClickListener {
                 DELEGATE.getParentDelegate().getSupportDelegate().start(bean.getDelegate());
                 break;
             case UserSettingItem.ADDRESS:
-                //DELEGATE.getParentDelegate().getSupportDelegate().start(null);
+                DELEGATE.getParentDelegate().getSupportDelegate().start(bean.getDelegate());
                 break;
             case UserSettingItem.SYSTEM:
                 DELEGATE.getParentDelegate().getSupportDelegate().start(bean.getDelegate());

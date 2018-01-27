@@ -14,4 +14,5 @@ public class ItemType {
     public static final int SHOP_CART = 6;
     public static final int ORDER_PRODUCT = 7;
     public static final int ORDER_LIST = 8;
+    public static final int ADDRESS_LIST = 9;
 }

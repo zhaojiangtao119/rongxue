@@ -62,4 +62,13 @@
 
     <!--order list-->
     <string name="order_list_title">订单列表</string>
+
+    <!--address list-->
+    <string name="address_list_title">地址列表</string>
+    <string name="address_name">姓名</string>
+    <string name="address_phone">电话</string>
+    <string name="address_mobile">手机</string>
+    <string name="address_location">区域</string>
+    <string name="address_detail">地址</string>
+    <string name="address_zip">邮政</string>
 </resources>
