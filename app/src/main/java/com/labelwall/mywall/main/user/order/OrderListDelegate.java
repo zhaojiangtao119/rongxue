@@ -63,7 +63,7 @@ public class OrderListDelegate extends WallDelegate {
                     public void onSuccess(String response) {
                         final List<MultipleItemEntity> data =
                                 new OrderListDataConverter().setJsonData(response).convert();
-                        final OrderListAdapter adapter = new OrderListAdapter(data);
+                        final OrderListAdapter adapter = new OrderListAdapter(data, OrderListDelegate.this);
                         mRecyclerView.setAdapter(adapter);
                     }
                 })

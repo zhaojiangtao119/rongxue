@@ -1,5 +1,7 @@
 package com.labelwall.mywall.main.user.address;
 
+import android.content.DialogInterface;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.AppCompatRadioButton;
 import android.support.v7.widget.AppCompatTextView;
 import android.view.View;
@@ -73,7 +75,23 @@ public class AddressAdapter extends MultipleRecyclerViewAdapter {
                     @Override
                     public void onClick(View v) {
                         //删除地址
-                        deleteAddress(helper, id);
+                        final AlertDialog alertDialog = new AlertDialog.Builder(DELEGATE.getContext()).create();
+                        alertDialog.setTitle("删除收货地址");
+                        alertDialog.setMessage("是否删除？");
+                        alertDialog.setButton(DialogInterface.BUTTON_POSITIVE, "确定", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                deleteAddress(helper, id);
+                            }
+                        });
+                        alertDialog.setButton(DialogInterface.BUTTON_NEGATIVE, "取消", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+
+                            }
+                        });
+                        alertDialog.show();
+
                     }
                 });
                 //选中按钮

@@ -48,6 +48,8 @@ public class OrderDetailDelegate extends WallDelegate implements IAIPayResultLis
     AppCompatTextView mOrderPayment = null;
     @BindView(R2.id.rv_order_product_item)
     RecyclerView mRecyclerView = null;
+    @BindView(R2.id.tv_order_status_value)
+    AppCompatTextView mOrderStatus = null;
 
     private final JSONObject ORDERINFO;
     private OrderProductAdapter mAdapter = null;
@@ -78,7 +80,6 @@ public class OrderDetailDelegate extends WallDelegate implements IAIPayResultLis
                 .put();
 
     }
-
     @OnClick(R2.id.btn_pay_order)
     void onClickPayOrder() {
         //支付订单
@@ -124,6 +125,8 @@ public class OrderDetailDelegate extends WallDelegate implements IAIPayResultLis
             final BigDecimal orderPayment = orderVo.getBigDecimal("payment");
             mTVOrderNo.setText(String.valueOf(mOrderNo));
             mOrderPayment.setText("￥" + String.valueOf(orderPayment));
+            final String orderStatus = orderVo.getString("statusDesc");
+            mOrderStatus.setText(orderStatus);
 
             final JSONArray orderProductItem = orderVo.getJSONArray("orderItemVoList");
             bindOrderProductData(orderProductItem);
