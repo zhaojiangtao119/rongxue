@@ -201,6 +201,8 @@ public class ProductDetailDelegate extends WallDelegate implements
         mTabLayout.setTabTextColors(ColorStateList.valueOf(Color.BLACK));
         mTabLayout.setBackgroundColor(Color.WHITE);
         mTabLayout.setupWithViewPager(mViewPager);//关联viewPager
+        mTabLayout.addTab(mTabLayout.newTab().setText("商品详情"));
+        mTabLayout.addTab(mTabLayout.newTab().setText("商品配置"));
     }
 
     @Override

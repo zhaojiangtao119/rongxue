@@ -60,7 +60,7 @@ public class TopicDetailRefreshHandler implements
     private void onSubmitTopicReply(String content) {
         final long userId = WallPreference.getCurrentUserId(WallTagType.CURRENT_USER_ID.name());
         RestClient.builder()
-                .url("topic/app_publish_post_reply")
+                .url("app/topic/app_publish_post_reply")
                 .params("userId", userId)
                 .params("topicPostId", TOPIC_ID)
                 .params("content", content)

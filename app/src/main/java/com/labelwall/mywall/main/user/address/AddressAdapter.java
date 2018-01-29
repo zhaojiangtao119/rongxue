@@ -1,6 +1,8 @@
 package com.labelwall.mywall.main.user.address;
 
 import android.content.DialogInterface;
+import android.graphics.Color;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.AppCompatRadioButton;
 import android.support.v7.widget.AppCompatTextView;
@@ -8,6 +10,7 @@ import android.view.View;
 import android.widget.CompoundButton;
 import android.widget.Toast;
 
+import com.joanzapata.iconify.widget.IconTextView;
 import com.labelwall.mywall.R;
 import com.labelwall.mywall.delegates.base.WallDelegate;
 import com.labelwall.mywall.ui.recycler.ItemType;
@@ -32,6 +35,7 @@ public class AddressAdapter extends MultipleRecyclerViewAdapter {
 
     private final WallDelegate DELEGATE;
     private final long USER_ID = WallPreference.getCurrentUserId(WallTagType.CURRENT_USER_ID.name());
+    private int mProPosition = 0;
 
     public AddressAdapter(List<MultipleItemEntity> data, WallDelegate delegate) {
         super(data);
@@ -40,7 +44,7 @@ public class AddressAdapter extends MultipleRecyclerViewAdapter {
     }
 
     @Override
-    protected void convert(final MultipleRecyclerViewHolder helper, MultipleItemEntity item) {
+    protected void convert(final MultipleRecyclerViewHolder helper, final MultipleItemEntity item) {
         super.convert(helper, item);
         switch (helper.getItemViewType()) {
             case ItemType.ADDRESS_LIST:
@@ -51,7 +55,7 @@ public class AddressAdapter extends MultipleRecyclerViewAdapter {
                 final AppCompatTextView addressView = helper.getView(R.id.tv_address_detail);
                 final AppCompatTextView zipView = helper.getView(R.id.tv_address_zip);
                 final AppCompatTextView deleteView = helper.getView(R.id.tv_address_delete);
-                final AppCompatRadioButton selectedView = helper.getView(R.id.btn_address_selected);
+                final IconTextView selectedView = helper.getView(R.id.icon_address_select);
 
                 final Integer id = item.getField(MultipleFields.ID);
                 final String name = item.getField(AddressField.RECEIVER_NAME);
@@ -87,25 +91,32 @@ public class AddressAdapter extends MultipleRecyclerViewAdapter {
                         alertDialog.setButton(DialogInterface.BUTTON_NEGATIVE, "取消", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
-
                             }
                         });
                         alertDialog.show();
+                    }
+                });
 
-                    }
-                });
-                //选中按钮
-                if (selected == 1) {
-                    selectedView.setChecked(true);
-                } else {
-                    selectedView.setChecked(false);
-                }
-                selectedView.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+                selectedView.setOnClickListener(new View.OnClickListener() {
                     @Override
-                    public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                        Toast.makeText(DELEGATE.getContext(), "ischecked:" + String.valueOf(isChecked), Toast.LENGTH_SHORT).show();
+                    public void onClick(View v) {
+                        final int currentPosition = helper.getAdapterPosition();
+                        if (mProPosition != currentPosition) {
+                            getData().get(mProPosition).setField(AddressField.SELECTED, 0);
+                            notifyItemChanged(mProPosition);
+                            item.setField(AddressField.SELECTED, 1);
+                            notifyItemChanged(currentPosition);
+                            mProPosition = currentPosition;
+                            //TODO 选中默认的地址之后，修改数据库中默认的配送地址
+                        }
                     }
                 });
+
+                if (selected == 1) {//选中
+                    selectedView.setTextColor(ContextCompat.getColor(DELEGATE.getContext(), R.color.app_title));
+                } else {
+                    selectedView.setTextColor(Color.GRAY);
+                }
                 break;
             default:
                 break;

@@ -17,6 +17,7 @@ import com.labelwall.mywall.delegates.base.WallDelegate;
 import com.labelwall.mywall.delegates.bottom.BottomItemDelegate;
 import com.labelwall.mywall.main.WallBottomDelegate;
 import com.labelwall.mywall.main.cart.ShopCartDataField;
+import com.labelwall.mywall.main.user.address.AdressDelegate;
 import com.labelwall.mywall.ui.recycler.ItemType;
 import com.labelwall.mywall.ui.recycler.MultipleItemEntity;
 import com.labelwall.mywall.util.net.RestClient;
@@ -42,44 +43,49 @@ import me.yokeyword.fragmentation.anim.FragmentAnimator;
 
 public class OrderDetailDelegate extends WallDelegate implements IAIPayResultListener {
 
-    @BindView(R2.id.tv_order_no_value)
-    AppCompatTextView mTVOrderNo = null;
+    //    @BindView(R2.id.tv_order_no_value)
+//    AppCompatTextView mTVOrderNo = null;
     @BindView(R2.id.tv_order_payment_value)
     AppCompatTextView mOrderPayment = null;
     @BindView(R2.id.rv_order_product_item)
     RecyclerView mRecyclerView = null;
-    @BindView(R2.id.tv_order_status_value)
-    AppCompatTextView mOrderStatus = null;
+//    @BindView(R2.id.tv_order_status_value)
+//    AppCompatTextView mOrderStatus = null;
+
+    @OnClick(R2.id.icon_select_address)
+    void onClickAddressSelect() {
+        getSupportDelegate().start(new AdressDelegate());
+    }
 
     private final JSONObject ORDERINFO;
     private OrderProductAdapter mAdapter = null;
     private Long mOrderNo = null;
     private final long USER_ID = WallPreference.getCurrentUserId(WallTagType.CURRENT_USER_ID.name());
 
-    @OnClick(R2.id.btn_cancel_order)
-    void onClickCancelOrder() {
-        //取消订单，orderNo，userId
-        RestClient.builder()
-                .url("")
-                .params("orderNo", mOrderNo)
-                .params("userId", USER_ID)
-                .success(new ISuccess() {
-                    @Override
-                    public void onSuccess(String response) {
-                        //取消订单后，跳转到购物车先
-                        final int shopCartTab = 3;
-                        final WallBottomDelegate wallBottomDelegate = getParentDelegate();
-                        final BottomItemDelegate shopCartDelegate =
-                                wallBottomDelegate.getItemDelegates().get(shopCartTab);
-                        wallBottomDelegate.getSupportDelegate()
-                                .showHideFragment(shopCartDelegate, OrderDetailDelegate.this);
-                        wallBottomDelegate.changeColor(shopCartTab);
-                    }
-                })
-                .build()
-                .put();
-
-    }
+    //    @OnClick(R2.id.btn_cancel_order)
+//    void onClickCancelOrder() {
+//        //取消订单，orderNo，userId
+//        RestClient.builder()
+//                .url("")
+//                .params("orderNo", mOrderNo)
+//                .params("userId", USER_ID)
+//                .success(new ISuccess() {
+//                    @Override
+//                    public void onSuccess(String response) {
+//                        //取消订单后，跳转到购物车先
+//                        final int shopCartTab = 3;
+//                        final WallBottomDelegate wallBottomDelegate = getParentDelegate();
+//                        final BottomItemDelegate shopCartDelegate =
+//                                wallBottomDelegate.getItemDelegates().get(shopCartTab);
+//                        wallBottomDelegate.getSupportDelegate()
+//                                .showHideFragment(shopCartDelegate, OrderDetailDelegate.this);
+//                        wallBottomDelegate.changeColor(shopCartTab);
+//                    }
+//                })
+//                .build()
+//                .put();
+//
+//    }
     @OnClick(R2.id.btn_pay_order)
     void onClickPayOrder() {
         //支付订单
@@ -123,10 +129,10 @@ public class OrderDetailDelegate extends WallDelegate implements IAIPayResultLis
             final JSONObject orderVo = ORDERINFO.getJSONObject("data");
             mOrderNo = orderVo.getLong("orderNo");
             final BigDecimal orderPayment = orderVo.getBigDecimal("payment");
-            mTVOrderNo.setText(String.valueOf(mOrderNo));
+//            mTVOrderNo.setText(String.valueOf(mOrderNo));
             mOrderPayment.setText("￥" + String.valueOf(orderPayment));
             final String orderStatus = orderVo.getString("statusDesc");
-            mOrderStatus.setText(orderStatus);
+//            mOrderStatus.setText(orderStatus);
 
             final JSONArray orderProductItem = orderVo.getJSONArray("orderItemVoList");
             bindOrderProductData(orderProductItem);

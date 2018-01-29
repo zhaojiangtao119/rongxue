@@ -90,7 +90,7 @@ public class CreateTopicDelegate extends WallDelegate {
     private void onCreateTopic() {
         //TODO 将帖子信息（content+images+userId）请求到服务器
         RestClient.builder()
-                .url("topic/app_publish_post")
+                .url("app/topic/app_publish_post")
                 .params("userId", String.valueOf(mUserId))
                 .params("image", mImagesUrl)
                 .params("content", mTopicCommentEditText.getText().toString())

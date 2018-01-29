@@ -43,9 +43,9 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
-            android:text="998"
+            android:text="1999.00"
             android:textColor="@color/app_title"
-            android:textSize="20sp" />
+            android:textSize="18sp" />
     </android.support.v7.widget.LinearLayoutCompat>
 
 </android.support.v7.widget.LinearLayoutCompat>
