@@ -36,10 +36,12 @@ public class AddressAdapter extends MultipleRecyclerViewAdapter {
     private final WallDelegate DELEGATE;
     private final long USER_ID = WallPreference.getCurrentUserId(WallTagType.CURRENT_USER_ID.name());
     private int mProPosition = 0;
+    private final Long ORDER_NO;
 
-    public AddressAdapter(List<MultipleItemEntity> data, WallDelegate delegate) {
+    public AddressAdapter(List<MultipleItemEntity> data, WallDelegate delegate, Long orderNo) {
         super(data);
         this.DELEGATE = delegate;
+        this.ORDER_NO = orderNo;
         addItemType(ItemType.ADDRESS_LIST, R.layout.item_address_list);
     }
 
@@ -101,14 +103,28 @@ public class AddressAdapter extends MultipleRecyclerViewAdapter {
                     @Override
                     public void onClick(View v) {
                         final int currentPosition = helper.getAdapterPosition();
-                        if (mProPosition != currentPosition) {
-                            getData().get(mProPosition).setField(AddressField.SELECTED, 0);
-                            notifyItemChanged(mProPosition);
-                            item.setField(AddressField.SELECTED, 1);
-                            notifyItemChanged(currentPosition);
-                            mProPosition = currentPosition;
-                            //TODO 选中默认的地址之后，修改数据库中默认的配送地址
-                        }
+                        RestClient.builder()
+                                .url("app/shopping/default")
+                                .params("userId", USER_ID)
+                                .params("shoppingId", id)
+                                .loader(DELEGATE.getContext())
+                                .success(new ISuccess() {
+                                    @Override
+                                    public void onSuccess(String response) {
+                                        if (mProPosition != currentPosition) {
+                                            getData().get(mProPosition).setField(AddressField.SELECTED, 0);
+                                            notifyItemChanged(mProPosition);
+                                            item.setField(AddressField.SELECTED, 1);
+                                            notifyItemChanged(currentPosition);
+                                            mProPosition = currentPosition;
+                                            //TODO 选中默认的地址之后，修改数据库中默认的配送地址
+                                            final Integer id = item.getField(MultipleFields.ID);
+                                            //updateSelectAddress(id);
+                                        }
+                                    }
+                                })
+                                .build()
+                                .put();
                     }
                 });
 
@@ -121,6 +137,10 @@ public class AddressAdapter extends MultipleRecyclerViewAdapter {
             default:
                 break;
         }
+    }
+
+    private void updateSelectAddress(Integer shoppingId) {
+
     }
 
     //请求删除地址

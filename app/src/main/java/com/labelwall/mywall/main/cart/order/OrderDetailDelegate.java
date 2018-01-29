@@ -43,18 +43,21 @@ import me.yokeyword.fragmentation.anim.FragmentAnimator;
 
 public class OrderDetailDelegate extends WallDelegate implements IAIPayResultListener {
 
-    //    @BindView(R2.id.tv_order_no_value)
-//    AppCompatTextView mTVOrderNo = null;
     @BindView(R2.id.tv_order_payment_value)
     AppCompatTextView mOrderPayment = null;
     @BindView(R2.id.rv_order_product_item)
     RecyclerView mRecyclerView = null;
-//    @BindView(R2.id.tv_order_status_value)
-//    AppCompatTextView mOrderStatus = null;
+
+    @BindView(R2.id.tv_receiver_name)
+    AppCompatTextView mReceiverUsername = null;
+    @BindView(R2.id.tv_receiver_mobile)
+    AppCompatTextView mReceiverMobile = null;
+    @BindView(R2.id.tv_receiver_address)
+    AppCompatTextView mReceiverAddress = null;
 
     @OnClick(R2.id.icon_select_address)
-    void onClickAddressSelect() {
-        getSupportDelegate().start(new AdressDelegate());
+    void onClickAddressSelect() {//选择配送地址
+        getSupportDelegate().start(new AdressDelegate(mOrderNo));
     }
 
     private final JSONObject ORDERINFO;
@@ -127,13 +130,21 @@ public class OrderDetailDelegate extends WallDelegate implements IAIPayResultLis
         //获取订单信息：orderNo，payment
         if (ORDERINFO != null) {
             final JSONObject orderVo = ORDERINFO.getJSONObject("data");
-            mOrderNo = orderVo.getLong("orderNo");
             final BigDecimal orderPayment = orderVo.getBigDecimal("payment");
-//            mTVOrderNo.setText(String.valueOf(mOrderNo));
+            mOrderNo = orderVo.getLong("orderNo");
             mOrderPayment.setText("￥" + String.valueOf(orderPayment));
-            final String orderStatus = orderVo.getString("statusDesc");
-//            mOrderStatus.setText(orderStatus);
 
+            //绑定收货人信息
+            final JSONObject shopping = orderVo.getJSONObject("shoppingVo");
+            final String name = shopping.getString("receiverName");
+            final String mobile = shopping.getString("receiverMobile");
+            final String province = shopping.getString("receiverProvince");
+            final String city = shopping.getString("receiverCity");
+            final String county = shopping.getString("receiverCounty");
+            final String address = shopping.getString("address");
+            mReceiverUsername.setText(name);
+            mReceiverMobile.setText(mobile);
+            mReceiverAddress.setText(province + city + county + address);
             final JSONArray orderProductItem = orderVo.getJSONArray("orderItemVoList");
             bindOrderProductData(orderProductItem);
         }

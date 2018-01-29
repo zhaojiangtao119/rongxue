@@ -27,6 +27,12 @@ import me.yokeyword.fragmentation.anim.FragmentAnimator;
 
 public class AdressDelegate extends WallDelegate {
 
+    private final Long ORDER_NO;
+
+    public AdressDelegate(Long orderNo) {
+        this.ORDER_NO = orderNo;
+    }
+
     @BindView(R2.id.rv_address_list)
     RecyclerView mRecyclerView = null;
     private final long mUserId =
@@ -64,7 +70,7 @@ public class AdressDelegate extends WallDelegate {
                     public void onSuccess(String response) {
                         final List<MultipleItemEntity> data =
                                 new AddressDataConverter().setJsonData(response).convert();
-                        final AddressAdapter adapter = new AddressAdapter(data, AdressDelegate.this);
+                        final AddressAdapter adapter = new AddressAdapter(data, AdressDelegate.this, ORDER_NO);
                         mRecyclerView.setAdapter(adapter);
                     }
                 })

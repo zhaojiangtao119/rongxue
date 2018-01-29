@@ -20,6 +20,7 @@ import com.labelwall.mywall.delegates.base.WallDelegate;
 import com.labelwall.mywall.delegates.bottom.BottomItemDelegate;
 import com.labelwall.mywall.main.WallBottomDelegate;
 import com.labelwall.mywall.main.cart.order.OrderDetailDelegate;
+import com.labelwall.mywall.main.user.address.AdressDelegate;
 import com.labelwall.mywall.ui.recycler.MultipleItemEntity;
 import com.labelwall.mywall.util.callback.CallbackManager;
 import com.labelwall.mywall.util.callback.CallbackType;
@@ -42,7 +43,7 @@ import butterknife.OnClick;
  */
 
 public class ShopCartDelegate extends BottomItemDelegate
-        implements ISuccess{
+        implements ISuccess {
     private int mCurrentItemCount = 0;
     private int mTotalCount = 0;
 
@@ -191,25 +192,25 @@ public class ShopCartDelegate extends BottomItemDelegate
                 }
             });
             if (!mStubIsInflate) {
-                    //只能初始化一次mStubNoItem.inflate();
-                    final View stubView = mStubNoItem.inflate();
-                    final AppCompatTextView tvToBye =
-                            (AppCompatTextView) stubView.findViewById(R.id.tv_stub_to_buy);
-                    tvToBye.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            //TODO
-                            //Toast.makeText(getContext(), "要去购物", Toast.LENGTH_SHORT).show();
-                            //跳转到商品页面
-                            final int sortTab = 1;
-                            final WallBottomDelegate wallBottomDelegate = getParentDelegate();
-                            final BottomItemDelegate sortDelegate = wallBottomDelegate.getItemDelegates().get(sortTab);
-                            wallBottomDelegate
-                                    .getSupportDelegate()
-                                    .showHideFragment(sortDelegate, ShopCartDelegate.this);
-                            wallBottomDelegate.changeColor(sortTab);
-                        }
-                    });
+                //只能初始化一次mStubNoItem.inflate();
+                final View stubView = mStubNoItem.inflate();
+                final AppCompatTextView tvToBye =
+                        (AppCompatTextView) stubView.findViewById(R.id.tv_stub_to_buy);
+                tvToBye.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        //TODO
+                        //Toast.makeText(getContext(), "要去购物", Toast.LENGTH_SHORT).show();
+                        //跳转到商品页面
+                        final int sortTab = 1;
+                        final WallBottomDelegate wallBottomDelegate = getParentDelegate();
+                        final BottomItemDelegate sortDelegate = wallBottomDelegate.getItemDelegates().get(sortTab);
+                        wallBottomDelegate
+                                .getSupportDelegate()
+                                .showHideFragment(sortDelegate, ShopCartDelegate.this);
+                        wallBottomDelegate.changeColor(sortTab);
+                    }
+                });
             }
             mStubNoItem.setVisibility(View.VISIBLE);
             mRecyclerView.setVisibility(View.GONE);
@@ -225,7 +226,7 @@ public class ShopCartDelegate extends BottomItemDelegate
     }
 
     private void createOrder() {
-        //TODO 请求服务创建订单，跳转到生成的订单详情页面，在订单详情页面进行支付
+        //TODO 请求服务创建订单，跳转到生成的订单详情页面，在订单详情页面进行支付，
         RestClient.builder()
                 .url("app/order/add")
                 .params("userId", mUserId)
@@ -233,11 +234,14 @@ public class ShopCartDelegate extends BottomItemDelegate
                     @Override
                     public void onSuccess(String response) {
                         final JSONObject data = JSON.parseObject(response);
+                        final JSONObject orderVo = data.getJSONObject("data");
                         final Integer status = data.getInteger("status");
-                        if (status == 0) {//订单生成成功
+                        if (status == 0 && orderVo != null) {//订单生成成功
                             final WallDelegate wallDelegate = getParentDelegate();
                             wallDelegate.getSupportDelegate().start(new OrderDetailDelegate(data));
-
+                        } else if (status == 2) {//TODO 订单生成失败，没有默认的配送地址
+                            final WallDelegate wallDelegate = getParentDelegate();
+                            wallDelegate.getSupportDelegate().start(new AdressDelegate(null));
                         }
                     }
                 })

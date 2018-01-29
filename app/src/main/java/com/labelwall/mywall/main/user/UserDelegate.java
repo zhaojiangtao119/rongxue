@@ -136,7 +136,7 @@ public class UserDelegate extends BottomItemDelegate {
                 .setItemType(ListItemType.ITEM_NORMAL_NO_HINT)
                 .setId(UserSettingItem.ADDRESS)
                 .setText(UserSettingItem.ADDRESS_VALUE)
-                .setDelegate(new AdressDelegate())
+                .setDelegate(new AdressDelegate(null))
                 .build();
         final ListBean systems = new ListBean.builder()
                 .setItemType(ListItemType.ITEM_NORMAL_NO_HINT)

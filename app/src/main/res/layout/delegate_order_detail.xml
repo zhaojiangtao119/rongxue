@@ -95,7 +95,7 @@
             android:textSize="20sp"
             tools:ignore="HardcodedText" />
     </RelativeLayout>-->
-    <LinearLayout
+    <android.support.v7.widget.LinearLayoutCompat
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
@@ -110,19 +110,19 @@
             android:textSize="20sp"
             tools:ignore="HardcodedText" />
 
-        <LinearLayout
+        <android.support.v7.widget.LinearLayoutCompat
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="8"
             android:orientation="vertical">
 
-            <LinearLayout
+            <android.support.v7.widget.LinearLayoutCompat
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
                 android:layout_weight="1"
                 android:orientation="horizontal">
 
-                <TextView
+                <android.support.v7.widget.AppCompatTextView
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
@@ -131,7 +131,8 @@
                     android:text="收货人："
                     android:textSize="14sp" />
 
-                <TextView
+                <android.support.v7.widget.AppCompatTextView
+                    android:id="@+id/tv_receiver_name"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_weight="1.5"
@@ -140,22 +141,23 @@
                     android:text="张三"
                     android:textSize="18sp" />
 
-                <TextView
+                <android.support.v7.widget.AppCompatTextView
+                    android:id="@+id/tv_receiver_mobile"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_weight="2"
                     android:gravity="left|center"
                     android:paddingLeft="5dp"
                     android:text="15266677788" />
-            </LinearLayout>
+            </android.support.v7.widget.LinearLayoutCompat>
 
-            <LinearLayout
+            <android.support.v7.widget.LinearLayoutCompat
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
                 android:layout_weight="1"
                 android:orientation="horizontal">
 
-                <TextView
+                <android.support.v7.widget.AppCompatTextView
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
@@ -164,7 +166,8 @@
                     android:text="收货地址："
                     android:textSize="12sp" />
 
-                <TextView
+                <android.support.v7.widget.AppCompatTextView
+                    android:id="@+id/tv_receiver_address"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_weight="3"
@@ -172,8 +175,8 @@
                     android:paddingLeft="5dp"
                     android:text="陕西省西安市未央区草滩街道西安工业大学"
                     android:textSize="12sp" />
-            </LinearLayout>
-        </LinearLayout>
+            </android.support.v7.widget.LinearLayoutCompat>
+        </android.support.v7.widget.LinearLayoutCompat>
 
         <com.joanzapata.iconify.widget.IconTextView
             android:id="@+id/icon_select_address"
@@ -183,7 +186,7 @@
             android:gravity="center"
             android:text="{fa-chevron-right}"
             android:textSize="18sp" />
-    </LinearLayout>
+    </android.support.v7.widget.LinearLayoutCompat>
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/rv_order_product_item"
