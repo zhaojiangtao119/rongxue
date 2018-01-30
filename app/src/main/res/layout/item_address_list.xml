@@ -41,7 +41,6 @@
                 android:layout_centerHorizontal="true"
                 android:layout_centerVertical="true"
                 android:layout_marginLeft="20dp"
-                android:text="姓名"
                 android:textColor="@color/app_title"
                 android:textSize="18sp" />
 
@@ -101,7 +100,6 @@
                             android:layout_height="match_parent"
                             android:layout_weight="3"
                             android:gravity="center"
-                            android:text="战三"
                             android:textColor="@android:color/black"
                             android:textSize="18sp" />
                     </android.support.v7.widget.LinearLayoutCompat>
@@ -128,7 +126,6 @@
                             android:layout_height="match_parent"
                             android:layout_weight="3"
                             android:gravity="center"
-                            android:text="1234567"
                             android:textColor="@android:color/black"
                             android:textSize="18sp" />
                     </android.support.v7.widget.LinearLayoutCompat>
@@ -163,7 +160,6 @@
                             android:layout_height="match_parent"
                             android:layout_weight="3"
                             android:gravity="center"
-                            android:text="陕西省西安市"
                             android:textColor="@android:color/black"
                             android:textSize="16sp" />
                     </LinearLayout>
@@ -190,7 +186,6 @@
                             android:layout_height="match_parent"
                             android:layout_weight="3"
                             android:gravity="center"
-                            android:text="XXXXXXXXXXXXXXX"
                             android:textColor="@android:color/black"
                             android:textSize="14sp" />
                     </android.support.v7.widget.LinearLayoutCompat>

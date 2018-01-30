@@ -73,7 +73,13 @@ public class AddressAdapter extends MultipleRecyclerViewAdapter {
                 nameView.setText(name);
                 //phoneView.setText(phone);
                 mobileView.setText(mobile);
-                locationView.setText(province + city);
+                if (province != null && city != null && county != null) {
+                    if (province.equals(city)) {
+                        locationView.setText(province + county);
+                    } else {
+                        locationView.setText(province + city);
+                    }
+                }
                 addressView.setText(address);
                 zipView.setText(zip);
 
@@ -117,9 +123,16 @@ public class AddressAdapter extends MultipleRecyclerViewAdapter {
                                             item.setField(AddressField.SELECTED, 1);
                                             notifyItemChanged(currentPosition);
                                             mProPosition = currentPosition;
-                                            //TODO 选中默认的地址之后，修改数据库中默认的配送地址
-                                            final Integer id = item.getField(MultipleFields.ID);
-                                            //updateSelectAddress(id);
+                                        } else if (getItemCount() == 1) {
+                                            //只有一个item
+                                            final Integer selected = item.getField(AddressField.SELECTED);
+                                            if (selected == 1) {//选中状态
+                                                getData().get(0).setField(AddressField.SELECTED, 0);
+                                                notifyItemChanged(0);
+                                            } else if (selected == 0) {
+                                                getData().get(0).setField(AddressField.SELECTED, 1);
+                                                notifyItemChanged(0);
+                                            }
                                         }
                                     }
                                 })
@@ -137,10 +150,6 @@ public class AddressAdapter extends MultipleRecyclerViewAdapter {
             default:
                 break;
         }
-    }
-
-    private void updateSelectAddress(Integer shoppingId) {
-
     }
 
     //请求删除地址

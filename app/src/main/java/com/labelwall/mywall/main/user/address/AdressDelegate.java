@@ -6,6 +6,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 
+import com.joanzapata.iconify.widget.IconTextView;
 import com.labelwall.mywall.R;
 import com.labelwall.mywall.R2;
 import com.labelwall.mywall.delegates.base.WallDelegate;
@@ -18,6 +19,7 @@ import com.labelwall.mywall.util.storage.WallTagType;
 import java.util.List;
 
 import butterknife.BindView;
+import butterknife.OnClick;
 import me.yokeyword.fragmentation.anim.DefaultHorizontalAnimator;
 import me.yokeyword.fragmentation.anim.FragmentAnimator;
 
@@ -38,6 +40,10 @@ public class AdressDelegate extends WallDelegate {
     private final long mUserId =
             WallPreference.getCurrentUserId(WallTagType.CURRENT_USER_ID.name());
 
+    @OnClick(R2.id.icon_address_add)
+    void onClickAddAddress() {
+        getSupportDelegate().start(new AddressAddDelegate());
+    }
 
     @Override
     public Object setLayout() {
