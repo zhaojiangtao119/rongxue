@@ -45,13 +45,23 @@
                 android:textSize="18sp" />
 
             <android.support.v7.widget.AppCompatTextView
+                android:id="@+id/tv_address_modify"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginRight="20dp"
+                android:layout_toLeftOf="@+id/tv_address_delete"
+                android:text="@string/address_modify"
+                android:textColor="@android:color/darker_gray" />
+
+            <android.support.v7.widget.AppCompatTextView
                 android:id="@+id/tv_address_delete"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentRight="true"
                 android:layout_centerVertical="true"
                 android:layout_marginRight="20dp"
-                android:text="删除"
+                android:text="@string/address_delete"
                 android:textColor="@android:color/darker_gray" />
         </RelativeLayout>
 

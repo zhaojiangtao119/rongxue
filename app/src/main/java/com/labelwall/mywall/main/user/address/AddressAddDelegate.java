@@ -8,7 +8,10 @@ import android.support.v7.widget.AppCompatTextView;
 import android.view.View;
 import android.widget.RelativeLayout;
 
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
 import com.bigkoo.pickerview.OptionsPickerView;
+import com.blankj.utilcode.util.StringUtils;
 import com.google.gson.Gson;
 import com.labelwall.mywall.R;
 import com.labelwall.mywall.R2;
@@ -35,6 +38,8 @@ import me.yokeyword.fragmentation.anim.FragmentAnimator;
 
 public class AddressAddDelegate extends WallDelegate {
 
+    @BindView(R2.id.tv_address_manager_title)
+    AppCompatTextView mAddressTitle = null;
     @BindView(R2.id.et_receiver_name)
     TextInputEditText mReceiverName = null;
     @BindView(R2.id.et_receiver_mobile)
@@ -43,9 +48,23 @@ public class AddressAddDelegate extends WallDelegate {
     TextInputEditText mReceiverZip = null;
     @BindView(R2.id.et_receiver_address)
     TextInputEditText mReceiverAddress = null;
-
     @BindView(R2.id.tv_arrow_value)
     AppCompatTextView mLocationValue = null;
+
+    private String mName = null;
+    private String mMobile = null;
+    private String mZip = null;
+    private String mAddress = null;
+    private String mProvince = null;
+    private String mCity = null;
+    private String mCounty = null;
+
+    private final long USER_ID = WallPreference.getCurrentUserId(WallTagType.CURRENT_USER_ID.name());
+    private final Integer SHOPPING_ID;
+
+    private ArrayList<JsonBean> options1Item = new ArrayList<>();
+    private ArrayList<ArrayList<String>> options2Item = new ArrayList<>();
+    private ArrayList<ArrayList<ArrayList<String>>> options3Item = new ArrayList<>();
 
     @OnClick(R2.id.rl_address_location)
     void onClickAddressLocation() {//选择省市区县
@@ -58,7 +77,7 @@ public class AddressAddDelegate extends WallDelegate {
                 mCity = options2Item.get(options1).get(options2);
                 mCounty = options3Item.get(options1).get(options2).get(options3);
                 String location;
-                if (options1Item.get(options1).getPickerViewText().equals(options2Item.get(options1).get(options2))) {
+                if (mProvince.equals(mCity)) {
                     location = mProvince + "-" + mCounty;
                 } else {
                     location = mProvince + "-" + mCity + "-" + mCounty;
@@ -71,49 +90,52 @@ public class AddressAddDelegate extends WallDelegate {
                 .setContentTextSize(20)
                 .setOutSideCancelable(false)
                 .build();
+        //noinspection unchecked
         pvOptions.setPicker(options1Item, options2Item, options3Item);
         pvOptions.show();
     }
 
-    private String mName = null;
-    private String mMobile = null;
-    private String mZip = null;
-    private String mAddress = null;
-    private String mProvince = null;
-    private String mCity = null;
-    private String mCounty = null;
-
-    private final long USER_ID = WallPreference.getCurrentUserId(WallTagType.CURRENT_USER_ID.name());
-
-    private ArrayList<JsonBean> options1Item = new ArrayList<>();
-    private ArrayList<ArrayList<String>> options2Item = new ArrayList<>();
-    private ArrayList<ArrayList<ArrayList<String>>> options3Item = new ArrayList<>();
 
     @OnClick(R2.id.btn_submit_add)
     void onClickAddAddress() {
-        //1.校验数据
-        if (checkForm()) {
-            RestClient.builder()
-                    .url("app/shopping/add")
-                    .params("userId", USER_ID)
-                    .params("receiverName", mName)
-                    .params("receiverMobile", mMobile)
-                    .params("receiverAddress", mAddress)
-                    .params("receiverZip", mZip)
-                    .params("receiverProvince", mProvince)
-                    .params("receiverCity", mCity)
-                    .params("receiverCounty", mCounty)
-                    .loader(getContext())
-                    .success(new ISuccess() {
-                        @Override
-                        public void onSuccess(String response) {
-                            //添加成功之后跳转到地址列表
+        if (SHOPPING_ID == null) {
+            //1.添加地址
+            if (checkForm()) {
+                manageReceiverInfo("app/shopping/add");
+            }
+        } else {
+            //2.修改地址
+            if (checkForm()) {
+                manageReceiverInfo("app/shopping/modify/" + SHOPPING_ID);
+            }
+        }
+    }
+
+    private void manageReceiverInfo(String url) {
+        RestClient.builder()
+                .url(url)
+                .loader(getContext())
+                .params("userId", USER_ID)
+                .params("receiverName", mName)
+                .params("receiverMobile", mMobile)
+                .params("receiverAddress", mAddress)
+                .params("receiverZip", mZip)
+                .params("receiverProvince", mProvince)
+                .params("receiverCity", mCity)
+                .params("receiverCounty", mCounty)
+                .success(new ISuccess() {
+                    @Override
+                    public void onSuccess(String response) {
+                        //添加成功之后跳转到地址列表
+                        final JSONObject data = JSON.parseObject(response);
+                        final int status = data.getInteger("status");
+                        if (status == 0) {
                             getSupportDelegate().startWithPop(new AdressDelegate(null));
                         }
-                    })
-                    .build()
-                    .post();
-        }
+                    }
+                })
+                .build()
+                .post();
     }
 
     private boolean checkForm() {
@@ -139,6 +161,10 @@ public class AddressAddDelegate extends WallDelegate {
         return isChenckPass;
     }
 
+    public AddressAddDelegate(Integer shoppingId) {
+        this.SHOPPING_ID = shoppingId;
+    }
+
     @Override
     public Object setLayout() {
         return R.layout.delegate_address_add;
@@ -147,6 +173,55 @@ public class AddressAddDelegate extends WallDelegate {
     @Override
     public void onBindView(@Nullable Bundle savedInstanceState, View rootView) {
         initJsonData();
+    }
+
+    @Override
+    public void onLazyInitView(@Nullable Bundle savedInstanceState) {
+        super.onLazyInitView(savedInstanceState);
+        if (SHOPPING_ID != null) {//修改配送地址
+            uploadModifyAddressInfo();
+        }
+    }
+
+    private void uploadModifyAddressInfo() {
+        RestClient.builder()
+                .url("app/shopping/" + USER_ID + "/" + SHOPPING_ID)
+                .loader(getContext())
+                .success(new ISuccess() {
+                    @Override
+                    public void onSuccess(String response) {
+                        //绑定数据
+                        bindModifyInfo(response);
+                    }
+                })
+                .build()
+                .get();
+    }
+
+    private void bindModifyInfo(String response) {
+        final JSONObject shoppingVo = JSON.parseObject(response).getJSONObject("data");
+        final String name = shoppingVo.getString("receiverName");
+        final String mobile = shoppingVo.getString("receiverMobile");
+        final String province = shoppingVo.getString("receiverProvince");
+        final String city = shoppingVo.getString("receiverCity");
+        final String county = shoppingVo.getString("receiverCounty");
+        final String address = shoppingVo.getString("receiverAddress");
+        final String zip = shoppingVo.getString("receiverZip");
+
+        mAddressTitle.setText("修改地址");
+        mReceiverName.setText(name);
+        mReceiverMobile.setText(mobile);
+        mReceiverZip.setText(zip);
+        mReceiverAddress.setText(address);
+        if (province != null && city != null && county != null) {
+            String location;
+            if (province.equals(city)) {
+                location = province + "-" + county;
+            } else {
+                location = province + "-" + city + "-" + county;
+            }
+            mLocationValue.setText(location);
+        }
     }
 
     private void initJsonData() {   //解析数据

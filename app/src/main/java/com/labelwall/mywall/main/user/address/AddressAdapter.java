@@ -57,6 +57,7 @@ public class AddressAdapter extends MultipleRecyclerViewAdapter {
                 final AppCompatTextView addressView = helper.getView(R.id.tv_address_detail);
                 final AppCompatTextView zipView = helper.getView(R.id.tv_address_zip);
                 final AppCompatTextView deleteView = helper.getView(R.id.tv_address_delete);
+                final AppCompatTextView modifyView = helper.getView(R.id.tv_address_modify);
                 final IconTextView selectedView = helper.getView(R.id.icon_address_select);
 
                 final Integer id = item.getField(MultipleFields.ID);
@@ -82,11 +83,10 @@ public class AddressAdapter extends MultipleRecyclerViewAdapter {
                 }
                 addressView.setText(address);
                 zipView.setText(zip);
-
+                //1.删除地址
                 deleteView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        //删除地址
                         final AlertDialog alertDialog = new AlertDialog.Builder(DELEGATE.getContext()).create();
                         alertDialog.setTitle("删除收货地址");
                         alertDialog.setMessage("是否删除？");
@@ -104,7 +104,7 @@ public class AddressAdapter extends MultipleRecyclerViewAdapter {
                         alertDialog.show();
                     }
                 });
-
+                //2.选择默认地址
                 selectedView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -140,12 +140,20 @@ public class AddressAdapter extends MultipleRecyclerViewAdapter {
                                 .put();
                     }
                 });
-
-                if (selected == 1) {//选中
+                if (selected == 1) {//初始化选中组件颜色
+                    //选中
                     selectedView.setTextColor(ContextCompat.getColor(DELEGATE.getContext(), R.color.app_title));
                 } else {
                     selectedView.setTextColor(Color.GRAY);
                 }
+                //3.修改地址
+                modifyView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        final Integer shoppingId = item.getField(MultipleFields.ID);
+                        DELEGATE.getSupportDelegate().start(new AddressAddDelegate(shoppingId));
+                    }
+                });
                 break;
             default:
                 break;

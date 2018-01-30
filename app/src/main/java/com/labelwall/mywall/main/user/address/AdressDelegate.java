@@ -42,7 +42,8 @@ public class AdressDelegate extends WallDelegate {
 
     @OnClick(R2.id.icon_address_add)
     void onClickAddAddress() {
-        getSupportDelegate().start(new AddressAddDelegate());
+        getSupportDelegate().start(new AddressAddDelegate(null));
+
     }
 
     @Override

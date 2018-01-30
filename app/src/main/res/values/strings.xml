@@ -72,6 +72,8 @@
     <string name="address_location">区域</string>
     <string name="address_detail">地址</string>
     <string name="address_zip">邮政</string>
+    <string name="address_delete">删除</string>
+    <string name="address_modify">修改</string>
 
     <string name="address_add">添加地址</string>
 
