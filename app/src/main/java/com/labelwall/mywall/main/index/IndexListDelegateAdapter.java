@@ -34,11 +34,11 @@ public class IndexListDelegateAdapter extends FragmentStatePagerAdapter {
 
     @Override
     public int getCount() {
-        return DELEGATES.size();
+        return DELEGATES.size();//返回ViewPage的个数
     }
 
     @Override
     public CharSequence getPageTitle(int position) {
-        return TITLES.get(position);
+        return TITLES.get(position);//返回title
     }
 }

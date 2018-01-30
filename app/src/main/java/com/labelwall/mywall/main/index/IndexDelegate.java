@@ -62,14 +62,6 @@ public class IndexDelegate extends BottomItemDelegate {
     void onClickAddTopic() {
         WallDelegate parentDelegate = getParentDelegate();
         parentDelegate.getSupportDelegate().start(new CreateTopicDelegate());
-        /*CallbackManager.getInstance().addCallback(CallbackType.ON_CROP, new IGlobalCallback<Uri>() {
-            @Override
-            public void executeCallback(Uri args) {
-                Log.e("剪裁的文件路径：", args.toString());
-            }
-        });
-        //照片选择
-        startCameraWithCheck();*/
     }
 
 
@@ -81,7 +73,6 @@ public class IndexDelegate extends BottomItemDelegate {
     @Override
     public void onBindView(@Nullable Bundle savedInstanceState, View rootView) {
         converterData();
-        onPageChange();
     }
 
     private void converterData() {
@@ -107,69 +98,30 @@ public class IndexDelegate extends BottomItemDelegate {
     }
 
     private void createTabControl() {
-        //Tab是平均分开的
-        //mTabLayout.setTabMode(TabLayout.MODE_FIXED);
-        //设置选择线的颜色
-        //mTabLayout.setSelectedTabIndicatorColor(ContextCompat.getColor(_mActivity,R.color.app_background));
-        //设置tab名称的颜色
-        mTabLayout.setTabTextColors(ColorStateList.valueOf(Color.BLACK));
-        //设置背景色
-        //mTabLayout.setBackgroundColor(Color.WHITE);
-
+        initTabLayout();
         final int size = mTitles.size();
-        for (int i = 0; i < size; i++) {
+        for (int i = 0; i < 3; i++) {
             mTabLayout.addTab(mTabLayout.newTab().setText(mTitles.get(i)));
         }
         final List<WallDelegate> delegates = new ArrayList<>();
-        for (int i = 0; i < size; i++) {
+        for (int i = 0; i < 3; i++) {
             delegates.add(new IndexListDelegate());
         }
         IndexListDelegateAdapter delegateAdapter =
                 IndexListDelegateAdapter.create(getFragmentManager(), delegates, mTitles);
         mViewPager.setAdapter(delegateAdapter);
-        mTabLayout.setupWithViewPager(mViewPager);
-        mTabLayout.setTabsFromPagerAdapter(delegateAdapter);
     }
 
-    private void onPageChange() {
-        /*滑动监听器OnPageChangeListener
-            onPageScrolled(int position, float positionOffset, int positionOffsetPixels)
-                当页面在活动的时候会调用此方法，在滑动被停止之前，此方法一直被调用
-                position：当前页面
-                positionOffest:当前页面偏移的百分比
-                positionOffsetPixels：当前页面偏移的像素位置
-            onPageSelected(int position)
-                页面跳转完成后被调用
-                position:当前选中的页面编号
-            onPageScrollStateChange(int state)
-                此方法实在状态改变的时候调用
-                state:
-                    0：表示什么也没做
-                    1：表示正在滑动
-                    2：表示滑动完毕
-        */
-        mViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
-            @Override
-            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-                Log.e("onPageScrolled: ", "postion:" + position + ",positionOffset:" +
-                        positionOffset + ",positionOffsetPixels:" + positionOffsetPixels);
-            }
-
-            @Override
-            public void onPageSelected(int position) {
-                Log.e("onPageSelected:", "position:" + position);
-            }
-
-            @Override
-            public void onPageScrollStateChanged(int state) {
-                if (state == 0) {
-                    Log.e("StateChanged", "state-->0");
-                } else if (state == 1) {
-                    Log.e("StateChanged", "state-->1");
-                } else if (state == 2) {
-                    Log.e("StateChanged", "state--->2");
-                }
-            }
-        });
+    private void initTabLayout() {
+        //tab title 平均分开
+        mTabLayout.setTabMode(TabLayout.MODE_FIXED);
+        //设置选择线的颜色
+        mTabLayout.setSelectedTabIndicatorColor(Color.BLACK);
+        //设置 tabTitle的字体颜色
+        mTabLayout.setTabTextColors(ColorStateList.valueOf(Color.BLACK));
+        //设置tab的背景色
+        //mTabLayout.setBackgroundColor(ContextCompat.getColor(_mActivity,R.color.app_title));
+        //关联viewPage
+        mTabLayout.setupWithViewPager(mViewPager);
     }
 }
