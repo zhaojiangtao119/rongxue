@@ -3,6 +3,7 @@ package com.labelwall.mywall.delegates.base;
 import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
@@ -28,14 +29,12 @@ public abstract class BaseDelegate extends Fragment implements ISupportFragment 
 
     private final SupportFragmentDelegate DELEGATE = new SupportFragmentDelegate(this);
     protected FragmentActivity _mActivity = null;
-
     @SuppressWarnings("SpellCheckingInspection")
     private Unbinder mUnbinder = null;
 
-    public abstract Object setLayout();//子类来设置布局 可以是view或是layout的id
+    public abstract Object setLayout();
 
-    public abstract void onBindView(@Nullable Bundle savedInstanceState,
-                                    View rootView);//进行View操作
+    public abstract void onBindView(@Nullable Bundle savedInstanceState, @NonNull View rootView);
 
     @Override
     public void onAttach(Context context) {
@@ -64,20 +63,18 @@ public abstract class BaseDelegate extends Fragment implements ISupportFragment 
 
     @Nullable
     @Override
-    public View onCreateView(LayoutInflater inflater,
-                             @Nullable ViewGroup container,
-                             @Nullable Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         final View rootView;
         if (setLayout() instanceof Integer) {
-            rootView = inflater.inflate((Integer) setLayout(), container, false);
+            rootView = inflater.inflate((int) setLayout(), container, false);
         } else if (setLayout() instanceof View) {
             rootView = (View) setLayout();
         } else {
             throw new ClassCastException("type of setLayout() must be int or View!");
         }
-        //绑定视图资源 fragment与view之间
         mUnbinder = ButterKnife.bind(this, rootView);
         onBindView(savedInstanceState, rootView);
+
         return rootView;
     }
 

@@ -22,17 +22,18 @@
             android:textSize="20sp" />
     </android.support.v7.widget.Toolbar>
 
-    <LinearLayout
+    <android.support.v7.widget.LinearLayoutCompat
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_below="@+id/delegate_tool_bar"
+        android:layout_marginTop="5dp"
         android:orientation="vertical">
 
-        <EditText
+        <android.support.v7.widget.AppCompatEditText
             android:id="@+id/topic_comment"
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_weight="2"
+            android:layout_weight="1.5"
             android:background="@drawable/topic_content"
             android:gravity="top"
             android:hint="@string/topic_content_hint"
@@ -53,7 +54,7 @@
             app:line_count="4"
             app:max_count="4" />
 
-        <LinearLayout
+        <android.support.v7.widget.LinearLayoutCompat
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_marginTop="20dp"
@@ -61,7 +62,7 @@
             android:gravity="right|center_vertical"
             android:orientation="horizontal">
 
-            <Button
+            <android.support.v7.widget.AppCompatButton
                 android:id="@+id/topic_submit_btn"
                 android:layout_width="80dp"
                 android:layout_height="35dp"
@@ -74,7 +75,7 @@
                 android:textColor="@android:color/black"
                 android:textSize="18sp" />
 
-            <Button
+            <android.support.v7.widget.AppCompatButton
                 android:id="@+id/topic_cancel_btn"
                 android:layout_width="80dp"
                 android:layout_height="35dp"
@@ -86,8 +87,8 @@
                 android:text="@string/topic_cancel_btn"
                 android:textColor="@android:color/black"
                 android:textSize="18sp" />
-        </LinearLayout>
+        </android.support.v7.widget.LinearLayoutCompat>
 
-    </LinearLayout>
+    </android.support.v7.widget.LinearLayoutCompat>
 
 </RelativeLayout>

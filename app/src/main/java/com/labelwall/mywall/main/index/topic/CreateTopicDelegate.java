@@ -13,7 +13,10 @@ import com.labelwall.mywall.R;
 import com.labelwall.mywall.R2;
 import com.labelwall.mywall.app.MyWall;
 import com.labelwall.mywall.delegates.base.WallDelegate;
+import com.labelwall.mywall.delegates.bottom.BottomItemDelegate;
 import com.labelwall.mywall.delegates.launcher.ScrollLauncherTag;
+import com.labelwall.mywall.main.WallBottomDelegate;
+import com.labelwall.mywall.main.cart.ShopCartDelegate;
 import com.labelwall.mywall.ui.widget.AutoPhotoLayout;
 import com.labelwall.mywall.util.callback.CallbackManager;
 import com.labelwall.mywall.util.callback.CallbackType;
@@ -50,32 +53,35 @@ public class CreateTopicDelegate extends WallDelegate {
 
     //当前用户的id
     private long mUserId = WallPreference.getCurrentUserId(WallTagType.CURRENT_USER_ID.name());
+    private final WallBottomDelegate WALL_BOTTOM_DELEGATE;
 
+    public CreateTopicDelegate(WallBottomDelegate bottomItemDelegate) {
+        this.WALL_BOTTOM_DELEGATE = bottomItemDelegate;
+    }
 
     @OnClick(R.id.topic_submit_btn)
     void onSubmitBtn() {
         final CallbackManager manager = CallbackManager.getInstance().addCallback(CallbackType.IMAGES, new IGlobalCallback<Map<Integer, Uri>>() {
             @Override
             public void executeCallback(Map<Integer, Uri> args) {
-                //循环遍历将图片上传到七牛云
+                //循环遍历将多张图片上传到七牛云，
                 for (final Map.Entry<Integer, Uri> entry : args.entrySet()) {
                     uploadImageToQiniu(entry.getValue().getPath());
                 }
             }
         });
         AutoPhotoLayout.setSubmitBtn(mButton);
-        onCreateTopic();
     }
 
     private void uploadImageToQiniu(final String path) {
-        //TODO 判断用户的id是否为0（0用户未登录）
         final String name = "topic_id_" + mUserId + System.currentTimeMillis() + "_images";
         QnUploadHelper.uploadPic(path, name, new QnUploadHelper.UploadCallBack() {
-
             @Override
             public void success(String url) {
                 //上传成功，拼接url
-                //mImagesUrl.append(url).append(",");
+                mImagesUrl.append(url).append(",");
+                //TODO 只上传一张图片
+                onCreateTopic();
             }
 
             @Override
@@ -84,13 +90,14 @@ public class CreateTopicDelegate extends WallDelegate {
                 throw new RuntimeException("image upload fail");
             }
         });
-        mImagesUrl.append(name).append(",");
+        //mImagesUrl.append(name).append(",");
     }
 
     private void onCreateTopic() {
         //TODO 将帖子信息（content+images+userId）请求到服务器
+        //Log.e("图片上传成功：", mImagesUrl.toString());
         RestClient.builder()
-                .url("app/topic/app_publish_post")
+                .url("app/topic/publish_post")
                 .params("userId", String.valueOf(mUserId))
                 .params("image", mImagesUrl)
                 .params("content", mTopicCommentEditText.getText().toString())
@@ -98,6 +105,11 @@ public class CreateTopicDelegate extends WallDelegate {
                     @Override
                     public void onSuccess(String response) {
                         //TODO 请求成功，跳转页面到index
+                        final int sortTab = 0;
+                        final BottomItemDelegate sortDelegate = WALL_BOTTOM_DELEGATE.getItemDelegates().get(sortTab);
+                        WALL_BOTTOM_DELEGATE.getSupportDelegate()
+                                .showHideFragment(sortDelegate, CreateTopicDelegate.this);
+                        WALL_BOTTOM_DELEGATE.changeColor(sortTab);
                     }
                 })
                 .build()

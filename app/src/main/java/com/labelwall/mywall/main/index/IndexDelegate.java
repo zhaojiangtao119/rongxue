@@ -60,8 +60,8 @@ public class IndexDelegate extends BottomItemDelegate {
 
     @OnClick(R2.id.tv_add_topic)
     void onClickAddTopic() {
-        WallDelegate parentDelegate = getParentDelegate();
-        parentDelegate.getSupportDelegate().start(new CreateTopicDelegate());
+        WallBottomDelegate parentDelegate = getParentDelegate();
+        parentDelegate.getSupportDelegate().start(new CreateTopicDelegate(parentDelegate));
     }
 
 

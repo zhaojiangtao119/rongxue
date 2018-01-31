@@ -130,7 +130,7 @@ public class AddressAddDelegate extends WallDelegate {
                         final JSONObject data = JSON.parseObject(response);
                         final int status = data.getInteger("status");
                         if (status == 0) {
-                            getSupportDelegate().startWithPop(new AdressDelegate(null));
+                            getSupportDelegate().pop();//销毁出栈，会回到上一个fragment
                         }
                     }
                 })
@@ -207,6 +207,10 @@ public class AddressAddDelegate extends WallDelegate {
         final String county = shoppingVo.getString("receiverCounty");
         final String address = shoppingVo.getString("receiverAddress");
         final String zip = shoppingVo.getString("receiverZip");
+
+        mProvince = province;
+        mCity = city;
+        mCounty = county;
 
         mAddressTitle.setText("修改地址");
         mReceiverName.setText(name);

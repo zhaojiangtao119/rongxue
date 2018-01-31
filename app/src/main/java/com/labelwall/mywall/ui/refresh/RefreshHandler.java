@@ -68,16 +68,19 @@ public class RefreshHandler implements SwipeRefreshLayout.OnRefreshListener,
     @Override
     public void onLoadMoreRequested() {
         //TODO uploadMoreTopic();
+        //uploadMoreTopic();
     }
 
     public void firstPage() {
         RestClient.builder()
-                .url("topic/get_topic_post_list/" + BEAN.getPageIndex() + "/4")
+                .url("topic/get_topic_post_list/" + BEAN.getPageIndex() + "/6")
                 .refreshLayout(REFRESH_LAYOUT)
                 .success(new ISuccess() {
                     @Override
                     public void onSuccess(String response) {
                         final JSONObject pageInfo = JSON.parseObject(response).getJSONObject("data");
+                        BEAN.setTotal(pageInfo.getInteger("total"))
+                                .setPageSize(pageInfo.getInteger("pageSize"));
                         mAdapter = MultipleRecyclerAdapter.create(CONVERTER.setJsonData(response));
                         //上拉加载更多的监听
                         mAdapter.setOnLoadMoreListener(RefreshHandler.this, RECYCLERVIEW);
@@ -90,24 +93,33 @@ public class RefreshHandler implements SwipeRefreshLayout.OnRefreshListener,
     }
 
     private void uploadRefreshTopic() {
-        RestClient.builder()
-                .url("topic/get_topic_post_list/" + BEAN.getPageIndex() + "/2")
-                .refreshLayout(REFRESH_LAYOUT)
-                .success(new ISuccess() {
-                    @Override
-                    public void onSuccess(String response) {
-                        final JSONObject pageInfo = JSON.parseObject(response).getJSONObject("data");
-                        List<MultipleItemEntity> newData = converterData(response);
-                        CONVERTER.clearData();
-                        mAdapter.addData(newData);
-                        BEAN.setPageSize(pageInfo.getInteger("pageSize"));
-                        BEAN.setCurrentCount(mAdapter.getData().size());
-                        BEAN.addIndex();
-                        Log.e("数量：", mAdapter.getItemCount() + "");
-                    }
-                })
-                .build()
-                .post();
+        final int pageSize = BEAN.getPageSize();
+        final int currentCount = BEAN.getCurrentCount();
+        final int total = BEAN.getTotal();
+        final int index = BEAN.getPageIndex();
+
+        if (mAdapter.getItemCount() < pageSize || currentCount >= total) {
+            mAdapter.loadMoreEnd(true);
+        } else {
+            RestClient.builder()
+                    .url("topic/get_topic_post_list/" + BEAN.getPageIndex() + "/2")
+                    .refreshLayout(REFRESH_LAYOUT)
+                    .success(new ISuccess() {
+                        @Override
+                        public void onSuccess(String response) {
+                            final JSONObject pageInfo = JSON.parseObject(response).getJSONObject("data");
+                            List<MultipleItemEntity> newData = converterData(response);
+                            CONVERTER.clearData();
+                            mAdapter.addData(newData);
+                            BEAN.setPageSize(pageInfo.getInteger("pageSize"));
+                            BEAN.setCurrentCount(mAdapter.getData().size());
+                            BEAN.addIndex();
+                            Log.e("数量：", mAdapter.getItemCount() + "");
+                        }
+                    })
+                    .build()
+                    .post();
+        }
     }
 
     private List<MultipleItemEntity> converterData(String response) {
@@ -132,26 +144,23 @@ public class RefreshHandler implements SwipeRefreshLayout.OnRefreshListener,
         if (mAdapter.getItemCount() < pageSize || currentCount >= total) {
             mAdapter.loadMoreEnd(true);
         } else {
-            MyWall.getHandler().postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    RestClient.builder()
-                            .url("topic/get_topic_post_list/" + BEAN.getPageIndex() + "/2")
-                            .success(new ISuccess() {
-                                @Override
-                                public void onSuccess(String response) {
-                                    CONVERTER.clearData();
-                                    mAdapter.addData(CONVERTER.setJsonData(response).convert());
-                                    //累加数量
-                                    BEAN.setCurrentCount(mAdapter.getData().size());
-                                    mAdapter.loadMoreComplete();
-                                    BEAN.addIndex();
-                                }
-                            })
-                            .build()
-                            .post();
-                }
-            }, 1000);
+            RestClient.builder()
+                    .url("topic/get_topic_post_list/" + index + "/2")
+                    .success(new ISuccess() {
+                        @Override
+                        public void onSuccess(String response) {
+                            final JSONObject pageInfo = JSON.parseObject(response).getJSONObject("data");
+                            List<MultipleItemEntity> newData = converterData(response);
+                            CONVERTER.clearData();
+                            mAdapter.addData(newData);
+                            //累加数量
+                            BEAN.setCurrentCount(mAdapter.getData().size());
+                            mAdapter.loadMoreComplete();
+                            BEAN.addIndex();
+                        }
+                    })
+                    .build()
+                    .post();
         }
     }
 }

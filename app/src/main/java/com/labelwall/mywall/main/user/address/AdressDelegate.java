@@ -43,7 +43,6 @@ public class AdressDelegate extends WallDelegate {
     @OnClick(R2.id.icon_address_add)
     void onClickAddAddress() {
         getSupportDelegate().start(new AddressAddDelegate(null));
-
     }
 
     @Override
@@ -88,5 +87,16 @@ public class AdressDelegate extends WallDelegate {
     @Override
     public FragmentAnimator onCreateFragmentAnimator() {
         return new DefaultHorizontalAnimator();
+    }
+
+    @Override
+    public void onHiddenChanged(boolean hidden) {
+        super.onHiddenChanged(hidden);
+        /*if (hidden) {
+            //隐藏时所作的事情
+        } else {
+            //显示时所作的事情
+        }*/
+        initData();
     }
 }
