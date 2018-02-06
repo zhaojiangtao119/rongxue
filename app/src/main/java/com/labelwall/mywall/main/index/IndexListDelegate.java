@@ -63,9 +63,9 @@ public class IndexListDelegate extends WallDelegate {
     @Override
     public void onLazyInitView(@Nullable Bundle savedInstanceState) {
         super.onLazyInitView(savedInstanceState);
-        initRefreshLayout();
-        initRecyclerView();
-        mRefreshHandler.firstPage();
+//        initRefreshLayout();
+//        initRecyclerView();
+//        mRefreshHandler.firstPage();
     }
 
     @Override
@@ -76,5 +76,17 @@ public class IndexListDelegate extends WallDelegate {
     @Override
     public void onBindView(@Nullable Bundle savedInstanceState, View rootView) {
         mRefreshHandler = RefreshHandler.create(mRefreshLayout, mRecyclerView, new IndexDataConverter());
+        initRefreshLayout();
+        initRecyclerView();
+        mRefreshHandler.firstPage();
+    }
+
+    @Override
+    public void onHiddenChanged(boolean hidden) {
+        super.onHiddenChanged(hidden);
+        initRefreshLayout();
+        initRecyclerView();
+        mRefreshHandler.firstPage();
+        //mRefreshHandler = RefreshHandler.create(mRefreshLayout, mRecyclerView, new IndexDataConverter());
     }
 }

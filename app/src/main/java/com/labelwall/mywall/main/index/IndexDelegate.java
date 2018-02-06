@@ -77,7 +77,7 @@ public class IndexDelegate extends BottomItemDelegate {
 
     private void converterData() {
         RestClient.builder()
-                .url("topic/get_category")
+                .url("app/topic/category")
                 .success(new ISuccess() {
                     @Override
                     public void onSuccess(String response) {

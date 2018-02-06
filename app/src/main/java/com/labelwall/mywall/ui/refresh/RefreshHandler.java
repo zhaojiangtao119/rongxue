@@ -73,7 +73,7 @@ public class RefreshHandler implements SwipeRefreshLayout.OnRefreshListener,
 
     public void firstPage() {
         RestClient.builder()
-                .url("topic/get_topic_post_list/" + BEAN.getPageIndex() + "/6")
+                .url("topic/get_topic_post_list/" + BEAN.getPageIndex() + "/10")
                 .refreshLayout(REFRESH_LAYOUT)
                 .success(new ISuccess() {
                     @Override
@@ -83,7 +83,7 @@ public class RefreshHandler implements SwipeRefreshLayout.OnRefreshListener,
                                 .setPageSize(pageInfo.getInteger("pageSize"));
                         mAdapter = MultipleRecyclerAdapter.create(CONVERTER.setJsonData(response));
                         //上拉加载更多的监听
-                        mAdapter.setOnLoadMoreListener(RefreshHandler.this, RECYCLERVIEW);
+                        //mAdapter.setOnLoadMoreListener(RefreshHandler.this, RECYCLERVIEW);
                         RECYCLERVIEW.setAdapter(mAdapter);
                         BEAN.addIndex();
                     }
@@ -99,10 +99,10 @@ public class RefreshHandler implements SwipeRefreshLayout.OnRefreshListener,
         final int index = BEAN.getPageIndex();
 
         if (mAdapter.getItemCount() < pageSize || currentCount >= total) {
-            mAdapter.loadMoreEnd(true);
+            REFRESH_LAYOUT.setRefreshing(false);//加载结束，没有更多
         } else {
             RestClient.builder()
-                    .url("topic/get_topic_post_list/" + BEAN.getPageIndex() + "/2")
+                    .url("topic/get_topic_post_list/" + BEAN.getPageIndex() + "/10")
                     .refreshLayout(REFRESH_LAYOUT)
                     .success(new ISuccess() {
                         @Override
@@ -145,7 +145,7 @@ public class RefreshHandler implements SwipeRefreshLayout.OnRefreshListener,
             mAdapter.loadMoreEnd(true);
         } else {
             RestClient.builder()
-                    .url("topic/get_topic_post_list/" + index + "/2")
+                    .url("topic/get_topic_post_list/" + index + "/5")
                     .success(new ISuccess() {
                         @Override
                         public void onSuccess(String response) {

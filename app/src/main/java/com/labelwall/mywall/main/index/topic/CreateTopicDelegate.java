@@ -79,7 +79,7 @@ public class CreateTopicDelegate extends WallDelegate {
             @Override
             public void success(String url) {
                 //上传成功，拼接url
-                mImagesUrl.append(url).append(",");
+                mImagesUrl.append(name);
                 //TODO 只上传一张图片
                 onCreateTopic();
             }
@@ -105,11 +105,12 @@ public class CreateTopicDelegate extends WallDelegate {
                     @Override
                     public void onSuccess(String response) {
                         //TODO 请求成功，跳转页面到index
-                        final int sortTab = 0;
+                       /* final int sortTab = 0;
                         final BottomItemDelegate sortDelegate = WALL_BOTTOM_DELEGATE.getItemDelegates().get(sortTab);
                         WALL_BOTTOM_DELEGATE.getSupportDelegate()
                                 .showHideFragment(sortDelegate, CreateTopicDelegate.this);
-                        WALL_BOTTOM_DELEGATE.changeColor(sortTab);
+                        WALL_BOTTOM_DELEGATE.changeColor(sortTab);*/
+                        getSupportDelegate().pop();
                     }
                 })
                 .build()

@@ -39,7 +39,7 @@ public class OrderListAdapter extends MultipleRecyclerViewAdapter {
     }
 
     @Override
-    protected void convert(MultipleRecyclerViewHolder helper, MultipleItemEntity item) {
+    protected void convert(MultipleRecyclerViewHolder helper, final MultipleItemEntity item) {
         super.convert(helper, item);
         switch (helper.getItemViewType()) {
             case ItemType.ORDER_LIST:
@@ -65,6 +65,7 @@ public class OrderListAdapter extends MultipleRecyclerViewAdapter {
                     @Override
                     public void onClick(View v) {
                         //跳转到order的详情页面
+                        final Long orderNo = item.getField(OrderListField.ORDER_NO);
                         uploadOrderDetail(orderNo);
                     }
                 });
@@ -74,7 +75,7 @@ public class OrderListAdapter extends MultipleRecyclerViewAdapter {
         }
     }
 
-    private void uploadOrderDetail(Long orderNo) {
+    private void uploadOrderDetail(final Long orderNo) {
         RestClient.builder()
                 .url("app/order/detail")
                 .params("userId", USER_ID)
@@ -84,7 +85,7 @@ public class OrderListAdapter extends MultipleRecyclerViewAdapter {
                     public void onSuccess(String response) {
                         final JSONObject data = JSON.parseObject(response);
                         //跳转到订单详情页面
-                        DELEGATE.getSupportDelegate().start(new OrderDetailDelegate(data));
+                        DELEGATE.getSupportDelegate().start(new OrderDetailDelegate(orderNo));
                     }
                 })
                 .build()

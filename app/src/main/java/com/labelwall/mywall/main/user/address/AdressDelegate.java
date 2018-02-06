@@ -29,7 +29,7 @@ import me.yokeyword.fragmentation.anim.FragmentAnimator;
 
 public class AdressDelegate extends WallDelegate {
 
-    private final Long ORDER_NO;
+    private Long ORDER_NO = null;
 
     public AdressDelegate(Long orderNo) {
         this.ORDER_NO = orderNo;

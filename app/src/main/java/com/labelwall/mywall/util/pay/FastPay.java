@@ -26,7 +26,7 @@ import com.labelwall.mywall.util.storage.WallTagType;
 
 public class FastPay implements View.OnClickListener {
 
-    //设置支付回调的监听
+    //设置支付结果回调的监听
     private IAIPayResultListener mIAIPayResultListener = null;
     private Activity mActivity = null;
     //支付方式选择的dialog
@@ -43,6 +43,7 @@ public class FastPay implements View.OnClickListener {
         return new FastPay(delegate);
     }
 
+    //创建支付的dialog
     public void beginPayDialog() {
         mDialog.show();
         final Window window = mDialog.getWindow();
@@ -63,6 +64,7 @@ public class FastPay implements View.OnClickListener {
         }
     }
 
+    //支付结果的监听
     public FastPay setPayResultListener(IAIPayResultListener listener) {
         this.mIAIPayResultListener = listener;
         return this;
@@ -74,7 +76,7 @@ public class FastPay implements View.OnClickListener {
     }
 
     public final void alPay(Long orderId) {
-        //通过订单号+userId，获取签名字符串
+        //通过订单号+userId，获取订单签名字符串
         RestClient.builder()
                 .url("app/order/sign")
                 .params("orderNo", mOrderNo)
@@ -82,6 +84,7 @@ public class FastPay implements View.OnClickListener {
                 .success(new ISuccess() {
                     @Override
                     public void onSuccess(String response) {
+                        //服务端返回的订单签名的字符串
                         final String paySign = JSON.parseObject(response).getString("data");
                         //必须是异步的调用客户端支付接口
                         final PayAsyncTask payAsyncTask = new PayAsyncTask(mActivity, mIAIPayResultListener);

@@ -58,7 +58,6 @@ public class MultipleViewHolder extends BaseViewHolder {
         switch (holder.getItemViewType()) {
             case ItemType.TEXT:
                 holder.setText(R.id.topic_content, content);
-
                 addOnClickListener(R.id.topic_content);
                 holder.setTag(R.id.topic_content, topicId);
                 break;

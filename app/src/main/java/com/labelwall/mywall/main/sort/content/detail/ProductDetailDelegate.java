@@ -109,7 +109,7 @@ public class ProductDetailDelegate extends WallDelegate implements
         //TODO 请求服务器将添加到购物的商品信息写入DB,参数userId,count,productId
         final long userId = WallPreference.getCurrentUserId(WallTagType.CURRENT_USER_ID.name());
         RestClient.builder()
-                .url("app/shopcart/app_add_cart")
+                .url("app/shopcart/add_cart")
                 .params("userId", userId)
                 .params("quantity", 1)
                 .params("productId", PRODUCT_ID)

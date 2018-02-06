@@ -9,8 +9,8 @@ import com.labelwall.mywall.delegates.bottom.BottomItemDelegate;
 import com.labelwall.mywall.delegates.bottom.BottomTabBean;
 import com.labelwall.mywall.delegates.bottom.ItemBuilder;
 import com.labelwall.mywall.main.cart.ShopCartDelegate;
+import com.labelwall.mywall.main.compass.ActivityDelegate;
 import com.labelwall.mywall.main.user.UserDelegate;
-import com.labelwall.mywall.main.compass.CompassDelegate;
 import com.labelwall.mywall.main.index.IndexDelegate;
 import com.labelwall.mywall.main.sort.SortDelegate;
 
@@ -28,7 +28,7 @@ public class WallBottomDelegate extends BaseBottomDelegate {
         final LinkedHashMap<BottomTabBean, BottomItemDelegate> items = new LinkedHashMap<>();
         items.put(new BottomTabBean("{fa-home}", ""), new IndexDelegate());
         items.put(new BottomTabBean("{fa-sort}", ""), new SortDelegate());
-        items.put(new BottomTabBean("{fa-compass}", ""), new CompassDelegate());
+        items.put(new BottomTabBean("{fa-compass}", ""), new ActivityDelegate());
         items.put(new BottomTabBean("{fa-shopping-cart}", ""), new ShopCartDelegate());
         items.put(new BottomTabBean("{fa-user}", ""), new UserDelegate());
         return builder.addItem(items).build();

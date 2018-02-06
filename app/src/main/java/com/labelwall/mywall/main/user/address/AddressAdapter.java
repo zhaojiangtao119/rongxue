@@ -13,6 +13,7 @@ import android.widget.Toast;
 import com.joanzapata.iconify.widget.IconTextView;
 import com.labelwall.mywall.R;
 import com.labelwall.mywall.delegates.base.WallDelegate;
+import com.labelwall.mywall.main.cart.order.OrderDetailDelegate;
 import com.labelwall.mywall.ui.recycler.ItemType;
 import com.labelwall.mywall.ui.recycler.MultipleFields;
 import com.labelwall.mywall.ui.recycler.MultipleItemEntity;
@@ -23,7 +24,9 @@ import com.labelwall.mywall.util.net.callback.ISuccess;
 import com.labelwall.mywall.util.storage.WallPreference;
 import com.labelwall.mywall.util.storage.WallTagType;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import retrofit2.http.DELETE;
 
@@ -36,7 +39,7 @@ public class AddressAdapter extends MultipleRecyclerViewAdapter {
     private final WallDelegate DELEGATE;
     private final long USER_ID = WallPreference.getCurrentUserId(WallTagType.CURRENT_USER_ID.name());
     private int mProPosition = 0;
-    private final Long ORDER_NO;
+    private Long ORDER_NO = null;
 
     public AddressAdapter(List<MultipleItemEntity> data, WallDelegate delegate, Long orderNo) {
         super(data);
@@ -109,10 +112,19 @@ public class AddressAdapter extends MultipleRecyclerViewAdapter {
                     @Override
                     public void onClick(View v) {
                         final int currentPosition = helper.getAdapterPosition();
+                        final Integer shoppingId = item.getField(MultipleFields.ID);
+                        Map<String, Object> params = new HashMap<>();
+                        if (ORDER_NO == null) {
+                            params.put("userId", USER_ID);
+                            params.put("shoppingId", id);
+                        } else {
+                            params.put("userId", USER_ID);
+                            params.put("shoppingId", id);
+                            params.put("orderNo", ORDER_NO);
+                        }
                         RestClient.builder()
                                 .url("app/shopping/default")
-                                .params("userId", USER_ID)
-                                .params("shoppingId", id)
+                                .params(params)
                                 .loader(DELEGATE.getContext())
                                 .success(new ISuccess() {
                                     @Override
@@ -133,6 +145,9 @@ public class AddressAdapter extends MultipleRecyclerViewAdapter {
                                                 getData().get(0).setField(AddressField.SELECTED, 1);
                                                 notifyItemChanged(0);
                                             }
+                                        }
+                                        if (ORDER_NO != null) {
+                                            DELEGATE.getSupportDelegate().startWithPop(new OrderDetailDelegate(ORDER_NO));
                                         }
                                     }
                                 })

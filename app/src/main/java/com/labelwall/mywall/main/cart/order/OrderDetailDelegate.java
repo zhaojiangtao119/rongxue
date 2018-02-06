@@ -6,6 +6,7 @@ import android.support.v7.widget.AppCompatButton;
 import android.support.v7.widget.AppCompatTextView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.View;
 
 import com.alibaba.fastjson.JSON;
@@ -60,7 +61,8 @@ public class OrderDetailDelegate extends WallDelegate implements IAIPayResultLis
         getSupportDelegate().start(new AdressDelegate(mOrderNo));
     }
 
-    private final JSONObject ORDERINFO;
+    private final Long ORDER_NO;
+
     private OrderProductAdapter mAdapter = null;
     private Long mOrderNo = null;
     private final long USER_ID = WallPreference.getCurrentUserId(WallTagType.CURRENT_USER_ID.name());
@@ -100,8 +102,8 @@ public class OrderDetailDelegate extends WallDelegate implements IAIPayResultLis
     }
 
 
-    public OrderDetailDelegate(JSONObject orderinfo) {
-        this.ORDERINFO = orderinfo;
+    public OrderDetailDelegate(Long orderNo) {
+        this.ORDER_NO = orderNo;
     }
 
     @Override
@@ -111,14 +113,25 @@ public class OrderDetailDelegate extends WallDelegate implements IAIPayResultLis
 
     @Override
     public void onBindView(@Nullable Bundle savedInstanceState, View rootView) {
-
+        RestClient.builder()
+                .url("app/order/detail")
+                .loader(getContext())
+                .params("userId", USER_ID)
+                .params("orderNo", ORDER_NO)
+                .success(new ISuccess() {
+                    @Override
+                    public void onSuccess(String response) {
+                        final JSONObject data = JSON.parseObject(response);
+                        bindData(data);
+                    }
+                })
+                .build().get();
     }
 
     @Override
     public void onLazyInitView(@Nullable Bundle savedInstanceState) {
         super.onLazyInitView(savedInstanceState);
         initRecyclerView();
-        bindData();
     }
 
     private void initRecyclerView() {
@@ -126,10 +139,10 @@ public class OrderDetailDelegate extends WallDelegate implements IAIPayResultLis
         mRecyclerView.setLayoutManager(manager);
     }
 
-    private void bindData() {
+    private void bindData(JSONObject data) {
         //获取订单信息：orderNo，payment
-        if (ORDERINFO != null) {
-            final JSONObject orderVo = ORDERINFO.getJSONObject("data");
+        if (data != null) {
+            final JSONObject orderVo = data.getJSONObject("data");
             final BigDecimal orderPayment = orderVo.getBigDecimal("payment");
             mOrderNo = orderVo.getLong("orderNo");
             mOrderPayment.setText("￥" + String.valueOf(orderPayment));
@@ -187,7 +200,9 @@ public class OrderDetailDelegate extends WallDelegate implements IAIPayResultLis
 
     @Override
     public void onPaySuccess() {
-
+        //这里监听的是支付宝同步返回的支付结果，
+        // 最终的支付结果的需要服务端的验签结果
+        Log.e("支付结果：", "支付成功");
     }
 
     @Override
@@ -208,5 +223,10 @@ public class OrderDetailDelegate extends WallDelegate implements IAIPayResultLis
     @Override
     public void onPayConnectError() {
 
+    }
+
+    @Override
+    public void onHiddenChanged(boolean hidden) {
+        super.onHiddenChanged(hidden);
     }
 }

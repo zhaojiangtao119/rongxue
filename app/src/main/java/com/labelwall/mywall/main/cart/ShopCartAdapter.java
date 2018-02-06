@@ -85,11 +85,11 @@ public class ShopCartAdapter extends MultipleRecyclerViewAdapter{
                         if (currentSelect == 1) {
                             iconIsSelected.setTextColor(Color.GRAY);
                             //TODO 请求服务器取消该商品的选择，请求参数：productId,userId
-                            clickChecked(productId, "app_un_select");
+                            clickChecked(productId, "un_select");
                         } else {
                             iconIsSelected.setTextColor(ContextCompat.getColor(DELEGATE.getContext(), R.color.app_title));
                             //TODO 请求服务器选择该商品，请求参数：productId,userId
-                            clickChecked(productId, "app_select");
+                            clickChecked(productId, "select");
                         }
                     }
                 });
@@ -154,7 +154,7 @@ public class ShopCartAdapter extends MultipleRecyclerViewAdapter{
 
     private void uploadShopCartProductNum(Integer updateProductNum, Integer productId) {
         RestClient.builder()
-                .url("app/shopcart/app_update_quantity")
+                .url("app/shopcart/update_quantity")
                 .loader(mContext)
                 .params("userId", userId)
                 .params("productId", productId)

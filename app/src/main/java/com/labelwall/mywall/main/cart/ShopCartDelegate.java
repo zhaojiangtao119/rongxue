@@ -71,10 +71,10 @@ public class ShopCartDelegate extends BottomItemDelegate
         if (mIsCheckedAll) {//判断是否全部选中
             //若是全部选中，则取消全部选中
             mSelectAll.setTextColor(Color.GRAY);
-            clickSelectAll("app_un_select_all");
+            clickSelectAll("un_select_all");
         } else {
             mSelectAll.setTextColor(ContextCompat.getColor(_mActivity, R.color.app_title));
-            clickSelectAll("app_select_all");
+            clickSelectAll("select_all");
         }
     }
 
@@ -236,9 +236,10 @@ public class ShopCartDelegate extends BottomItemDelegate
                         final JSONObject data = JSON.parseObject(response);
                         final JSONObject orderVo = data.getJSONObject("data");
                         final Integer status = data.getInteger("status");
+                        final Long orderNo = orderVo.getLong("orderNo");
                         if (status == 0 && orderVo != null) {//订单生成成功
                             final WallDelegate wallDelegate = getParentDelegate();
-                            wallDelegate.getSupportDelegate().start(new OrderDetailDelegate(data));
+                            wallDelegate.getSupportDelegate().start(new OrderDetailDelegate(orderNo));
                         } else if (status == 2) {//TODO 订单生成失败，没有默认的配送地址
                             final WallDelegate wallDelegate = getParentDelegate();
                             wallDelegate.getSupportDelegate().start(new AdressDelegate(null));
@@ -271,7 +272,7 @@ public class ShopCartDelegate extends BottomItemDelegate
         super.onLazyInitView(savedInstanceState);
         //加载数据
         RestClient.builder()
-                .url("app/shopcart/app_get_cart_list/" + mUserId)
+                .url("app/shopcart/get_cart_list/" + mUserId)
                 .success(this)
                 .build()
                 .get();
@@ -307,7 +308,7 @@ public class ShopCartDelegate extends BottomItemDelegate
     public void onHiddenChanged(boolean hidden) {
         super.onHiddenChanged(hidden);
         RestClient.builder()
-                .url("app/shopcart/app_get_cart_list/" + mUserId)
+                .url("app/shopcart/get_cart_list/" + mUserId)
                 .success(this)
                 .build()
                 .get();
