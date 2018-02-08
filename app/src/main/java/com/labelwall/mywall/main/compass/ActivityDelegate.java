@@ -15,6 +15,7 @@ import com.labelwall.mywall.delegates.base.WallDelegate;
 import com.labelwall.mywall.delegates.bottom.BottomItemDelegate;
 
 import butterknife.BindView;
+import butterknife.OnClick;
 
 /**
  * Created by Administrator on 2018-01-04.
@@ -26,12 +27,19 @@ public class ActivityDelegate extends BottomItemDelegate {
     SwipeRefreshLayout mRefreshLayout = null;
     @BindView(R2.id.rv_activity_list)
     RecyclerView mRecyclerView = null;
-    @BindView(R2.id.tv_activity_my)
-    AppCompatTextView mMyActivityList;
-    @BindView(R2.id.icon_activity_add)
-    IconTextView mAddActivity;
+
 
     private ActivityRefreshHandler mRefreshHandler = null;
+
+    @OnClick(R2.id.tv_activity_my)
+    void onClickMyActivity() {//我的活动
+        //getParentDelegate().getSupportDelegate().start();
+    }
+
+    @OnClick(R2.id.icon_activity_add)
+    void onClickStartActivity() {//创建活动
+
+    }
 
     @Override
     public Object setLayout() {
@@ -41,7 +49,8 @@ public class ActivityDelegate extends BottomItemDelegate {
     @Override
     public void onBindView(@Nullable Bundle savedInstanceState, View rootView) {
         WallDelegate wallDelegate = getParentDelegate();
-        mRefreshHandler = ActivityRefreshHandler.create(mRefreshLayout, mRecyclerView, new ActivityDataConverter(),wallDelegate);
+        mRefreshHandler = ActivityRefreshHandler
+                .create(mRefreshLayout, mRecyclerView, new ActivityDataConverter(), wallDelegate);
     }
 
     @Override

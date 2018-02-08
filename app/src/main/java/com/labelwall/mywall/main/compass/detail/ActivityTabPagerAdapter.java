@@ -21,65 +21,51 @@ public class ActivityTabPagerAdapter extends FragmentStatePagerAdapter {
 
     private final ArrayList<String> TAB_TITLES = new ArrayList<>();
     private final ArrayList<String> USERS = new ArrayList<>();
-    private final Integer ACTIVITY_ID;
-    private String mComment = null;
 
-    public ActivityTabPagerAdapter(FragmentManager fm, JSONObject data, Integer activityId) {
+    public ActivityTabPagerAdapter(FragmentManager fm, JSONObject data, JSONObject commentData) {
         super(fm);
-        this.ACTIVITY_ID = activityId;
         //设置title标题
         TAB_TITLES.add("已加入");
         TAB_TITLES.add("已申请");
         TAB_TITLES.add("评论");
         //获取加入的用户信息
         final JSONArray joinUserArray = data.getJSONArray("joinUser");
-        if (joinUserArray != null && joinUserArray.size() >= 0) {
+        if (joinUserArray != null && joinUserArray.size() > 0) {
             USERS.add(0, joinUserArray.toString());//存储的时候指定list下标
+        } else {
+            USERS.add(0, null);
         }
         final JSONArray noCheckedJoinUserArray = data.getJSONArray("noCheckedJoinUser");
-        if (noCheckedJoinUserArray != null && noCheckedJoinUserArray.size() >= 0) {
+        if (noCheckedJoinUserArray != null && noCheckedJoinUserArray.size() > 0) {
             USERS.add(1, noCheckedJoinUserArray.toString());
+        } else {
+            USERS.add(1, null);
         }
-        //加载评论
-        uploadComment();
-        //
-        USERS.add(2, mComment);
-    }
-
-    private void uploadComment() {
-        RestClient.builder()//加载评论
-                .url("activity/comment/" + ACTIVITY_ID + "/1/20")
-                .success(new ISuccess() {
-                    @Override
-                    public void onSuccess(String response) {
-                        mComment = response;
-                    }
-                })
-                .build()
-                .get();
+        final JSONArray commentArray = commentData.getJSONArray("list");
+        if (commentArray != null && commentArray.size() > 0) {
+            USERS.add(2, commentArray.toJSONString());
+        } else {
+            USERS.add(2, null);
+        }
     }
 
     @Override
     public Fragment getItem(int position) {
         String hintMessage = null;
         if (position == 0) {
-            if (USERS.size() > 0) {
-                if (!StringUtils.isEmpty(USERS.get(0))) {
-                    return ActivityJoinUserDelegate.create(USERS.get(0));
-                }
+            if (USERS.get(0) != null) {
+                return ActivityJoinUserDelegate.create(USERS.get(0));
             } else {
                 hintMessage = "暂无加入的用户";
             }
         } else if (position == 1) {
-            if (USERS.size() > 1) {
-                if (!StringUtils.isEmpty(USERS.get(1))) {
-                    return ActivityJoinUserDelegate.create(USERS.get(1));
-                }
+            if (USERS.get(1) != null) {
+                return ActivityJoinUserDelegate.create(USERS.get(1));
             } else {
                 hintMessage = "暂无申请加入的用户";
             }
         } else if (position == 2) {
-            if (USERS.size() > 2) {
+            if (USERS.get(2) != null) {
                 return ActivityCommentDelegate.create(USERS.get(2));
             } else {
                 hintMessage = "暂无评论";

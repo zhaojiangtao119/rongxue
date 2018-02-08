@@ -17,6 +17,7 @@ import android.view.View;
 import android.widget.Toast;
 
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
@@ -28,7 +29,6 @@ import com.labelwall.mywall.util.net.RestClient;
 import com.labelwall.mywall.util.net.callback.ISuccess;
 
 import butterknife.BindView;
-import de.hdodenhof.circleimageview.CircleImageView;
 import me.yokeyword.fragmentation.anim.DefaultHorizontalAnimator;
 import me.yokeyword.fragmentation.anim.FragmentAnimator;
 
@@ -51,7 +51,6 @@ public class ActivityDetailDelegate extends WallDelegate implements AppBarLayout
     @BindView(R2.id.app_bar_detail)
     AppBarLayout mAppBar = null;
 
-
     private static final RequestOptions OPTIONS = new RequestOptions()
             .diskCacheStrategy(DiskCacheStrategy.ALL)
             .dontAnimate()
@@ -59,6 +58,8 @@ public class ActivityDetailDelegate extends WallDelegate implements AppBarLayout
 
     private Integer mActivityId = -1;
     private static final String ARG_ACTIVITY_ID = "ARG_ACTIVITY_ID";
+
+    private JSONObject mCommentData = null;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -88,9 +89,24 @@ public class ActivityDetailDelegate extends WallDelegate implements AppBarLayout
         mCollapsingToolbarLayout.setContentScrimColor(Color.WHITE);
         //设置滚动的事件监听
         mAppBar.addOnOffsetChangedListener(this);
-        //加载服务端数据
+        //加载服务端activity数据
+        initActivityComment(mActivityId);
         initData();
         initTabLayout();
+    }
+
+    private void initActivityComment(Integer mActivityId) {
+        RestClient.builder()//加载评论
+                .url("activity/comment/" + mActivityId + "/1/20")
+                .success(new ISuccess() {
+                    @Override
+                    public void onSuccess(String response) {
+                        final JSONObject pageInfo = JSON.parseObject(response).getJSONObject("data");
+                        mCommentData = pageInfo;
+                    }
+                })
+                .build()
+                .get();
     }
 
     private void initData() {
@@ -106,6 +122,7 @@ public class ActivityDetailDelegate extends WallDelegate implements AppBarLayout
                         initActivityPoster(activityDto);
                         initActivityInfo(activityDto);
                         initViewPager(activityDto);
+
                     }
                 })
                 .build()
@@ -137,7 +154,7 @@ public class ActivityDetailDelegate extends WallDelegate implements AppBarLayout
 
     private void initViewPager(JSONObject activityDto) {
         final ActivityTabPagerAdapter adapter =
-                new ActivityTabPagerAdapter(getFragmentManager(), activityDto, mActivityId);
+                new ActivityTabPagerAdapter(getFragmentManager(), activityDto, mCommentData);
         mViewPage.setAdapter(adapter);
     }
 
