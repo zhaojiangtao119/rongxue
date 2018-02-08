@@ -90,12 +90,12 @@ public class ActivityDetailDelegate extends WallDelegate implements AppBarLayout
         //设置滚动的事件监听
         mAppBar.addOnOffsetChangedListener(this);
         //加载服务端activity数据
-        initActivityComment(mActivityId);
+        initActivityComment();
         initData();
         initTabLayout();
     }
 
-    private void initActivityComment(Integer mActivityId) {
+    private void initActivityComment() {
         RestClient.builder()//加载评论
                 .url("activity/comment/" + mActivityId + "/1/20")
                 .success(new ISuccess() {

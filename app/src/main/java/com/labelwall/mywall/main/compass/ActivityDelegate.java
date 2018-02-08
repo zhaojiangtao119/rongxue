@@ -13,6 +13,7 @@ import com.labelwall.mywall.R;
 import com.labelwall.mywall.R2;
 import com.labelwall.mywall.delegates.base.WallDelegate;
 import com.labelwall.mywall.delegates.bottom.BottomItemDelegate;
+import com.labelwall.mywall.main.compass.my.ActivityMyDelegate;
 
 import butterknife.BindView;
 import butterknife.OnClick;
@@ -33,7 +34,7 @@ public class ActivityDelegate extends BottomItemDelegate {
 
     @OnClick(R2.id.tv_activity_my)
     void onClickMyActivity() {//我的活动
-        //getParentDelegate().getSupportDelegate().start();
+        getParentDelegate().getSupportDelegate().start(new ActivityMyDelegate());
     }
 
     @OnClick(R2.id.icon_activity_add)

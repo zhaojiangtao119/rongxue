@@ -6,10 +6,7 @@ import android.support.v4.app.FragmentStatePagerAdapter;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
-import com.blankj.utilcode.util.StringUtils;
 import com.labelwall.mywall.main.compass.detail.comment.ActivityCommentDelegate;
-import com.labelwall.mywall.util.net.RestClient;
-import com.labelwall.mywall.util.net.callback.ISuccess;
 
 import java.util.ArrayList;
 
