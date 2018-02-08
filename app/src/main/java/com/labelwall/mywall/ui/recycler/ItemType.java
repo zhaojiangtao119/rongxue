@@ -18,4 +18,5 @@ public class ItemType {
     public static final int ACTIVITY_LIST = 10;
     public static final int JOIN_USERS = 11;
     public static final int ACTIVITY_COMMENT_LIST = 12;
+    public static final int APPLY_JOIN_USERS = 13;
 }

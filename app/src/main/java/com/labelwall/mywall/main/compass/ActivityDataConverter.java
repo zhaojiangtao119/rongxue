@@ -3,6 +3,7 @@ package com.labelwall.mywall.main.compass;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import com.labelwall.mywall.main.user.UserProfileField;
 import com.labelwall.mywall.ui.recycler.DataConverter;
 import com.labelwall.mywall.ui.recycler.ItemType;
 import com.labelwall.mywall.ui.recycler.MultipleFields;
@@ -25,6 +26,7 @@ public class ActivityDataConverter extends DataConverter {
         for (int i = 0; i < size; i++) {
             final JSONObject activityInfo = activityList.getJSONObject(i);
             final Integer id = activityInfo.getInteger("id");
+            final Integer userId = activityInfo.getInteger("userId");
             final String theme = activityInfo.getString("theme");
             final String location = activityInfo.getString("location");
             final String city = activityInfo.getString("city");
@@ -40,6 +42,7 @@ public class ActivityDataConverter extends DataConverter {
             final MultipleItemEntity entity = MultipleItemEntity.builder()
                     .setItemType(ItemType.ACTIVITY_LIST)
                     .setField(MultipleFields.ID, id)
+                    .setField(UserProfileField.USER_ID, userId)
                     .setField(ActivityFeilds.THEME, theme)
                     .setField(ActivityFeilds.LOCATION, location)
                     .setField(ActivityFeilds.CITY, city)
