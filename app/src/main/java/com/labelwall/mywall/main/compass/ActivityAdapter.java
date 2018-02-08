@@ -9,6 +9,7 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.RequestOptions;
 import com.labelwall.mywall.R;
 import com.labelwall.mywall.delegates.base.WallDelegate;
+import com.labelwall.mywall.main.compass.detail.ActivityDetailDelegate;
 import com.labelwall.mywall.ui.recycler.ItemType;
 import com.labelwall.mywall.ui.recycler.MultipleFields;
 import com.labelwall.mywall.ui.recycler.MultipleItemEntity;
@@ -40,11 +41,10 @@ public class ActivityAdapter extends MultipleRecyclerViewAdapter {
     }
 
     @Override
-    protected void convert(MultipleRecyclerViewHolder helper, MultipleItemEntity item) {
+    protected void convert(MultipleRecyclerViewHolder helper, final MultipleItemEntity item) {
         super.convert(helper, item);
         switch (helper.getItemViewType()) {
             case ItemType.ACTIVITY_LIST:
-                final Integer id = item.getField(MultipleFields.ID);
                 final String theme = item.getField(ActivityFeilds.THEME);
                 final String location = item.getField(ActivityFeilds.LOCATION);
                 final String city = item.getField(ActivityFeilds.CITY);
@@ -85,7 +85,8 @@ public class ActivityAdapter extends MultipleRecyclerViewAdapter {
                 helper.itemView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-
+                        final Integer id = item.getField(MultipleFields.ID);
+                        DELEGATE.getSupportDelegate().start(ActivityDetailDelegate.create(id));
                     }
                 });
                 break;

@@ -16,4 +16,5 @@ public class ItemType {
     public static final int ORDER_LIST = 8;
     public static final int ADDRESS_LIST = 9;
     public static final int ACTIVITY_LIST = 10;
+    public static final int JOIN_USERS = 11;
 }
