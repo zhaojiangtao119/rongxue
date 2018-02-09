@@ -25,7 +25,7 @@ public class ActivityDataConverter extends DataConverter {
         final int size = activityList.size();
         for (int i = 0; i < size; i++) {
             final JSONObject activityInfo = activityList.getJSONObject(i);
-            final Integer id = activityInfo.getInteger("id");
+            final Integer activityId = activityInfo.getInteger("id");
             final Integer userId = activityInfo.getInteger("userId");
             final String theme = activityInfo.getString("theme");
             final String location = activityInfo.getString("location");
@@ -41,7 +41,7 @@ public class ActivityDataConverter extends DataConverter {
 
             final MultipleItemEntity entity = MultipleItemEntity.builder()
                     .setItemType(ItemType.ACTIVITY_LIST)
-                    .setField(MultipleFields.ID, id)
+                    .setField(MultipleFields.ID, activityId)
                     .setField(UserProfileField.USER_ID, userId)
                     .setField(ActivityFeilds.THEME, theme)
                     .setField(ActivityFeilds.LOCATION, location)

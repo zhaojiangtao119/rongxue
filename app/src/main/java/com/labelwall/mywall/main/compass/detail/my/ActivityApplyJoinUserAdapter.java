@@ -4,6 +4,8 @@ import android.support.v7.widget.AppCompatTextView;
 import android.view.View;
 import android.widget.Toast;
 
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
 import com.blankj.utilcode.util.StringUtils;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
@@ -14,6 +16,10 @@ import com.labelwall.mywall.ui.recycler.ItemType;
 import com.labelwall.mywall.ui.recycler.MultipleItemEntity;
 import com.labelwall.mywall.ui.recycler.MultipleRecyclerViewAdapter;
 import com.labelwall.mywall.ui.recycler.MultipleRecyclerViewHolder;
+import com.labelwall.mywall.util.net.RestClient;
+import com.labelwall.mywall.util.net.callback.ISuccess;
+import com.labelwall.mywall.util.storage.WallPreference;
+import com.labelwall.mywall.util.storage.WallTagType;
 
 import java.util.List;
 
@@ -25,13 +31,18 @@ import de.hdodenhof.circleimageview.CircleImageView;
 
 public class ActivityApplyJoinUserAdapter extends MultipleRecyclerViewAdapter {
 
+    private final Integer ACTIVITY_ID;
+    private final long USER_ID =
+            WallPreference.getCurrentUserId(WallTagType.CURRENT_USER_ID.name());
+
     private static final RequestOptions OPTIONS = new RequestOptions()
             .diskCacheStrategy(DiskCacheStrategy.ALL)
             .centerCrop()
             .dontAnimate();
 
-    public ActivityApplyJoinUserAdapter(List<MultipleItemEntity> data) {
+    public ActivityApplyJoinUserAdapter(List<MultipleItemEntity> data, Integer activityId) {
         super(data);
+        this.ACTIVITY_ID = activityId;
         addItemType(ItemType.APPLY_JOIN_USERS, R.layout.item_activity_apply_join_user);
     }
 
@@ -71,7 +82,7 @@ public class ActivityApplyJoinUserAdapter extends MultipleRecyclerViewAdapter {
                     @Override
                     public void onClick(View v) {
                         final Integer userId = item.getField(UserProfileField.USER_ID);
-                        agreeJoin(userId);
+                        agreeJoin(userId, applyJoinUser);
                     }
                 });
                 break;
@@ -80,7 +91,24 @@ public class ActivityApplyJoinUserAdapter extends MultipleRecyclerViewAdapter {
         }
     }
 
-    private void agreeJoin(Integer userId) {
+    private void agreeJoin(Integer userId, final AppCompatTextView applyJoinUser) {
         //TODO 请求服务器同意申请用户加入，修改UI的展示
+        RestClient.builder()
+                .url("activity/agreeJoin/" + USER_ID + "/" + ACTIVITY_ID + "/" + userId)
+                .success(new ISuccess() {
+                    @Override
+                    public void onSuccess(String response) {
+                        final JSONObject jsonResponse = JSON.parseObject(response);
+                        final int status = jsonResponse.getInteger("status");
+                        final String message = jsonResponse.getString("msg");
+                        if (status == 2) {
+                            Toast.makeText(mContext, message, Toast.LENGTH_SHORT).show();
+                        } else if (status == 0) {
+                            applyJoinUser.setText("已经加入活动");
+                        }
+                    }
+                })
+                .build()
+                .put();
     }
 }

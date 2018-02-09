@@ -19,9 +19,11 @@ import java.util.ArrayList;
 public class ActivityTabPagerMyAdapter extends FragmentStatePagerAdapter {
     private final ArrayList<String> TAB_TITLES = new ArrayList<>();
     private final ArrayList<String> USERS = new ArrayList<>();
+    private final Integer ACTIVITY_ID;
 
-    public ActivityTabPagerMyAdapter(FragmentManager fm, JSONObject data, JSONObject commentData) {
+    public ActivityTabPagerMyAdapter(FragmentManager fm, JSONObject data, JSONObject commentData, Integer activityId) {
         super(fm);
+        this.ACTIVITY_ID = activityId;
         //设置title标题
         TAB_TITLES.add("已加入");
         TAB_TITLES.add("已申请");
@@ -58,7 +60,7 @@ public class ActivityTabPagerMyAdapter extends FragmentStatePagerAdapter {
             }
         } else if (position == 1) {
             if (USERS.get(1) != null) {
-                return ActivityApplyJoinUserDelegate.create(USERS.get(1));
+                return ActivityApplyJoinUserDelegate.create(USERS.get(1), ACTIVITY_ID);
             } else {
                 hintMessage = "暂无申请加入的用户";
             }

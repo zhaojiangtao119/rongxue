@@ -88,17 +88,17 @@ public class ActivityAdapter extends MultipleRecyclerViewAdapter {
                 }
                 limitNumView.setText(String.valueOf(limitNum));
                 //点击item跳转到活动详情
-                //TODO，如何判断当前活动是用户创建的？？？
+                //如何判断当前活动是用户创建的
                 helper.itemView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        final Integer id = item.getField(MultipleFields.ID);
+                        final Integer activityId = item.getField(MultipleFields.ID);
                         //活动创建者的id
                         final Integer userId = item.getField(UserProfileField.USER_ID);
                         if (userId != USER_ID) {
-                            DELEGATE.getSupportDelegate().start(ActivityDetailDelegate.create(id));
+                            DELEGATE.getSupportDelegate().start(ActivityDetailDelegate.create(activityId));
                         } else {
-                            DELEGATE.getSupportDelegate().start(ActivityDetailMyDelegate.create(id));
+                            DELEGATE.getSupportDelegate().start(ActivityDetailMyDelegate.create(activityId));
                         }
                     }
                 });

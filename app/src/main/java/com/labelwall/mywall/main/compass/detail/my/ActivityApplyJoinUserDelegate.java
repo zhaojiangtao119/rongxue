@@ -28,6 +28,8 @@ public class ActivityApplyJoinUserDelegate extends WallDelegate {
 
     private static final String ARG_APPLY_JOIN = "ARG_APPLY_JOIN";
     private String mApplyJoinUserData = null;
+    private static final String ARF_ACTIVITY_ID = "ARF_ACTIVITY_ID";
+    private Integer mActivityId = null;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -35,12 +37,14 @@ public class ActivityApplyJoinUserDelegate extends WallDelegate {
         final Bundle args = getArguments();
         if (args != null) {
             mApplyJoinUserData = args.getString(ARG_APPLY_JOIN);
+            mActivityId = args.getInt(ARF_ACTIVITY_ID);
         }
     }
 
-    public static ActivityApplyJoinUserDelegate create(String data) {
+    public static ActivityApplyJoinUserDelegate create(String data, Integer activityId) {
         final Bundle args = new Bundle();
         args.putString(ARG_APPLY_JOIN, data);
+        args.putInt(ARF_ACTIVITY_ID, activityId);
         final ActivityApplyJoinUserDelegate delegate = new ActivityApplyJoinUserDelegate();
         delegate.setArguments(args);
         return delegate;
@@ -55,7 +59,7 @@ public class ActivityApplyJoinUserDelegate extends WallDelegate {
     public void onBindView(@Nullable Bundle savedInstanceState, @NonNull View rootView) {
         final LinearLayoutManager manager = new LinearLayoutManager(getContext());
         mRecyclerView.setLayoutManager(manager);
-        mAdapter = new ActivityApplyJoinUserAdapter(mConverter.setJsonData(mApplyJoinUserData).convert());
+        mAdapter = new ActivityApplyJoinUserAdapter(mConverter.setJsonData(mApplyJoinUserData).convert(),mActivityId);
         mRecyclerView.setAdapter(mAdapter);
     }
 }
