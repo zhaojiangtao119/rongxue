@@ -3,6 +3,8 @@ package com.labelwall.mywall.main.compass;
 import android.support.v7.widget.AppCompatTextView;
 import android.view.View;
 
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
 import com.blankj.utilcode.util.StringUtils;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
@@ -11,12 +13,15 @@ import com.labelwall.mywall.R;
 import com.labelwall.mywall.delegates.base.WallDelegate;
 import com.labelwall.mywall.main.compass.detail.ActivityDetailDelegate;
 import com.labelwall.mywall.main.compass.detail.my.ActivityDetailMyDelegate;
+import com.labelwall.mywall.main.compass.detail.my.join.ActivityDetailMyJoinDelegate;
 import com.labelwall.mywall.main.user.UserProfileField;
 import com.labelwall.mywall.ui.recycler.ItemType;
 import com.labelwall.mywall.ui.recycler.MultipleFields;
 import com.labelwall.mywall.ui.recycler.MultipleItemEntity;
 import com.labelwall.mywall.ui.recycler.MultipleRecyclerViewAdapter;
 import com.labelwall.mywall.ui.recycler.MultipleRecyclerViewHolder;
+import com.labelwall.mywall.util.net.RestClient;
+import com.labelwall.mywall.util.net.callback.ISuccess;
 import com.labelwall.mywall.util.storage.WallPreference;
 import com.labelwall.mywall.util.storage.WallTagType;
 
@@ -44,6 +49,10 @@ public class ActivityAdapter extends MultipleRecyclerViewAdapter {
         super(data);
         this.DELEGATE = delegate;
         addItemType(ItemType.ACTIVITY_LIST, R.layout.item_activity_list);
+    }
+
+    private void getUserJoinActivityIds() {
+
     }
 
     @Override
@@ -96,7 +105,8 @@ public class ActivityAdapter extends MultipleRecyclerViewAdapter {
                         //活动创建者的id
                         final Integer userId = item.getField(UserProfileField.USER_ID);
                         if (userId != USER_ID) {
-                            DELEGATE.getSupportDelegate().start(ActivityDetailDelegate.create(activityId));
+                            //TODO 判断该活动是否是当前用户参加的活动，跳转
+                            validateActivity(activityId);
                         } else {
                             DELEGATE.getSupportDelegate().start(ActivityDetailMyDelegate.create(activityId));
                         }
@@ -108,4 +118,23 @@ public class ActivityAdapter extends MultipleRecyclerViewAdapter {
         }
     }
 
+    private void validateActivity(final Integer activityId) {
+        RestClient.builder()
+                .url("activity/user/" + USER_ID + "/" + activityId)
+                .success(new ISuccess() {
+                    @Override
+                    public void onSuccess(String response) {
+                        final JSONObject jsonResponse = JSON.parseObject(response);
+                        final int status = jsonResponse.getInteger("status");
+                        if (status == 0) {
+                            //参加了该活动
+                            DELEGATE.getSupportDelegate().start(ActivityDetailMyJoinDelegate.create(activityId));
+                        } else {
+                            DELEGATE.getSupportDelegate().start(ActivityDetailDelegate.create(activityId));
+                        }
+                    }
+                })
+                .build()
+                .get();
+    }
 }

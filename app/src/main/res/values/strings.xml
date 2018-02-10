@@ -84,6 +84,6 @@
     <string name="activity_apply_time">报名时间</string>
     <string name="activity_time">活动时间</string>
     <string name="join_activity">加入活动</string>
-
+    <string name="delete_activity">放弃活动</string>
 
 </resources>

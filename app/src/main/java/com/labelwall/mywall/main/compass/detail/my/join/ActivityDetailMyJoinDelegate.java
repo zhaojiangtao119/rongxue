@@ -1,4 +1,4 @@
-package com.labelwall.mywall.main.compass.detail.my;
+package com.labelwall.mywall.main.compass.detail.my.join;
 
 import android.content.res.ColorStateList;
 import android.graphics.Color;
@@ -21,6 +21,9 @@ import com.bumptech.glide.request.RequestOptions;
 import com.labelwall.mywall.R;
 import com.labelwall.mywall.R2;
 import com.labelwall.mywall.delegates.base.WallDelegate;
+import com.labelwall.mywall.main.compass.detail.ActivityTabPagerAdapter;
+import com.labelwall.mywall.main.compass.detail.my.ActivityDetailInfoMyDelegate;
+import com.labelwall.mywall.main.compass.detail.my.ActivityMyTabPagerAdapter;
 import com.labelwall.mywall.util.net.RestClient;
 import com.labelwall.mywall.util.net.callback.ISuccess;
 
@@ -32,7 +35,7 @@ import me.yokeyword.fragmentation.anim.FragmentAnimator;
  * Created by Administrator on 2018-02-06.
  */
 
-public class ActivityDetailMyDelegate extends WallDelegate implements AppBarLayout.OnOffsetChangedListener {
+public class ActivityDetailMyJoinDelegate extends WallDelegate implements AppBarLayout.OnOffsetChangedListener {
 
     @BindView(R2.id.activity_detail_toolbar)
     Toolbar mToobar = null;
@@ -66,10 +69,10 @@ public class ActivityDetailMyDelegate extends WallDelegate implements AppBarLayo
         }
     }
 
-    public static ActivityDetailMyDelegate create(@NonNull Integer activityId) {
+    public static ActivityDetailMyJoinDelegate create(@NonNull Integer activityId) {
         final Bundle args = new Bundle();
         args.putInt(ARG_ACTIVITY_ID, activityId);
-        final ActivityDetailMyDelegate delegate = new ActivityDetailMyDelegate();
+        final ActivityDetailMyJoinDelegate delegate = new ActivityDetailMyJoinDelegate();
         delegate.setArguments(args);
         return delegate;
     }
@@ -128,7 +131,7 @@ public class ActivityDetailMyDelegate extends WallDelegate implements AppBarLayo
     private void initActivityInfo(JSONObject activityDto) {
         final String activityInfo = activityDto.toString();
         getSupportDelegate().loadRootFragment(R.id.frame_activity_info,
-                ActivityDetailInfoMyDelegate.create(activityInfo));
+                ActivityDetailInfoMyJoinDelegate.create(activityInfo, mActivityId));
     }
 
     private void initActivityPoster(JSONObject activityDto) {
@@ -149,8 +152,8 @@ public class ActivityDetailMyDelegate extends WallDelegate implements AppBarLayo
     }
 
     private void initViewPager(JSONObject activityDto) {
-        final ActivityMyTabPagerAdapter adapter =
-                new ActivityMyTabPagerAdapter(getFragmentManager(), activityDto, mCommentData, mActivityId);
+        final ActivityTabPagerAdapter adapter =
+                new ActivityTabPagerAdapter(getFragmentManager(), mActivityId, activityDto, mCommentData);
         mViewPage.setAdapter(adapter);
     }
 

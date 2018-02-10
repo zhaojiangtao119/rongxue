@@ -1,4 +1,4 @@
-package com.labelwall.mywall.main.compass.detail;
+package com.labelwall.mywall.main.compass.detail.my.join;
 
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -21,7 +21,6 @@ import com.labelwall.mywall.util.net.callback.ISuccess;
 import com.labelwall.mywall.util.storage.WallPreference;
 import com.labelwall.mywall.util.storage.WallTagType;
 
-import butterknife.BindFloat;
 import butterknife.BindView;
 import butterknife.OnClick;
 import de.hdodenhof.circleimageview.CircleImageView;
@@ -30,7 +29,7 @@ import de.hdodenhof.circleimageview.CircleImageView;
  * Created by Administrator on 2018-02-07.
  */
 
-public class ActivityDetailInfoDelegate extends WallDelegate {
+public class ActivityDetailInfoMyJoinDelegate extends WallDelegate {
 
     //startUserProfile，activtyInfo
     @BindView(R2.id.circle_user_avatar)
@@ -75,7 +74,7 @@ public class ActivityDetailInfoDelegate extends WallDelegate {
                             final Integer status = jsonResponse.getInteger("status");
                             final String message = jsonResponse.getString("msg");
                             if (status == 0) {
-                                mJoinActivity.setText("加入活动");
+                                mJoinActivity.setText("参加活动");
                             } else {
                                 Toast.makeText(_mActivity, message, Toast.LENGTH_SHORT).show();
                             }
@@ -83,7 +82,7 @@ public class ActivityDetailInfoDelegate extends WallDelegate {
                     })
                     .build()
                     .delete();
-        } else if (hintMessage.equals("加入活动")) {
+        } else if (hintMessage.equals("参加活动")) {
             RestClient.builder()
                     .url("activity/join/" + mActivityId + "/" + USER_ID)
                     .success(new ISuccess() {
@@ -103,6 +102,7 @@ public class ActivityDetailInfoDelegate extends WallDelegate {
                     .post();
         }
     }
+
 
     private static final String ARG_ACTIVITY_DATA = "ARG_ACTIVITY_DATA";
     private JSONObject mActivityDto = null;
@@ -130,18 +130,18 @@ public class ActivityDetailInfoDelegate extends WallDelegate {
         }
     }
 
-    public static ActivityDetailInfoDelegate create(String data, Integer activityId) {
+    public static ActivityDetailInfoMyJoinDelegate create(String data, Integer activityId) {
         final Bundle args = new Bundle();
         args.putString(ARG_ACTIVITY_DATA, data);
         args.putInt(ARG_ACTIVITY_ID, activityId);
-        final ActivityDetailInfoDelegate activityDetailInfoDelegate = new ActivityDetailInfoDelegate();
+        final ActivityDetailInfoMyJoinDelegate activityDetailInfoDelegate = new ActivityDetailInfoMyJoinDelegate();
         activityDetailInfoDelegate.setArguments(args);
         return activityDetailInfoDelegate;
     }
 
     @Override
     public void onBindView(@Nullable Bundle savedInstanceState, @NonNull View rootView) {
-        mJoinActivity.setText("加入活动");
+        mJoinActivity.setText("放弃活动");
         initActivityData();
     }
 
