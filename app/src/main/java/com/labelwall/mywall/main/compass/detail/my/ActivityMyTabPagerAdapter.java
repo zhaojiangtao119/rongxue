@@ -9,6 +9,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.labelwall.mywall.main.compass.detail.ActivityJoinUserDelegate;
 import com.labelwall.mywall.main.compass.detail.ActivityJoinUserNullDelegate;
 import com.labelwall.mywall.main.compass.detail.comment.ActivityCommentDelegate;
+import com.labelwall.mywall.ui.recycler.ItemType;
 
 import java.util.ArrayList;
 
@@ -16,12 +17,12 @@ import java.util.ArrayList;
  * Created by Administrator on 2018-02-08.
  */
 
-public class ActivityTabPagerMyAdapter extends FragmentStatePagerAdapter {
+public class ActivityMyTabPagerAdapter extends FragmentStatePagerAdapter {
     private final ArrayList<String> TAB_TITLES = new ArrayList<>();
     private final ArrayList<String> USERS = new ArrayList<>();
     private final Integer ACTIVITY_ID;
 
-    public ActivityTabPagerMyAdapter(FragmentManager fm, JSONObject data, JSONObject commentData, Integer activityId) {
+    public ActivityMyTabPagerAdapter(FragmentManager fm, JSONObject data, JSONObject commentData, Integer activityId) {
         super(fm);
         this.ACTIVITY_ID = activityId;
         //设置title标题
@@ -54,13 +55,13 @@ public class ActivityTabPagerMyAdapter extends FragmentStatePagerAdapter {
         String hintMessage = null;
         if (position == 0) {
             if (USERS.get(0) != null) {
-                return ActivityJoinUserDelegate.create(USERS.get(0));
+                return ActivityJoinUserDelegate.create(USERS.get(0), ACTIVITY_ID, ItemType.MY_JOIN_USERS);
             } else {
                 hintMessage = "暂无加入的用户";
             }
         } else if (position == 1) {
             if (USERS.get(1) != null) {
-                return ActivityApplyJoinUserDelegate.create(USERS.get(1), ACTIVITY_ID);
+                return ActivityJoinUserDelegate.create(USERS.get(1), ACTIVITY_ID, ItemType.APPLY_JOIN_USERS);
             } else {
                 hintMessage = "暂无申请加入的用户";
             }

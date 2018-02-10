@@ -7,6 +7,7 @@ import android.support.v4.app.FragmentStatePagerAdapter;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.labelwall.mywall.main.compass.detail.comment.ActivityCommentDelegate;
+import com.labelwall.mywall.ui.recycler.ItemType;
 
 import java.util.ArrayList;
 
@@ -18,9 +19,11 @@ public class ActivityTabPagerAdapter extends FragmentStatePagerAdapter {
 
     private final ArrayList<String> TAB_TITLES = new ArrayList<>();
     private final ArrayList<String> USERS = new ArrayList<>();
+    private final Integer ACTIVITY_ID;
 
-    public ActivityTabPagerAdapter(FragmentManager fm, JSONObject data, JSONObject commentData) {
+    public ActivityTabPagerAdapter(FragmentManager fm, Integer activityId, JSONObject data, JSONObject commentData) {
         super(fm);
+        this.ACTIVITY_ID = activityId;
         //设置title标题
         TAB_TITLES.add("已加入");
         TAB_TITLES.add("已申请");
@@ -51,13 +54,13 @@ public class ActivityTabPagerAdapter extends FragmentStatePagerAdapter {
         String hintMessage = null;
         if (position == 0) {
             if (USERS.get(0) != null) {
-                return ActivityJoinUserDelegate.create(USERS.get(0));
+                return ActivityJoinUserDelegate.create(USERS.get(0), ACTIVITY_ID, ItemType.JOIN_USERS);
             } else {
                 hintMessage = "暂无加入的用户";
             }
         } else if (position == 1) {
             if (USERS.get(1) != null) {
-                return ActivityJoinUserDelegate.create(USERS.get(1));
+                return ActivityJoinUserDelegate.create(USERS.get(1), ACTIVITY_ID, ItemType.JOIN_USERS);
             } else {
                 hintMessage = "暂无申请加入的用户";
             }

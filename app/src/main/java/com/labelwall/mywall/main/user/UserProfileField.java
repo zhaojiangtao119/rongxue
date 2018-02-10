@@ -11,5 +11,6 @@ public enum UserProfileField {
     SCHOOL_NAME,
     PROVINCE,
     CITY,
-    COUNTY
+    COUNTY,
+    EMAIL
 }

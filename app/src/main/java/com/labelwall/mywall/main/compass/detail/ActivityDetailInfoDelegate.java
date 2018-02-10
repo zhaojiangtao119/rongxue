@@ -5,6 +5,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.AppCompatTextView;
 import android.view.View;
+import android.widget.Toast;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
@@ -15,9 +16,14 @@ import com.bumptech.glide.request.RequestOptions;
 import com.labelwall.mywall.R;
 import com.labelwall.mywall.R2;
 import com.labelwall.mywall.delegates.base.WallDelegate;
+import com.labelwall.mywall.util.net.RestClient;
+import com.labelwall.mywall.util.net.callback.ISuccess;
+import com.labelwall.mywall.util.storage.WallPreference;
+import com.labelwall.mywall.util.storage.WallTagType;
 
 import butterknife.BindFloat;
 import butterknife.BindView;
+import butterknife.OnClick;
 import de.hdodenhof.circleimageview.CircleImageView;
 
 /**
@@ -52,10 +58,37 @@ public class ActivityDetailInfoDelegate extends WallDelegate {
     AppCompatTextView mActivityContent = null;
     @BindView(R2.id.tv_activity_location)
     AppCompatTextView mActivityLocation = null;
+    @BindView(R2.id.tv_activity_apply_join)
+    AppCompatTextView mJoinActivity = null;
+
+    @OnClick(R2.id.tv_activity_apply_join)
+    void onJoinActivity() {
+        //加入活动，
+        RestClient.builder()
+                .url("activity/join/" + mActivityId + "/" + USER_ID)
+                .success(new ISuccess() {
+                    @Override
+                    public void onSuccess(String response) {
+                        final JSONObject jsonResponse = JSON.parseObject(response);
+                        final Integer status = jsonResponse.getInteger("status");
+                        final String message = jsonResponse.getString("msg");
+                        if (status == 0) {
+                            mJoinActivity.setText("加入成功");
+                        } else if (status == 2) {
+                            Toast.makeText(_mActivity, message, Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                })
+                .build()
+                .post();
+    }
 
 
     private static final String ARG_ACTIVITY_DATA = "ARG_ACTIVITY_DATA";
     private JSONObject mActivityDto = null;
+    private static final String ARG_ACTIVITY_ID = "ARG_ACTIVITY_ID";
+    private Integer mActivityId = null;
+    private final long USER_ID = WallPreference.getCurrentUserId(WallTagType.CURRENT_USER_ID.name());
     private static final RequestOptions OPTIONS = new RequestOptions()
             .diskCacheStrategy(DiskCacheStrategy.ALL)
             .dontAnimate()
@@ -73,12 +106,14 @@ public class ActivityDetailInfoDelegate extends WallDelegate {
         if (agrs != null) {
             final String activityInfo = agrs.getString(ARG_ACTIVITY_DATA);
             mActivityDto = JSON.parseObject(activityInfo);
+            mActivityId = agrs.getInt(ARG_ACTIVITY_ID);
         }
     }
 
-    public static ActivityDetailInfoDelegate create(String data) {
+    public static ActivityDetailInfoDelegate create(String data, Integer activityId) {
         final Bundle args = new Bundle();
         args.putString(ARG_ACTIVITY_DATA, data);
+        args.putInt(ARG_ACTIVITY_ID, activityId);
         final ActivityDetailInfoDelegate activityDetailInfoDelegate = new ActivityDetailInfoDelegate();
         activityDetailInfoDelegate.setArguments(args);
         return activityDetailInfoDelegate;

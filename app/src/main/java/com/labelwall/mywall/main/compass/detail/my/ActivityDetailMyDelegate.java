@@ -11,23 +11,16 @@ import android.support.design.widget.TabLayout;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.AppCompatImageView;
-import android.support.v7.widget.AppCompatTextView;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
-import android.widget.Toast;
 
 import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
-import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.RequestOptions;
 import com.labelwall.mywall.R;
 import com.labelwall.mywall.R2;
 import com.labelwall.mywall.delegates.base.WallDelegate;
-import com.labelwall.mywall.main.compass.detail.ActivityDetailDelegate;
-import com.labelwall.mywall.main.compass.detail.ActivityDetailInfoDelegate;
-import com.labelwall.mywall.main.compass.detail.my.ActivityTabPagerMyAdapter;
 import com.labelwall.mywall.util.net.RestClient;
 import com.labelwall.mywall.util.net.callback.ISuccess;
 
@@ -157,8 +150,8 @@ public class ActivityDetailMyDelegate extends WallDelegate implements AppBarLayo
     }
 
     private void initViewPager(JSONObject activityDto) {
-        final ActivityTabPagerMyAdapter adapter =
-                new ActivityTabPagerMyAdapter(getFragmentManager(), activityDto, mCommentData, mActivityId);
+        final ActivityMyTabPagerAdapter adapter =
+                new ActivityMyTabPagerAdapter(getFragmentManager(), activityDto, mCommentData, mActivityId);
         mViewPage.setAdapter(adapter);
     }
 

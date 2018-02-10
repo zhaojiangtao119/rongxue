@@ -23,8 +23,12 @@ import butterknife.BindView;
 
 public class ActivityJoinUserDelegate extends WallDelegate {
 
-    private static final String JOIN_USERS = "JOIN_USERS";
+    private static final String ARG_USERS_DATA = "ARG_USERS_DATA";
     private String mData = null;
+    private static final String ARG_ACTIVITY_ID = "ARF_ACTIVITY_ID";
+    private Integer mActivityId = null;
+    private static final String ARG_ITEM_TYPE = "ARG_ITEM_TYPE";
+    private int mItemType = 0;
 
     @BindView(R2.id.rv_activity_join_user)
     RecyclerView mRecyclerView = null;
@@ -36,13 +40,17 @@ public class ActivityJoinUserDelegate extends WallDelegate {
         super.onCreate(savedInstanceState);
         final Bundle args = getArguments();
         if (args != null) {
-            mData = args.getString(JOIN_USERS);
+            mData = args.getString(ARG_USERS_DATA);
+            mActivityId = args.getInt(ARG_ACTIVITY_ID);
+            mItemType = args.getInt(ARG_ITEM_TYPE);
         }
     }
 
-    public static ActivityJoinUserDelegate create(String data) {
+    public static ActivityJoinUserDelegate create(String data, Integer activityId, int itemType) {
         final Bundle args = new Bundle();
-        args.putString(JOIN_USERS, data);
+        args.putString(ARG_USERS_DATA, data);
+        args.putInt(ARG_ACTIVITY_ID, activityId);
+        args.putInt(ARG_ITEM_TYPE, itemType);
         final ActivityJoinUserDelegate activityJoinUserDelegate = new ActivityJoinUserDelegate();
         activityJoinUserDelegate.setArguments(args);
         return activityJoinUserDelegate;
@@ -58,7 +66,8 @@ public class ActivityJoinUserDelegate extends WallDelegate {
     public void onBindView(@Nullable Bundle savedInstanceState, @NonNull View rootView) {
         final LinearLayoutManager manager = new LinearLayoutManager(getContext());
         mRecyclerView.setLayoutManager(manager);
-        mAdapter = new ActivityJoinUserAdapter(mConverter.setJsonData(mData).convert());
+        mAdapter = new ActivityJoinUserAdapter(
+                mConverter.setItemType(mItemType).setJsonData(mData).convert(), mActivityId);
         mRecyclerView.setAdapter(mAdapter);
     }
 }

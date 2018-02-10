@@ -15,6 +15,8 @@ public abstract class DataConverter {
 
     public abstract ArrayList<MultipleItemEntity> convert();
 
+    private int mItemType = 0;
+
     /**
      * 设置json数据
      *
@@ -47,5 +49,15 @@ public abstract class DataConverter {
      */
     public void clearData() {
         ENTITIES.clear();
+    }
+
+    //设置数据的ItemType
+    public int getItemType() {
+        return mItemType;
+    }
+
+    public DataConverter setItemType(int itemType) {
+        this.mItemType = itemType;
+        return this;
     }
 }

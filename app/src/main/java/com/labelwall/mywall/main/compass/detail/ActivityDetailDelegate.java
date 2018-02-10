@@ -91,7 +91,7 @@ public class ActivityDetailDelegate extends WallDelegate implements AppBarLayout
         mAppBar.addOnOffsetChangedListener(this);
         //加载服务端activity数据
         initActivityComment();
-        initData();
+
         initTabLayout();
     }
 
@@ -103,6 +103,7 @@ public class ActivityDetailDelegate extends WallDelegate implements AppBarLayout
                     public void onSuccess(String response) {
                         final JSONObject pageInfo = JSON.parseObject(response).getJSONObject("data");
                         mCommentData = pageInfo;
+                        initData();
                     }
                 })
                 .build()
@@ -132,7 +133,7 @@ public class ActivityDetailDelegate extends WallDelegate implements AppBarLayout
     private void initActivityInfo(JSONObject activityDto) {
         final String activityInfo = activityDto.toString();
         getSupportDelegate().loadRootFragment(R.id.frame_activity_info,
-                ActivityDetailInfoDelegate.create(activityInfo));
+                ActivityDetailInfoDelegate.create(activityInfo, mActivityId));
     }
 
     private void initActivityPoster(JSONObject activityDto) {
@@ -154,7 +155,7 @@ public class ActivityDetailDelegate extends WallDelegate implements AppBarLayout
 
     private void initViewPager(JSONObject activityDto) {
         final ActivityTabPagerAdapter adapter =
-                new ActivityTabPagerAdapter(getFragmentManager(), activityDto, mCommentData);
+                new ActivityTabPagerAdapter(getFragmentManager(), mActivityId, activityDto, mCommentData);
         mViewPage.setAdapter(adapter);
     }
 

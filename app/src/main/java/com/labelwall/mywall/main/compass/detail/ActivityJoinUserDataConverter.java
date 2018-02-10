@@ -21,21 +21,25 @@ public class ActivityJoinUserDataConverter extends DataConverter {
         final int size = joinUserArray.size();
         for (int i = 0; i < size; i++) {
             JSONObject joinUser = joinUserArray.getJSONObject(i);
+            final Integer userId = joinUser.getInteger("id");
             final String username = joinUser.getString("username");
             final String avatar = joinUser.getString("head");
             final String schoolName = joinUser.getString("schoolName");
             final String city = joinUser.getString("locationCity");
             final String county = joinUser.getString("locationCounty");
             final String province = joinUser.getString("locationProvince");
+            final String email = joinUser.getString("email");
 
             final MultipleItemEntity entity = MultipleItemEntity.builder()
-                    .setItemType(ItemType.JOIN_USERS)
+                    .setItemType(getItemType())
+                    .setField(UserProfileField.USER_ID, userId)
                     .setField(UserProfileField.USERNAME, username)
                     .setField(UserProfileField.AVATAR, avatar)
                     .setField(UserProfileField.SCHOOL_NAME, schoolName)
                     .setField(UserProfileField.CITY, city)
                     .setField(UserProfileField.COUNTY, county)
                     .setField(UserProfileField.PROVINCE, province)
+                    .setField(UserProfileField.EMAIL, email)
                     .build();
             ENTITIES.add(entity);
         }
