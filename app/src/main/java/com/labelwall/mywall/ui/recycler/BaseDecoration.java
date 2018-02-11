@@ -6,7 +6,7 @@ import com.choices.divider.DividerItemDecoration;
 
 /**
  * Created by Administrator on 2018-01-09.
- * RecyclerView的分割线  继承DividerItemDecoration
+ * 定义RecyclerView的分割线  继承DividerItemDecoration
  */
 
 public class BaseDecoration extends DividerItemDecoration {

@@ -14,11 +14,11 @@ public class ListBean implements MultiItemEntity {
 
     private int mItemType = 0;
     private String mImageUrl = null;
-    private String mText = null;
-    private String mValue = null;
+    private String mText = null;//item的名称
+    private String mValue = null;//item的值
     private int mId = 0;
     private WallDelegate mDelegate = null;
-    private CompoundButton.OnCheckedChangeListener mOnCheckedChangeListener = null;
+    private CompoundButton.OnCheckedChangeListener mOnCheckedChangeListener = null;//设置点击监听
 
     public ListBean(int itemType, String imageUrl, String text, String value,
                     int id, WallDelegate delegate, CompoundButton.OnCheckedChangeListener onCheckedChangeListener) {

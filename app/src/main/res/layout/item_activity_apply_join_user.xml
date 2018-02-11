@@ -70,7 +70,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:gravity="center"
-            android:text="同意加入"
+            android:text="@string/agree_join_activity"
             android:textColor="@color/app_title"
             tools:ignore="HardcodedText" />
 
