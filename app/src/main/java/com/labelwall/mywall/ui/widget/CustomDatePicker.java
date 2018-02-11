@@ -481,7 +481,15 @@ public class CustomDatePicker {
 
     public void show(String time) {
         if (canAccess) {
-            if (isValidDate(time, "yyyy-MM-dd")) {
+            if (startCalendar.getTime().getTime() < endCalendar.getTime().getTime()) {
+                canAccess = true;
+                initParameter();
+                initTimer();
+                addListener();
+                setSelectedTime(time);
+                datePickerDialog.show();
+            }
+            /*if (isValidDate(time, "yyyy-MM-dd")) {
                 if (startCalendar.getTime().getTime() < endCalendar.getTime().getTime()) {
                     canAccess = true;
                     initParameter();
@@ -492,7 +500,7 @@ public class CustomDatePicker {
                 }
             } else {
                 canAccess = false;
-            }
+            }*/
         }
     }
 

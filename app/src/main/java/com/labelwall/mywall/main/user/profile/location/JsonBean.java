@@ -11,9 +11,17 @@ public class JsonBean implements IPickerViewData {
      * name : 省份
      * city : [{"name":"北京市","area":["东城区","西城区","崇文区","宣武区","朝阳区"]}]
      */
-
+    private Integer id;
     private String name;
     private List<CityBean> city;
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
 
     public String getName() {
         return name;
@@ -45,9 +53,17 @@ public class JsonBean implements IPickerViewData {
          * name : 城市
          * area : ["东城区","西城区","崇文区","昌平区"]
          */
-
+        private Integer schoolId;
         private String name;
         private List<String> area;
+
+        public int getSchoolId() {
+            return schoolId;
+        }
+
+        public void setSchoolId(int schoolId) {
+            this.schoolId = schoolId;
+        }
 
         public String getName() {
             return name;
