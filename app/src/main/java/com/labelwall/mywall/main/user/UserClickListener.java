@@ -38,6 +38,8 @@ public class UserClickListener extends SimpleClickListener {
             case UserSettingItem.SYSTEM:
                 DELEGATE.getParentDelegate().getSupportDelegate().start(bean.getDelegate());
                 break;
+            case UserSettingItem.ACTIVITY_ACCOUNT:
+                DELEGATE.getParentDelegate().getSupportDelegate().start(bean.getDelegate());
             default:
                 break;
         }

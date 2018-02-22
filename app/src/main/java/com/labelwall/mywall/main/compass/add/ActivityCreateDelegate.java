@@ -247,7 +247,7 @@ public class ActivityCreateDelegate extends WallDelegate {
                             Toast.makeText(_mActivity, message, Toast.LENGTH_SHORT).show();
                         } else if (status == 0) {
                             Toast.makeText(_mActivity, "创建成功", Toast.LENGTH_SHORT).show();
-                            //跳转到“我的”活动
+                            // TODO 跳转到“我的”活动，跳转有问题？？？
                             getSupportDelegate().start(new ActivityMyDelegate());
                         }
                     }

@@ -51,7 +51,14 @@
     <string name="my_orders_all">全部订单</string>
     <string name="user_profile">用户信息</string>
     <string name="system_setting">系统设置</string>
+    <string name="activity_account">活动账户</string>
     <string name="user_location">用户地址</string>
+
+    <!--User Activity Account-->
+    <string name="activity_account_add">充值</string>
+    <string name="activity_account_add_history">充值记录</string>
+    <string name="activity_account_title">账户余额</string>
+    <string name="activity_account_unit">金豆</string>
 
     <!--product-->
     <string name="product_search_hint">请输入关键字</string>

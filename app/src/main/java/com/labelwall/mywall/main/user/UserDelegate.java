@@ -17,6 +17,7 @@ import com.labelwall.mywall.R2;
 import com.labelwall.mywall.database.DataBaseManager;
 import com.labelwall.mywall.database.UserProfile;
 import com.labelwall.mywall.delegates.bottom.BottomItemDelegate;
+import com.labelwall.mywall.main.user.account.ActivityAccountDelegate;
 import com.labelwall.mywall.main.user.address.AdressDelegate;
 import com.labelwall.mywall.main.user.list.ListAdapter;
 import com.labelwall.mywall.main.user.list.ListBean;
@@ -144,10 +145,17 @@ public class UserDelegate extends BottomItemDelegate {
                 .setText(UserSettingItem.SYSTEM_VALUE)
                 .setDelegate(new SettingsDelegate())
                 .build();
+        final ListBean activityAccount = new ListBean.builder()
+                .setItemType(ListItemType.ITEM_NORMAL_NO_HINT)
+                .setId(UserSettingItem.ACTIVITY_ACCOUNT)
+                .setText(UserSettingItem.ACTIVITY_ACCOUNT_VALUE)
+                .setDelegate(new ActivityAccountDelegate())
+                .build();
         final List<ListBean> data = new ArrayList<>();
         data.add(userProfile);
         data.add(address);
         data.add(systems);
+        data.add(activityAccount);
 
         final LinearLayoutManager manager = new LinearLayoutManager(getContext());
         mRecyclerView.setLayoutManager(manager);
