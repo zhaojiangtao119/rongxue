@@ -84,7 +84,7 @@ public class ActivityMyDelegate extends WallDelegate {
     private void initViewPager() {
         final ActivityMyTabPagerAdapter adapter =
                 new ActivityMyTabPagerAdapter(getFragmentManager(),
-                        mStartActivityData, mJoinActivityData,this);
+                        mStartActivityData, mJoinActivityData, this);
         mViewPager.setAdapter(adapter);
     }
 
@@ -93,4 +93,5 @@ public class ActivityMyDelegate extends WallDelegate {
         mTabLayout.setTabTextColors(ColorStateList.valueOf(Color.BLACK));
         mTabLayout.setupWithViewPager(mViewPager);
     }
+
 }

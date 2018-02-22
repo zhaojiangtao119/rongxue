@@ -72,6 +72,7 @@ public abstract class BaseDelegate extends Fragment implements ISupportFragment 
         } else {
             throw new ClassCastException("type of setLayout() must be int or View!");
         }
+        //将设置的fragment的内容视图与ButterKnife绑定起来
         mUnbinder = ButterKnife.bind(this, rootView);
         onBindView(savedInstanceState, rootView);
 
@@ -109,6 +110,7 @@ public abstract class BaseDelegate extends Fragment implements ISupportFragment 
     @Override
     public void onDestroyView() {
         super.onDestroyView();
+        //销毁fragment是解除绑定
         if (mUnbinder != null) {
             mUnbinder.unbind();
         }

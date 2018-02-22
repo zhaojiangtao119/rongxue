@@ -12,13 +12,18 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
+import android.widget.Toast;
 
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
+import com.blankj.utilcode.util.StringUtils;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.RequestOptions;
 import com.labelwall.mywall.R;
 import com.labelwall.mywall.R2;
 import com.labelwall.mywall.delegates.base.WallDelegate;
+import com.labelwall.mywall.main.compass.my.ActivityMyDelegate;
 import com.labelwall.mywall.main.user.UserClickListener;
 import com.labelwall.mywall.main.user.UserSettingItem;
 import com.labelwall.mywall.main.user.address.AdressDelegate;
@@ -32,8 +37,15 @@ import com.labelwall.mywall.util.callback.CallbackManager;
 import com.labelwall.mywall.util.callback.CallbackType;
 import com.labelwall.mywall.util.callback.IGlobalCallback;
 import com.labelwall.mywall.util.location.LocationUtil;
+import com.labelwall.mywall.util.net.RestClient;
+import com.labelwall.mywall.util.net.callback.ISuccess;
+import com.labelwall.mywall.util.qiniu.QnUploadHelper;
+import com.labelwall.mywall.util.storage.WallPreference;
+import com.labelwall.mywall.util.storage.WallTagType;
+import com.qiniu.android.http.ResponseInfo;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -54,7 +66,7 @@ public class ActivityCreateDelegate extends WallDelegate {
     @BindView(R2.id.iv_activity_poster_img)
     AppCompatImageView mAcitivtyPoster = null;
     @BindView(R2.id.et_activity_content)
-    AppCompatEditText mActivityContent = null;
+    AppCompatEditText mActivityContent = null;//活动概述
 
     private static final RequestOptions OPTIONS = new RequestOptions()
             .diskCacheStrategy(DiskCacheStrategy.NONE)
@@ -65,6 +77,10 @@ public class ActivityCreateDelegate extends WallDelegate {
     private ArrayList<ArrayList<String>> options2Item = new ArrayList<>();
     private ArrayList<ArrayList<ArrayList<String>>> options3Item = new ArrayList<>();
 
+    private Map<String, Object> mCreateActivityParams = new HashMap<>();
+    private Uri mPosterUri = null;
+    private final long USER_ID = WallPreference.getCurrentUserId(WallTagType.CURRENT_USER_ID.name());
+
     @OnClick(R2.id.tv_activity_upload_poster)
     void onClickUploadPoster() {
         startCameraWithCheck();
@@ -74,6 +90,7 @@ public class ActivityCreateDelegate extends WallDelegate {
                 .addCallback(CallbackType.ON_CROP, new IGlobalCallback<Uri>() {
                     @Override
                     public void executeCallback(Uri args) {
+                        mPosterUri = args;
                         mUploadActivityPoster.setVisibility(View.INVISIBLE);
                         Glide.with(_mActivity)
                                 .load(args)
@@ -81,12 +98,162 @@ public class ActivityCreateDelegate extends WallDelegate {
                                 .into(mAcitivtyPoster);
                     }
                 });
+
     }
 
     @OnClick(R2.id.btn_activity_submit)
     void onClickActivitySubmit() {
-        Map<Integer, Object> activityInfo = ActivityCreateClickListener.getActivityInfo();
-        Log.e("INFO:", activityInfo.toString());
+        mCreateActivityParams.putAll(ActivityCreateClickListener.getActivityInfo());
+        //验证信息
+        boolean flag = validataParams(mCreateActivityParams);
+        if (flag) {
+            createActivity();
+        }
+    }
+
+    @SuppressWarnings("ConstantConditions")
+    private boolean validataParams(Map<String, Object> activityInfo) {
+        boolean flag = true;
+        if (mPosterUri == null) {
+            Toast.makeText(_mActivity, "请上传图片", Toast.LENGTH_SHORT).show();
+        }
+        if (activityInfo.get(ActivityCreateInfoItem.APPLY_START_TIME_PARAM) == null) {
+            hintMessage(ActivityCreateInfoItem.APPLY_START_TIME_VALUE);
+            return !flag;
+        }
+        if (activityInfo.get(ActivityCreateInfoItem.APPLY_END_TIME_PARAM) == null) {
+            hintMessage(ActivityCreateInfoItem.APPLY_END_TIME_VALUE);
+            return !flag;
+        }
+        if (activityInfo.get(ActivityCreateInfoItem.ACTIVITY_START_TIME_PARAM) == null) {
+            hintMessage(ActivityCreateInfoItem.ACTIVITY_START_TIME_VALUE);
+            return !flag;
+        }
+        if (activityInfo.get(ActivityCreateInfoItem.ACTIVITY_END_TIME_PARAM) == null) {
+            hintMessage(ActivityCreateInfoItem.ACTIVITY_END_TIME_VALUE);
+            return !flag;
+        }
+        if (activityInfo.get(ActivityCreateInfoItem.ACTIVITY_FREE_PARAM) == null) {
+            hintMessage(ActivityCreateInfoItem.ACTIVITY_FREE_VALUE);
+            return !flag;
+        }
+        if (activityInfo.get(ActivityCreateInfoItem.ACTIVITY_STYLE_PARAM) == null) {
+            hintMessage(ActivityCreateInfoItem.ACTIVITY_STYLE_VALUE);
+            return !flag;
+        }
+        if (activityInfo.get(ActivityCreateInfoItem.ACTIVITY_TYPE_PARAM) == null) {
+            hintMessage(ActivityCreateInfoItem.ACTIVITY_TYPE_VALUE);
+            return !flag;
+        }
+        if (activityInfo.get(ActivityCreateInfoItem.ACTIVITY_SCHOOL_PARAM) == null) {
+            hintMessage(ActivityCreateInfoItem.ACTIVITY_SCHOOL_VALUE);
+            return !flag;
+        }
+        if (activityInfo.get(ActivityCreateInfoItem.ACTIVITY_AMOUNT_PARAM) == null) {
+            hintMessage(ActivityCreateInfoItem.ACTIVITY_AMOUNT_VALUE);
+            return !flag;
+        }
+        if (activityInfo.get(ActivityCreateInfoItem.ACTIVITY_PROVINCE_PARAM) == null) {
+            hintMessage(ActivityCreateInfoItem.ACTIVITY_LOCATION_VALUE);
+            return !flag;
+        }
+        if (activityInfo.get(ActivityCreateInfoItem.ACTIVITY_CITY_PARAM) == null) {
+            hintMessage(ActivityCreateInfoItem.ACTIVITY_LOCATION_VALUE);
+            return !flag;
+        }
+        if (activityInfo.get(ActivityCreateInfoItem.ACTIVITY_COUNTY_PARAM) == null) {
+            hintMessage(ActivityCreateInfoItem.ACTIVITY_LOCATION_VALUE);
+            return !flag;
+        }
+        if (activityInfo.get(ActivityCreateInfoItem.ACTIVITY_USER_NUM_PARAM) == null) {
+            hintMessage(ActivityCreateInfoItem.ACTIVITY_USER_NUM_VALUE);
+            return !flag;
+        }
+        if (StringUtils.isEmpty(mActivityContent.getText().toString())) {
+            hintMessage("活动概括");
+            return !flag;
+        } else {
+            mCreateActivityParams.put(ActivityCreateInfoItem.ACTIVITY_CONTENT_PRAMS,
+                    mActivityContent.getText().toString());
+        }
+        mCreateActivityParams.put(ActivityCreateInfoItem.ACTIVITY_USER_ID_PRAMS, USER_ID);
+        return flag;
+    }
+
+    private void hintMessage(String message) {
+        Toast.makeText(getContext(), message + "未设置", Toast.LENGTH_SHORT).show();
+    }
+
+    private void createActivity() {
+        //1.首先判断活动的收费情况
+        int free = (int) mCreateActivityParams.get(ActivityCreateInfoItem.ACTIVITY_FREE_PARAM);
+        if (free == 0) {
+            //免费
+            RestClient.builder()
+                    .url("activity/create")
+                    .params(mCreateActivityParams)
+                    .success(new ISuccess() {
+                        @Override
+                        public void onSuccess(String response) {
+                            final JSONObject jsonResponse = JSON.parseObject(response);
+                            final int status = jsonResponse.getInteger("status");
+                            final String message = jsonResponse.getString("msg");
+                            final Integer activityId = jsonResponse.getInteger("data");
+                            if (status == 0) {
+                                //创建成功，上传图片，将图片的url提交的后台修改该活动信息
+                                if (mPosterUri != null) {
+                                    final String key = "activity/poster/" + USER_ID + "/" + System.currentTimeMillis() + "/images";
+                                    QnUploadHelper.uploadPic(mPosterUri.getPath(), key, new QnUploadHelper.UploadCallBack() {
+
+                                        @Override
+                                        public void success(String url) {
+                                            //将图片的url存储到DB
+                                            updateActivityInfo(activityId, url);
+                                        }
+
+                                        @Override
+                                        public void fail(String key, ResponseInfo info) {
+
+                                        }
+                                    });
+                                }
+                            } else {
+                                Toast.makeText(_mActivity, message, Toast.LENGTH_SHORT).show();
+                            }
+                        }
+                    })
+                    .build()
+                    .post();
+        } else if (free == 1) {
+            //TODO 付费，跳转页面（支付页面）
+
+        }
+
+    }
+
+    private void updateActivityInfo(Integer activityId, String url) {
+        RestClient.builder()
+                .url("activity/poster")
+                .params("userId", USER_ID)
+                .params("activityId", activityId)
+                .params("posterUrl", url)
+                .success(new ISuccess() {
+                    @Override
+                    public void onSuccess(String response) {
+                        final JSONObject jsonResponse = JSON.parseObject(response);
+                        final int status = jsonResponse.getInteger("status");
+                        final String message = jsonResponse.getString("msg");
+                        if (status == 1) {
+                            Toast.makeText(_mActivity, message, Toast.LENGTH_SHORT).show();
+                        } else if (status == 0) {
+                            Toast.makeText(_mActivity, "创建成功", Toast.LENGTH_SHORT).show();
+                            //跳转到“我的”活动
+                            getSupportDelegate().start(new ActivityMyDelegate());
+                        }
+                    }
+                })
+                .build()
+                .put();
     }
 
 
@@ -166,6 +333,11 @@ public class ActivityCreateDelegate extends WallDelegate {
                 .setId(ActivityCreateInfoItem.ACTIVITY_AMOUNT)
                 .setText(ActivityCreateInfoItem.ACTIVITY_AMOUNT_VALUE)
                 .build();
+        final ListBean activityUserNum = new ListBean.builder()
+                .setItemType(ListItemType.ITEM_NORMAL)
+                .setId(ActivityCreateInfoItem.ACTIVITY_USER_NUM)
+                .setText(ActivityCreateInfoItem.ACTIVITY_USER_NUM_VALUE)
+                .build();
         final List<ListBean> data = new ArrayList<>();
         data.add(applyStartTime);
         data.add(applyEntTime);
@@ -177,7 +349,7 @@ public class ActivityCreateDelegate extends WallDelegate {
         data.add(activityLocation);
         data.add(activitySchool);
         data.add(activityAmount);
-
+        data.add(activityUserNum);
 
         final LinearLayoutManager manager = new LinearLayoutManager(getContext());
         mRecyclerView.setLayoutManager(manager);

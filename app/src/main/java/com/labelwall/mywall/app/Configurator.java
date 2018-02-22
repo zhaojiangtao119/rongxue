@@ -102,6 +102,7 @@ public final class Configurator {
     public final void configure() {
         //初始化字体图标
         initIcons();
+        //标记初始化参数完成
         WALL_CONFIGS.put(ConfigKeys.CONFIG_READY, true);
         //初始化工具包
         Utils.init(MyWall.getApplicationContext());

@@ -22,7 +22,7 @@ public abstract class ProxyActivity extends AppCompatActivity implements ISuppor
 
     private final SupportActivityDelegate DELEGATE = new SupportActivityDelegate(this);
 
-    public abstract WallDelegate setRootDelegate();
+    public abstract WallDelegate setRootDelegate();//设置根delegate
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -40,8 +40,9 @@ public abstract class ProxyActivity extends AppCompatActivity implements ISuppor
         //根容器，一般容纳fragment的容器是FrameLayout
         final ContentFrameLayout contentFrameLayout = new ContentFrameLayout(this);
         contentFrameLayout.setId(R.id.delegate_container);
-        setContentView(contentFrameLayout);
+        setContentView(contentFrameLayout);//将FrameLayout作为承载fragment的父布局
         if (savedInstanceState == null) {//第一次加载
+            //将加载的根delegate加载到FrameLayout中
             DELEGATE.loadRootFragment(R.id.delegate_container, setRootDelegate());
         }
     }

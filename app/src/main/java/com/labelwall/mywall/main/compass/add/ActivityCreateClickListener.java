@@ -50,8 +50,9 @@ public class ActivityCreateClickListener extends SimpleClickListener {
     private String[] mActivityFree = new String[]{"免费", "收费"};
     private String[] mSchoolName = null;
     private String[] mAmount = new String[]{"5", "10", "20", "50", "100"};
+    private String[] mUserNum = new String[]{"5", "10", "20", "50", "100"};
 
-    private static Map<Integer, Object> mActivityInfo = new HashMap<>();
+    private static Map<String, Object> mActivityInfo = new HashMap<>();
 
     private final ArrayList<JsonBean> OPTION1;
     private final ArrayList<ArrayList<String>> OPTION2;
@@ -77,6 +78,7 @@ public class ActivityCreateClickListener extends SimpleClickListener {
                                                      ArrayList<ArrayList<String>> option2,
                                                      ArrayList<ArrayList<ArrayList<String>>> option3) {
         return new ActivityCreateClickListener(delegate, option1, option2, option3);
+
     }
 
     @Override
@@ -90,10 +92,10 @@ public class ActivityCreateClickListener extends SimpleClickListener {
                     @Override
                     public void onTimeSelect(Date date, View v) {
                         valueView.setText(DateTimeUtil.dateToStr(date));
-                        if (mActivityInfo.get(ActivityCreateInfoItem.APPLY_START_TIME) != null) {
-                            mActivityInfo.remove(ActivityCreateInfoItem.APPLY_START_TIME);
+                        if (mActivityInfo.get(ActivityCreateInfoItem.APPLY_START_TIME_PARAM) != null) {
+                            mActivityInfo.remove(ActivityCreateInfoItem.APPLY_START_TIME_PARAM);
                         }
-                        mActivityInfo.put(ActivityCreateInfoItem.APPLY_START_TIME, DateTimeUtil.dateToStr(date));
+                        mActivityInfo.put(ActivityCreateInfoItem.APPLY_START_TIME_PARAM, DateTimeUtil.dateToStr(date));
                     }
                 })
                         .setDate(Calendar.getInstance())
@@ -107,10 +109,10 @@ public class ActivityCreateClickListener extends SimpleClickListener {
                     @Override
                     public void onTimeSelect(Date date, View v) {
                         valueView.setText(DateTimeUtil.dateToStr(date));
-                        if (mActivityInfo.get(ActivityCreateInfoItem.APPLY_END_TIME) != null) {
-                            mActivityInfo.remove(ActivityCreateInfoItem.APPLY_END_TIME);
+                        if (mActivityInfo.get(ActivityCreateInfoItem.APPLY_END_TIME_PARAM) != null) {
+                            mActivityInfo.remove(ActivityCreateInfoItem.APPLY_END_TIME_PARAM);
                         }
-                        mActivityInfo.put(ActivityCreateInfoItem.APPLY_END_TIME, DateTimeUtil.dateToStr(date));
+                        mActivityInfo.put(ActivityCreateInfoItem.APPLY_END_TIME_PARAM, DateTimeUtil.dateToStr(date));
                     }
                 })
                         .setDate(Calendar.getInstance())
@@ -124,10 +126,10 @@ public class ActivityCreateClickListener extends SimpleClickListener {
                     @Override
                     public void onTimeSelect(Date date, View v) {
                         valueView.setText(DateTimeUtil.dateToStr(date));
-                        if (mActivityInfo.get(ActivityCreateInfoItem.ACTIVITY_START_TIME) != null) {
-                            mActivityInfo.remove(ActivityCreateInfoItem.ACTIVITY_START_TIME);
+                        if (mActivityInfo.get(ActivityCreateInfoItem.ACTIVITY_START_TIME_PARAM) != null) {
+                            mActivityInfo.remove(ActivityCreateInfoItem.ACTIVITY_START_TIME_PARAM);
                         }
-                        mActivityInfo.put(ActivityCreateInfoItem.ACTIVITY_START_TIME, DateTimeUtil.dateToStr(date));
+                        mActivityInfo.put(ActivityCreateInfoItem.ACTIVITY_START_TIME_PARAM, DateTimeUtil.dateToStr(date));
                     }
                 })
                         .setDate(Calendar.getInstance())
@@ -141,10 +143,10 @@ public class ActivityCreateClickListener extends SimpleClickListener {
                     @Override
                     public void onTimeSelect(Date date, View v) {
                         valueView.setText(DateTimeUtil.dateToStr(date));
-                        if (mActivityInfo.get(ActivityCreateInfoItem.ACTIVITY_END_TIME) != null) {
-                            mActivityInfo.remove(ActivityCreateInfoItem.ACTIVITY_END_TIME);
+                        if (mActivityInfo.get(ActivityCreateInfoItem.ACTIVITY_END_TIME_PARAM) != null) {
+                            mActivityInfo.remove(ActivityCreateInfoItem.ACTIVITY_END_TIME_PARAM);
                         }
-                        mActivityInfo.put(ActivityCreateInfoItem.ACTIVITY_END_TIME, DateTimeUtil.dateToStr(date));
+                        mActivityInfo.put(ActivityCreateInfoItem.ACTIVITY_END_TIME_PARAM, DateTimeUtil.dateToStr(date));
                     }
                 })
                         .setDate(Calendar.getInstance())
@@ -154,7 +156,6 @@ public class ActivityCreateClickListener extends SimpleClickListener {
                 timePickerView4.show();
                 break;
             case ActivityCreateInfoItem.ACTIVITY_FREE:
-                valueView.setText("未设置");
                 getDialog(new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
@@ -167,40 +168,45 @@ public class ActivityCreateClickListener extends SimpleClickListener {
                         } else {
                             free = 0;
                         }
-                        mActivityInfo.put(ActivityCreateInfoItem.ACTIVITY_FREE, free);
+                        if (mActivityInfo.get(ActivityCreateInfoItem.ACTIVITY_FREE_PARAM) != null) {
+                            mActivityInfo.remove(ActivityCreateInfoItem.ACTIVITY_FREE_PARAM);
+                        }
+                        mActivityInfo.put(ActivityCreateInfoItem.ACTIVITY_FREE_PARAM, free);
                     }
                 }, mActivityFree);
                 break;
             case ActivityCreateInfoItem.ACTIVITY_STYLE:
-                valueView.setText("未设置");
                 getDialog(new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         //选择的回调
                         valueView.setText(mStyleArray[which]);
                         dialog.cancel();
-                        mActivityInfo.put(ActivityCreateInfoItem.ACTIVITY_STYLE, mStyleArray[which]);
+                        if (mActivityInfo.get(ActivityCreateInfoItem.ACTIVITY_STYLE_PARAM) != null) {
+                            mActivityInfo.remove(ActivityCreateInfoItem.ACTIVITY_STYLE_PARAM);
+                        }
+                        mActivityInfo.put(ActivityCreateInfoItem.ACTIVITY_STYLE_PARAM, mStyleArray[which]);
                     }
                 }, mStyleArray);
                 break;
             case ActivityCreateInfoItem.ACTIVITY_TYPE:
-                valueView.setText("未设置");
                 getDialog(new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         //选择的回调
                         valueView.setText(mTypeArray[which]);
                         dialog.cancel();
-                        mActivityInfo.put(ActivityCreateInfoItem.ACTIVITY_TYPE, mTypeArray[which]);
+                        if (mActivityInfo.get(ActivityCreateInfoItem.ACTIVITY_TYPE_PARAM) != null) {
+                            mActivityInfo.remove(ActivityCreateInfoItem.ACTIVITY_TYPE_PARAM);
+                        }
+                        mActivityInfo.put(ActivityCreateInfoItem.ACTIVITY_TYPE_PARAM, mTypeArray[which]);
                     }
                 }, mTypeArray);
                 break;
             case ActivityCreateInfoItem.ACTIVITY_LOCATION:
                 showLocationPickerView(valueView);
-
                 break;
             case ActivityCreateInfoItem.ACTIVITY_SCHOOL:
-                valueView.setText("未设置");
                 if (mSchoolName == null) {
                     Toast.makeText(DELEGATE.getContext(), "请先选择位置，后选择学校", Toast.LENGTH_SHORT).show();
                 } else {
@@ -209,21 +215,39 @@ public class ActivityCreateClickListener extends SimpleClickListener {
                         public void onClick(DialogInterface dialog, int which) {
                             valueView.setText(mSchoolName[which]);
                             dialog.cancel();
-                            mActivityInfo.put(ActivityCreateInfoItem.ACTIVITY_SCHOOL, mSchoolName[which]);
+                            if (mActivityInfo.get(ActivityCreateInfoItem.ACTIVITY_SCHOOL_PARAM) != null) {
+                                mActivityInfo.remove(ActivityCreateInfoItem.ACTIVITY_SCHOOL_PARAM);
+                            }
+                            mActivityInfo.put(ActivityCreateInfoItem.ACTIVITY_SCHOOL_PARAM, mSchoolName[which]);
                         }
                     }, mSchoolName);
                 }
                 break;
             case ActivityCreateInfoItem.ACTIVITY_AMOUNT:
-                valueView.setText("未设置");
                 getDialog(new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         valueView.setText(mAmount[which]);
                         dialog.cancel();
-                        mActivityInfo.put(ActivityCreateInfoItem.ACTIVITY_AMOUNT, mAmount[which]);
+                        if (mActivityInfo.get(ActivityCreateInfoItem.ACTIVITY_AMOUNT_PARAM) != null) {
+                            mActivityInfo.remove(ActivityCreateInfoItem.ACTIVITY_AMOUNT_PARAM);
+                        }
+                        mActivityInfo.put(ActivityCreateInfoItem.ACTIVITY_AMOUNT_PARAM, mAmount[which]);
                     }
                 }, mAmount);
+                break;
+            case ActivityCreateInfoItem.ACTIVITY_USER_NUM:
+                getDialog(new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        valueView.setText(mUserNum[which]);
+                        dialog.cancel();
+                        if (mActivityInfo.get(ActivityCreateInfoItem.ACTIVITY_USER_NUM_PARAM) != null) {
+                            mActivityInfo.remove(ActivityCreateInfoItem.ACTIVITY_USER_NUM_PARAM);
+                        }
+                        mActivityInfo.put(ActivityCreateInfoItem.ACTIVITY_USER_NUM_PARAM, mUserNum[which]);
+                    }
+                }, mUserNum);
                 break;
             default:
                 break;
@@ -304,19 +328,19 @@ public class ActivityCreateClickListener extends SimpleClickListener {
                     location = province + "-" + city + "-" + county;
                 }
                 view.setText(location);
-                //TODO mActivityLocation，将location数据缓存到MAP集合中
+                //mActivityLocation，将location数据缓存到MAP集合中
                 if (mActivityInfo.get(ActivityCreateInfoItem.ACTIVITY_PROVINCE) != null) {
                     mActivityInfo.remove(ActivityCreateInfoItem.ACTIVITY_PROVINCE);
                 }
-                mActivityInfo.put(ActivityCreateInfoItem.ACTIVITY_PROVINCE, province);
+                mActivityInfo.put(ActivityCreateInfoItem.ACTIVITY_PROVINCE_PARAM, province);
                 if (mActivityInfo.get(ActivityCreateInfoItem.ACTIVITY_CITY) != null) {
                     mActivityInfo.remove(ActivityCreateInfoItem.ACTIVITY_CITY);
                 }
-                mActivityInfo.put(ActivityCreateInfoItem.ACTIVITY_CITY, city);
+                mActivityInfo.put(ActivityCreateInfoItem.ACTIVITY_CITY_PARAM, city);
                 if (mActivityInfo.get(ActivityCreateInfoItem.ACTIVITY_COUNTY) != null) {
                     mActivityInfo.remove(ActivityCreateInfoItem.ACTIVITY_COUNTY);
                 }
-                mActivityInfo.put(ActivityCreateInfoItem.ACTIVITY_COUNTY, county);
+                mActivityInfo.put(ActivityCreateInfoItem.ACTIVITY_COUNTY_PARAM, county);
                 mProvinceName = province;
                 //初始化该省份下的学校信息
                 initProvinceSchoolData();
@@ -357,7 +381,7 @@ public class ActivityCreateClickListener extends SimpleClickListener {
         }
     }
 
-    public static Map<Integer, Object> getActivityInfo() {
+    public static Map<String, Object> getActivityInfo() {
         return mActivityInfo;
     }
 
