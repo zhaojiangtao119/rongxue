@@ -71,7 +71,6 @@ public class ActivityAccountDelegate extends WallDelegate {
         uploadActivityOrder();
     }
 
-
     private void uploadUserActivityAccount() {
         RestClient.builder()
                 .url("activity/account/" + USER_ID)
@@ -95,6 +94,7 @@ public class ActivityAccountDelegate extends WallDelegate {
         mRecyclerView.setLayoutManager(manager);
         mRecyclerView.addItemDecoration(BaseDecoration.
                 create(ContextCompat.getColor(getContext(), R.color.app_background), 5));
+        mRecyclerView.addOnItemTouchListener(new ActivityAccountOrderClickListener(this));
     }
 
     private void uploadActivityOrder() {
