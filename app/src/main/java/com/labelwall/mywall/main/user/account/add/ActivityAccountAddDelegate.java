@@ -117,7 +117,7 @@ public class ActivityAccountAddDelegate extends WallDelegate implements AdapterV
                             final String message = jsonResponse.getString("msg");
                             if (status == 0) {
                                 //插入成功，跳转到订单详情页面，进行支付，或不支付
-                                getSupportDelegate().start(
+                                getSupportDelegate().startWithPop(
                                         new ActivityAccountAddOrderDetailDelegate(data));
                             } else {
                                 Toast.makeText(_mActivity, message, Toast.LENGTH_SHORT).show();
