@@ -14,6 +14,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.labelwall.mywall.R;
 import com.labelwall.mywall.R2;
 import com.labelwall.mywall.delegates.base.WallDelegate;
+import com.labelwall.mywall.main.user.account.add.ActivityAccountAddDelegate;
 import com.labelwall.mywall.main.user.account.add.history.ActivityAccountAddHistoryDelegate;
 import com.labelwall.mywall.ui.recycler.BaseDecoration;
 import com.labelwall.mywall.util.net.RestClient;
@@ -44,7 +45,7 @@ public class ActivityAccountDelegate extends WallDelegate {
 
     @OnClick(R2.id.tv_account_add)
     void onClickAccountAdd() {
-        //TODO 充值
+        getSupportDelegate().start(new ActivityAccountAddDelegate(mAccountId));
     }
 
     @OnClick(R2.id.tv_account_add_history)

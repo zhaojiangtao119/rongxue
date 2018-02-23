@@ -43,12 +43,14 @@ public class ActivityAccountAddHistoryAdapter extends MultipleRecyclerViewAdapte
                 final AppCompatTextView orderPriceView = helper.getView(R.id.tv_account_order_price);
                 final AppCompatTextView createTimeView = helper.getView(R.id.tv_account_order_create_time);
                 final AppCompatTextView typeDescView = helper.getView(R.id.tv_account_order_type);
+                final AppCompatTextView statuDescView = helper.getView(R.id.tv_account_order_status);
                 final IconTextView iconOrder_detail = helper.getView(R.id.icon_account_order_detail);
                 iconOrder_detail.setVisibility(View.INVISIBLE);
                 orderNoView.setText(orderNo);
                 orderPriceView.setText("￥" + String.valueOf(orderPrice));
                 createTimeView.setText(createTime);
                 typeDescView.setText(typeDesc);
+                statuDescView.setText(statusDesc);
                 break;
             default:
                 break;

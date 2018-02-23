@@ -41,12 +41,14 @@ public class ActivityAccountOrderAdapter extends MultipleRecyclerViewAdapter {
                 final AppCompatTextView orderPriceView = helper.getView(R.id.tv_account_order_price);
                 final AppCompatTextView createTimeView = helper.getView(R.id.tv_account_order_create_time);
                 final AppCompatTextView typeDescView = helper.getView(R.id.tv_account_order_type);
+                final AppCompatTextView statusDescView = helper.getView(R.id.tv_account_order_status);
                 final IconTextView iconOrder_detail = helper.getView(R.id.icon_account_order_detail);
 
                 orderNoView.setText(orderNo);
                 orderPriceView.setText(String.valueOf(orderPrice) + "金豆");
                 createTimeView.setText(createTime);
                 typeDescView.setText(typeDesc);
+                statusDescView.setText(statusDesc);
                 break;
             default:
                 break;
