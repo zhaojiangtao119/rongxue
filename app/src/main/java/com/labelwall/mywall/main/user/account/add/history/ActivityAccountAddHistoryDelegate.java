@@ -15,6 +15,8 @@ import com.labelwall.mywall.main.user.account.ActivityAccountOrderDataConverter;
 import com.labelwall.mywall.ui.recycler.BaseDecoration;
 import com.labelwall.mywall.util.net.RestClient;
 import com.labelwall.mywall.util.net.callback.ISuccess;
+import com.labelwall.mywall.util.storage.WallPreference;
+import com.labelwall.mywall.util.storage.WallTagType;
 
 import butterknife.BindView;
 
@@ -28,6 +30,8 @@ public class ActivityAccountAddHistoryDelegate extends WallDelegate {
     RecyclerView mRecyclerView = null;
 
     private final Integer ACCOUNT_ID;
+    private final long USER_ID =
+            WallPreference.getCurrentUserId(WallTagType.CURRENT_USER_ID.name());
     private ActivityAccountAddHistoryAdapter mAdapter = null;
     private ActivityAccountAddHistoryDataConverter mConverter =
             new ActivityAccountAddHistoryDataConverter();
@@ -62,7 +66,7 @@ public class ActivityAccountAddHistoryDelegate extends WallDelegate {
 
     private void uploadAccountAddHistory() {
         RestClient.builder()
-                .url("activity/account/trade/22/2")
+                .url("activity/account/trade/" + USER_ID + "/" + ACCOUNT_ID)
                 .success(new ISuccess() {
                     @Override
                     public void onSuccess(String response) {

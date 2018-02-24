@@ -12,6 +12,7 @@ import com.labelwall.mywall.R;
 import com.labelwall.mywall.R2;
 import com.labelwall.mywall.delegates.base.WallDelegate;
 import com.labelwall.mywall.main.cart.order.OrderDetailDelegate;
+import com.labelwall.mywall.main.user.account.add.history.ActivityAccountAddHistoryDelegate;
 import com.labelwall.mywall.util.pay.FastPay;
 import com.labelwall.mywall.util.pay.IAIPayResultListener;
 
@@ -36,6 +37,7 @@ public class ActivityAccountAddOrderDetailDelegate extends WallDelegate implemen
     AppCompatTextView mOrderStatus = null;
 
     private String mOrderNo = null;
+    private Integer mAccountId = null;
 
     @OnClick(R2.id.btn_submit_add_order)
     void onClickPayOrder() {
@@ -64,6 +66,7 @@ public class ActivityAccountAddOrderDetailDelegate extends WallDelegate implemen
 
     private void bindData() {
         mOrderNo = ORDER_INFO.getString("orderNo");
+        mAccountId = ORDER_INFO.getInteger("accountId");
         final String orderInfo = ORDER_INFO.getString("orderInfo");
         final double orderPrice = ORDER_INFO.getDouble("orderPrice");
         final Integer jindouNum = ORDER_INFO.getInteger("jindouCount");
@@ -77,7 +80,8 @@ public class ActivityAccountAddOrderDetailDelegate extends WallDelegate implemen
 
     @Override
     public void onPaySuccess() {
-
+        //TODO 支付成功后跳转到用户的充值页面
+        getSupportDelegate().startWithPop(new ActivityAccountAddHistoryDelegate(mAccountId));
     }
 
     @Override
