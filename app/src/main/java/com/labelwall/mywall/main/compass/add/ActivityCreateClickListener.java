@@ -223,19 +223,6 @@ public class ActivityCreateClickListener extends SimpleClickListener {
                     }, mSchoolName);
                 }
                 break;
-            case ActivityCreateInfoItem.ACTIVITY_AMOUNT:
-                getDialog(new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        valueView.setText(mAmount[which]);
-                        dialog.cancel();
-                        if (mActivityInfo.get(ActivityCreateInfoItem.ACTIVITY_AMOUNT_PARAM) != null) {
-                            mActivityInfo.remove(ActivityCreateInfoItem.ACTIVITY_AMOUNT_PARAM);
-                        }
-                        mActivityInfo.put(ActivityCreateInfoItem.ACTIVITY_AMOUNT_PARAM, mAmount[which]);
-                    }
-                }, mAmount);
-                break;
             case ActivityCreateInfoItem.ACTIVITY_USER_NUM:
                 getDialog(new DialogInterface.OnClickListener() {
                     @Override

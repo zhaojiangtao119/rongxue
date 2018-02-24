@@ -52,6 +52,7 @@
     <string name="user_profile">用户信息</string>
     <string name="system_setting">系统设置</string>
     <string name="activity_account">活动账户</string>
+    <string name="acitivity_pay">支付</string>
     <string name="user_location">用户地址</string>
 
     <!--User Activity Account-->

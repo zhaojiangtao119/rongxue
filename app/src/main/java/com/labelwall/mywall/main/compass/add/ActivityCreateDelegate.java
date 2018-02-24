@@ -23,6 +23,7 @@ import com.bumptech.glide.request.RequestOptions;
 import com.labelwall.mywall.R;
 import com.labelwall.mywall.R2;
 import com.labelwall.mywall.delegates.base.WallDelegate;
+import com.labelwall.mywall.main.compass.add.charge.ActivityCreatePayDelegate;
 import com.labelwall.mywall.main.compass.my.ActivityMyDelegate;
 import com.labelwall.mywall.main.user.UserClickListener;
 import com.labelwall.mywall.main.user.UserSettingItem;
@@ -38,6 +39,7 @@ import com.labelwall.mywall.util.callback.CallbackType;
 import com.labelwall.mywall.util.callback.IGlobalCallback;
 import com.labelwall.mywall.util.location.LocationUtil;
 import com.labelwall.mywall.util.net.RestClient;
+import com.labelwall.mywall.util.net.callback.IRequest;
 import com.labelwall.mywall.util.net.callback.ISuccess;
 import com.labelwall.mywall.util.qiniu.QnUploadHelper;
 import com.labelwall.mywall.util.storage.WallPreference;
@@ -67,6 +69,8 @@ public class ActivityCreateDelegate extends WallDelegate {
     AppCompatImageView mAcitivtyPoster = null;
     @BindView(R2.id.et_activity_content)
     AppCompatEditText mActivityContent = null;//活动概述
+    @BindView(R2.id.et_activity_title)
+    AppCompatEditText mActivityTitle = null;
 
     private static final RequestOptions OPTIONS = new RequestOptions()
             .diskCacheStrategy(DiskCacheStrategy.NONE)
@@ -80,6 +84,7 @@ public class ActivityCreateDelegate extends WallDelegate {
     private Map<String, Object> mCreateActivityParams = new HashMap<>();
     private Uri mPosterUri = null;
     private final long USER_ID = WallPreference.getCurrentUserId(WallTagType.CURRENT_USER_ID.name());
+    private boolean mValidateTime = false;
 
     @OnClick(R2.id.tv_activity_upload_poster)
     void onClickUploadPoster() {
@@ -116,6 +121,7 @@ public class ActivityCreateDelegate extends WallDelegate {
         boolean flag = true;
         if (mPosterUri == null) {
             Toast.makeText(_mActivity, "请上传图片", Toast.LENGTH_SHORT).show();
+            return !flag;
         }
         if (activityInfo.get(ActivityCreateInfoItem.APPLY_START_TIME_PARAM) == null) {
             hintMessage(ActivityCreateInfoItem.APPLY_START_TIME_VALUE);
@@ -149,10 +155,6 @@ public class ActivityCreateDelegate extends WallDelegate {
             hintMessage(ActivityCreateInfoItem.ACTIVITY_SCHOOL_VALUE);
             return !flag;
         }
-        if (activityInfo.get(ActivityCreateInfoItem.ACTIVITY_AMOUNT_PARAM) == null) {
-            hintMessage(ActivityCreateInfoItem.ACTIVITY_AMOUNT_VALUE);
-            return !flag;
-        }
         if (activityInfo.get(ActivityCreateInfoItem.ACTIVITY_PROVINCE_PARAM) == null) {
             hintMessage(ActivityCreateInfoItem.ACTIVITY_LOCATION_VALUE);
             return !flag;
@@ -175,6 +177,13 @@ public class ActivityCreateDelegate extends WallDelegate {
         } else {
             mCreateActivityParams.put(ActivityCreateInfoItem.ACTIVITY_CONTENT_PRAMS,
                     mActivityContent.getText().toString());
+        }
+        if (StringUtils.isEmpty(mActivityTitle.getText().toString())) {
+            hintMessage("活动标题");
+            return !flag;
+        } else {
+            mCreateActivityParams.put(ActivityCreateInfoItem.ACTIVITY_TITLE_PRAMS,
+                    mActivityTitle.getText().toString());
         }
         mCreateActivityParams.put(ActivityCreateInfoItem.ACTIVITY_USER_ID_PRAMS, USER_ID);
         return flag;
@@ -225,10 +234,45 @@ public class ActivityCreateDelegate extends WallDelegate {
                     .build()
                     .post();
         } else if (free == 1) {
-            //TODO 付费，跳转页面（支付页面）
+            //TODO 操作之前需要验证用户的填写的时间是否合适，验证当前用户的关联事件是否存在时间上的冲突
+            /*RestClient.builder()
+                    .url("activity/validate")
+                    .params(mCreateActivityParams)
+                    .success(new ISuccess() {
+                        @Override
+                        public void onSuccess(String response) {
+                            final JSONObject jsonResponse = JSON.parseObject(response);
+                            final int status = jsonResponse.getInteger("status");
+                            final String message = jsonResponse.getString("msg");
+                            if (status == 0) {
+                                //付费，跳转页面（支付页面）,将活动的基本信息传递过去，
+                                mValidateTime = true;
+                            } else {
+                                Toast.makeText(_mActivity, message, Toast.LENGTH_SHORT).show();
+                            }
+                        }
+                    })
+                    .request(new IRequest() {
+                        @Override
+                        public void onRequestStart() {
 
+                        }
+
+                        @Override
+                        public void onRequestEnd() {
+                            forwordPayPage();
+                        }
+                    })
+                    .build()
+                    .post();*/
+            forwordPayPage();
         }
+    }
 
+    private void forwordPayPage() {
+        if (true) {
+            getSupportDelegate().startWithPop(new ActivityCreatePayDelegate(mCreateActivityParams));
+        }
     }
 
     private void updateActivityInfo(Integer activityId, String url) {
@@ -328,11 +372,6 @@ public class ActivityCreateDelegate extends WallDelegate {
                 .setId(ActivityCreateInfoItem.ACTIVITY_SCHOOL)
                 .setText(ActivityCreateInfoItem.ACTIVITY_SCHOOL_VALUE)
                 .build();
-        final ListBean activityAmount = new ListBean.builder()
-                .setItemType(ListItemType.ITEM_NORMAL)
-                .setId(ActivityCreateInfoItem.ACTIVITY_AMOUNT)
-                .setText(ActivityCreateInfoItem.ACTIVITY_AMOUNT_VALUE)
-                .build();
         final ListBean activityUserNum = new ListBean.builder()
                 .setItemType(ListItemType.ITEM_NORMAL)
                 .setId(ActivityCreateInfoItem.ACTIVITY_USER_NUM)
@@ -348,7 +387,6 @@ public class ActivityCreateDelegate extends WallDelegate {
         data.add(activityType);
         data.add(activityLocation);
         data.add(activitySchool);
-        data.add(activityAmount);
         data.add(activityUserNum);
 
         final LinearLayoutManager manager = new LinearLayoutManager(getContext());

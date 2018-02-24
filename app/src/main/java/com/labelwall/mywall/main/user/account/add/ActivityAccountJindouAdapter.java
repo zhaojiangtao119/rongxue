@@ -26,7 +26,7 @@ public class ActivityAccountJindouAdapter extends BaseAdapter {
     private final LayoutInflater INFLATER;
     private int mTemp = -1;
 
-    protected ActivityAccountJindouAdapter(WallDelegate delegate, List<String> data) {
+    public ActivityAccountJindouAdapter(WallDelegate delegate, List<String> data) {
         this.DELEGATE = delegate;
         this.DATA = data;
         INFLATER = LayoutInflater.from(delegate.getContext());

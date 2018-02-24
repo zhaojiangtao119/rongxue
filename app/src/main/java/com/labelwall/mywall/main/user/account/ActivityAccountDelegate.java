@@ -100,7 +100,6 @@ public class ActivityAccountDelegate extends WallDelegate {
 
     private void uploadActivityOrder() {
         RestClient.builder()
-                //TODO
                 .url("activity/account/trade/" + USER_ID)
                 .success(new ISuccess() {
                     @Override
