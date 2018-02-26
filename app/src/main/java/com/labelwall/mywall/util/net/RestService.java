@@ -22,6 +22,7 @@ import retrofit2.http.Url;
 /**
  * Created by Administrator on 2018-01-03.
  * 具体请求方式接口
+ * Call<返回值的类型></>
  */
 
 public interface RestService {
@@ -47,7 +48,7 @@ public interface RestService {
     @DELETE
     Call<String> delete(@Url String url, @QueryMap Map<String, Object> params);
 
-    //Streaming一边下载一遍写入到文件系统，必须使用异步方式
+    //@Streaming一边下载一遍写入到文件系统，必须使用异步方式
     @Streaming
     @GET
     Call<ResponseBody> download(@Url String url, @QueryMap Map<String, Object> params);

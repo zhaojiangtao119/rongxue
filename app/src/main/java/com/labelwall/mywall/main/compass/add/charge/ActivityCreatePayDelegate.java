@@ -108,13 +108,13 @@ public class ActivityCreatePayDelegate extends WallDelegate {
 
     @Override
     public void onBindView(@Nullable Bundle savedInstanceState, @NonNull View rootView) {
-        uploadUserActivityAccount();
-        initListView();
     }
 
     @Override
     public void onLazyInitView(@Nullable Bundle savedInstanceState) {
         super.onLazyInitView(savedInstanceState);
+        uploadUserActivityAccount();
+        initListView();
     }
 
     private void initListView() {

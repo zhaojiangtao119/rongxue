@@ -30,7 +30,7 @@ import retrofit2.Callback;
 public class RestClient {
 
     private final String URL;
-    private static final WeakHashMap<String, Object> PARAMS = RestCreator.getParams();
+    private final WeakHashMap<String, Object> PARAMS;
     private final IRequest REQUEST;
     private final ISuccess SUCCESS;
     private final IError ERROR;
@@ -44,8 +44,7 @@ public class RestClient {
     private final String NAME;
     private final SwipeRefreshLayout REFRESH_LAYOUT;
 
-
-    public RestClient(String url, Map<String, Object> params,
+    public RestClient(String url, WeakHashMap<String, Object> params,
                       IRequest request, ISuccess success,
                       IError error, IFailure failure,
                       RequestBody body, LoaderStyle loaderStyle,
@@ -53,7 +52,7 @@ public class RestClient {
                       String dounloadDir, String extension, String name,
                       SwipeRefreshLayout refreshLayout) {
         this.URL = url;
-        PARAMS.putAll(params);
+        this.PARAMS = params;
         this.REQUEST = request;
         this.SUCCESS = success;
         this.ERROR = error;
@@ -73,6 +72,7 @@ public class RestClient {
     }
 
     private void request(HttpMethod method) {
+        //获取Service对象
         final RestService restService = RestCreator.getRestService();
         Call<String> call = null;
         if (REQUEST != null) {
@@ -155,7 +155,7 @@ public class RestClient {
     }
 
     public final void download() {
-        new DownloadHandler(URL, REQUEST, SUCCESS, ERROR, FAILURE, DOWNLOAD_DIR, EXTENSION, NAME)
+        new DownloadHandler(URL, PARAMS, REQUEST, SUCCESS, ERROR, FAILURE, DOWNLOAD_DIR, EXTENSION, NAME)
                 .handleDownload();
     }
 }

@@ -39,8 +39,11 @@ import com.labelwall.mywall.util.callback.CallbackType;
 import com.labelwall.mywall.util.callback.IGlobalCallback;
 import com.labelwall.mywall.util.location.LocationUtil;
 import com.labelwall.mywall.util.net.RestClient;
+import com.labelwall.mywall.util.net.RestCreator;
 import com.labelwall.mywall.util.net.callback.IRequest;
 import com.labelwall.mywall.util.net.callback.ISuccess;
+import com.labelwall.mywall.util.net.rx.RxRestClient;
+import com.labelwall.mywall.util.net.rx.RxRestService;
 import com.labelwall.mywall.util.qiniu.QnUploadHelper;
 import com.labelwall.mywall.util.storage.WallPreference;
 import com.labelwall.mywall.util.storage.WallTagType;
@@ -53,6 +56,12 @@ import java.util.Map;
 
 import butterknife.BindView;
 import butterknife.OnClick;
+import io.reactivex.Observable;
+import io.reactivex.Observer;
+import io.reactivex.Scheduler;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.Disposable;
+import io.reactivex.schedulers.Schedulers;
 
 /**
  * Created by Administrator on 2018-02-10.
@@ -186,6 +195,7 @@ public class ActivityCreateDelegate extends WallDelegate {
                     mActivityTitle.getText().toString());
         }
         mCreateActivityParams.put(ActivityCreateInfoItem.ACTIVITY_USER_ID_PRAMS, USER_ID);
+        mCreateActivityParams.put(ActivityCreateInfoItem.ACTIVITY_POSTER, mPosterUri);
         return flag;
     }
 
@@ -235,42 +245,44 @@ public class ActivityCreateDelegate extends WallDelegate {
                     .post();
         } else if (free == 1) {
             //TODO 操作之前需要验证用户的填写的时间是否合适，验证当前用户的关联事件是否存在时间上的冲突
-            /*RestClient.builder()
-                    .url("activity/validate")
-                    .params(mCreateActivityParams)
-                    .success(new ISuccess() {
+            //使用RxJava+Retrofit请求，解决Retrofit链式请求的回调问题
+            final Observable<String> observable = RestCreator.getRxRestService().post("activity/validate", mCreateActivityParams);
+            observable.subscribeOn(Schedulers.io())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe(new Observer<String>() {
                         @Override
-                        public void onSuccess(String response) {
-                            final JSONObject jsonResponse = JSON.parseObject(response);
+                        public void onSubscribe(@io.reactivex.annotations.NonNull Disposable d) {
+
+                        }
+
+                        @Override
+                        public void onNext(@io.reactivex.annotations.NonNull String s) {
+                            //获取的数据
+                            final JSONObject jsonResponse = JSON.parseObject(s);
                             final int status = jsonResponse.getInteger("status");
                             final String message = jsonResponse.getString("msg");
                             if (status == 0) {
-                                //付费，跳转页面（支付页面）,将活动的基本信息传递过去，
                                 mValidateTime = true;
                             } else {
                                 Toast.makeText(_mActivity, message, Toast.LENGTH_SHORT).show();
                             }
                         }
-                    })
-                    .request(new IRequest() {
+
                         @Override
-                        public void onRequestStart() {
+                        public void onError(@io.reactivex.annotations.NonNull Throwable e) {
 
                         }
 
                         @Override
-                        public void onRequestEnd() {
+                        public void onComplete() {
                             forwordPayPage();
                         }
-                    })
-                    .build()
-                    .post();*/
-            forwordPayPage();
+                    });
         }
     }
 
     private void forwordPayPage() {
-        if (true) {
+        if (mValidateTime) {
             getSupportDelegate().startWithPop(new ActivityCreatePayDelegate(mCreateActivityParams));
         }
     }
@@ -292,7 +304,7 @@ public class ActivityCreateDelegate extends WallDelegate {
                         } else if (status == 0) {
                             Toast.makeText(_mActivity, "创建成功", Toast.LENGTH_SHORT).show();
                             // TODO 跳转到“我的”活动，跳转有问题？？？
-                            getSupportDelegate().start(new ActivityMyDelegate());
+                            getSupportDelegate().startWithPop(new ActivityMyDelegate());
                         }
                     }
                 })

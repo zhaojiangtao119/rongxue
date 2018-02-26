@@ -20,7 +20,7 @@ import retrofit2.Response;
 public class DownloadHandler {
 
     private final String URL;
-    private static final WeakHashMap<String, Object> PARAMS = RestCreator.getParams();
+    private final WeakHashMap<String, Object> PARAMS;
     private final IRequest REQUEST;
     private final ISuccess SUCCESS;
     private final IError ERROR;
@@ -29,10 +29,11 @@ public class DownloadHandler {
     private final String EXTENSION;
     private final String NAME;
 
-    public DownloadHandler(String url, IRequest request, ISuccess success,
+    public DownloadHandler(String url, WeakHashMap<String, Object> params, IRequest request, ISuccess success,
                            IError error, IFailure failure, String downloadDir,
                            String extension, String name) {
         this.URL = url;
+        this.PARAMS = params;
         this.REQUEST = request;
         this.SUCCESS = success;
         this.ERROR = error;
@@ -68,14 +69,12 @@ public class DownloadHandler {
                                 ERROR.onError(response.code(), response.message());
                             }
                         }
-                        RestCreator.getParams().clear();
                     }
 
                     @Override
                     public void onFailure(Call<ResponseBody> call, Throwable t) {
                         if (FAILURE != null) {
                             FAILURE.onFailure();
-                            RestCreator.getParams().clear();
                         }
                     }
                 });

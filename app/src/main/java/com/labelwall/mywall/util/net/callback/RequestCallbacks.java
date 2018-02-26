@@ -3,6 +3,9 @@ package com.labelwall.mywall.util.net.callback;
 import android.os.Handler;
 import android.support.v4.widget.SwipeRefreshLayout;
 
+import com.labelwall.mywall.app.ConfigKeys;
+import com.labelwall.mywall.app.MyWall;
+import com.labelwall.mywall.delegates.base.WallDelegate;
 import com.labelwall.mywall.ui.loader.LoaderStyle;
 import com.labelwall.mywall.ui.loader.WallLoader;
 
@@ -55,6 +58,7 @@ public class RequestCallbacks implements Callback<String> {
         if (REFRESH_LAYOUT != null) {
             REFRESH_LAYOUT.setRefreshing(false);//停止加载
         }
+        //onRequestFinish();
     }
 
     @Override
@@ -79,4 +83,16 @@ public class RequestCallbacks implements Callback<String> {
             }, 1000);
         }
     }
+
+    /*private void onRequestFinish() {
+        final long delayed = MyWall.getConfiguration(ConfigKeys.LOADER_DELAYED);
+        if (LOADER_STYLE != null) {
+            HANDLER.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    LatteLoader.stopLoading();
+                }
+            }, delayed);
+        }
+    }*/
 }

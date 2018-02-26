@@ -49,5 +49,6 @@ public class ActivityCreateInfoItem {
     public static final String ACTIVITY_USER_ID_PRAMS = "userId";
     public static final String ACTIVITY_CONTENT_PRAMS = "content";
     public static final String ACTIVITY_TITLE_PRAMS = "theme";
+    public static final String ACTIVITY_POSTER = "poster";
 
 }

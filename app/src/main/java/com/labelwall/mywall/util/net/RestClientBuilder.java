@@ -8,6 +8,7 @@ import com.labelwall.mywall.util.net.callback.*;
 
 import java.io.File;
 import java.util.Map;
+import java.util.WeakHashMap;
 
 import okhttp3.MediaType;
 import okhttp3.RequestBody;
@@ -20,7 +21,7 @@ import okhttp3.RequestBody;
 public class RestClientBuilder {
 
     private String mUrl = null;
-    private static final Map<String, Object> mParams = RestCreator.getParams();
+    private final WeakHashMap<String, Object> PARAMS = new WeakHashMap<>();
     private IRequest mIRequest = null;
     private ISuccess mISuccess = null;
     private IError mIError = null;
@@ -44,12 +45,12 @@ public class RestClientBuilder {
     }
 
     public final RestClientBuilder params(Map<String, Object> params) {
-        mParams.putAll(params);
+        PARAMS.putAll(params);
         return this;
     }
 
     public final RestClientBuilder params(String key, Object value) {
-        this.mParams.put(key, value);
+        this.PARAMS.put(key, value);
         return this;
     }
 
@@ -115,7 +116,7 @@ public class RestClientBuilder {
         return this;
     }
 
-    public final RestClientBuilder refreshLayout(SwipeRefreshLayout refreshLayout){
+    public final RestClientBuilder refreshLayout(SwipeRefreshLayout refreshLayout) {
         this.mRefreshLayout = refreshLayout;
         return this;
     }
@@ -127,10 +128,9 @@ public class RestClientBuilder {
     }*/
 
     public final RestClient build() {
-        return new RestClient(mUrl, mParams, mIRequest,
+        return new RestClient(mUrl, PARAMS, mIRequest,
                 mISuccess, mIError, mIFailure, mBody,
                 mLoaderStyle, mContext, mFile,
-                mDownloadDir, mExtension, mName,mRefreshLayout);
+                mDownloadDir, mExtension, mName, mRefreshLayout);
     }
-
 }
