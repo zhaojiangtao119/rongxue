@@ -50,16 +50,16 @@ public class ActivityDelegate extends BottomItemDelegate {
 
     @Override
     public void onBindView(@Nullable Bundle savedInstanceState, View rootView) {
-        WallDelegate wallDelegate = getParentDelegate();
-        mRefreshHandler = ActivityRefreshHandler
-                .create(mRefreshLayout, mRecyclerView, new ActivityDataConverter(), wallDelegate);
+        initRefreshLayout();
+        initRecyclerView();
     }
 
     @Override
     public void onLazyInitView(@Nullable Bundle savedInstanceState) {
         super.onLazyInitView(savedInstanceState);
-        initRefreshLayout();
-        initRecyclerView();
+        WallDelegate wallDelegate = getParentDelegate();
+        mRefreshHandler = ActivityRefreshHandler
+                .create(mRefreshLayout, mRecyclerView, new ActivityDataConverter(), wallDelegate);
         mRefreshHandler.firshActivityPage();
     }
 

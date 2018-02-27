@@ -35,8 +35,8 @@ public class WallBottomDelegate extends BaseBottomDelegate {
     }
 
     @Override
-    public int setIndexDelegate() {
-        return 0;
+    public int setIndexDelegate(Integer index) {
+        return BaseBottomDelegate.setIndex(index);
     }
 
     @Override

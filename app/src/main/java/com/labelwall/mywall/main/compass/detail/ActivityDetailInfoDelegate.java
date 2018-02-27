@@ -16,6 +16,7 @@ import com.bumptech.glide.request.RequestOptions;
 import com.labelwall.mywall.R;
 import com.labelwall.mywall.R2;
 import com.labelwall.mywall.delegates.base.WallDelegate;
+import com.labelwall.mywall.main.compass.add.charge.ActivityCreateOrderDetailDelegate;
 import com.labelwall.mywall.util.net.RestClient;
 import com.labelwall.mywall.util.net.callback.ISuccess;
 import com.labelwall.mywall.util.storage.WallPreference;
@@ -61,6 +62,7 @@ public class ActivityDetailInfoDelegate extends WallDelegate {
     @BindView(R2.id.tv_activity_apply_join)
     AppCompatTextView mJoinActivity = null;
 
+
     @OnClick(R2.id.tv_activity_apply_join)
     void onJoinActivity() {
         String hintMessage = mJoinActivity.getText().toString();
@@ -84,24 +86,80 @@ public class ActivityDetailInfoDelegate extends WallDelegate {
                     .build()
                     .delete();
         } else if (hintMessage.equals("加入活动")) {
-            RestClient.builder()
-                    .url("activity/join/" + mActivityId + "/" + USER_ID)
-                    .success(new ISuccess() {
-                        @Override
-                        public void onSuccess(String response) {
-                            final JSONObject jsonResponse = JSON.parseObject(response);
-                            final Integer status = jsonResponse.getInteger("status");
-                            final String message = jsonResponse.getString("msg");
-                            if (status == 0) {
-                                mJoinActivity.setText("放弃活动");
-                            } else if (status == 2) {
-                                Toast.makeText(_mActivity, message, Toast.LENGTH_SHORT).show();
+            //判断加入的活动的收费情况
+            if (mAmount == 0) {//免费活动
+                RestClient.builder()
+                        .url("activity/join/" + mActivityId + "/" + USER_ID)
+                        .success(new ISuccess() {
+                            @Override
+                            public void onSuccess(String response) {
+                                final JSONObject jsonResponse = JSON.parseObject(response);
+                                final Integer status = jsonResponse.getInteger("status");
+                                final String message = jsonResponse.getString("msg");
+                                if (status == 0) {
+                                    mJoinActivity.setText("放弃活动");
+                                } else if (status == 2) {
+                                    Toast.makeText(_mActivity, message, Toast.LENGTH_SHORT).show();
+                                }
                             }
-                        }
-                    })
-                    .build()
-                    .post();
+                        })
+                        .build()
+                        .post();
+            } else if (mAmount > 0) {//收费活动
+                //1.判断用户的时间是否与加入的时间存在冲突，人数是否冲突
+                RestClient.builder()
+                        .url("activity/validate/join")
+                        .params("activityId", mActivityId)
+                        .params("userId", USER_ID)
+                        .success(new ISuccess() {
+                            @Override
+                            public void onSuccess(String response) {
+                                final JSONObject jsonResponse = JSON.parseObject(response);
+                                final int status = jsonResponse.getInteger("status");
+                                final String message = jsonResponse.getString("msg");
+                                if (status == 0) {
+                                    createJoinActivityOrder();
+                                } else {
+                                    Toast.makeText(_mActivity, message, Toast.LENGTH_SHORT).show();
+                                }
+                            }
+                        })
+                        .build()
+                        .post();
+
+            } else {
+                Toast.makeText(_mActivity, "未知错误", Toast.LENGTH_SHORT).show();
+            }
         }
+    }
+
+    private void createJoinActivityOrder() {
+        //2.首先创建加入活动的订单
+        RestClient.builder()
+                .url("activity/account/trade/add/a")
+                .params("userId", USER_ID)
+                .params("orderPrice", mAmount)
+                .params("orderInfo", mTheme)
+                .params("activityId", mActivityId)
+                .params("type", 1)//1加入活动
+                .success(new ISuccess() {
+                    @Override
+                    public void onSuccess(String response) {
+                        final JSONObject jsonResponse = JSON.parseObject(response);
+                        final int status = jsonResponse.getInteger("status");
+                        final String message = jsonResponse.getString("msg");
+                        final JSONObject data = jsonResponse.getJSONObject("data");
+                        //跳转到订单详情页面
+                        if (status == 0) {
+                            //跳转到订单详情页面
+                            getParentDelegate().getSupportDelegate().startWithPop(new ActivityCreateOrderDetailDelegate(data, null));
+                        } else {
+                            Toast.makeText(_mActivity, message, Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                })
+                .build()
+                .post();
     }
 
     private static final String ARG_ACTIVITY_DATA = "ARG_ACTIVITY_DATA";
@@ -110,9 +168,21 @@ public class ActivityDetailInfoDelegate extends WallDelegate {
     private Integer mActivityId = null;
     private final long USER_ID = WallPreference.getCurrentUserId(WallTagType.CURRENT_USER_ID.name());
     private static final RequestOptions OPTIONS = new RequestOptions()
-            .diskCacheStrategy(DiskCacheStrategy.ALL)
+            .diskCacheStrategy(DiskCacheStrategy.NONE)
             .dontAnimate()
             .centerCrop();
+    private int mAmount = -1;
+    private String mTheme = null;
+
+    public ActivityDetailInfoDelegate(JSONObject activityDto, Integer activityId) {
+        this.mActivityDto = activityDto;
+        this.mActivityId = activityId;
+    }
+
+    ActivityDetailInfoDelegate() {
+        
+    }
+
 
     @Override
     public Object setLayout() {
@@ -147,27 +217,27 @@ public class ActivityDetailInfoDelegate extends WallDelegate {
 
     private void initActivityData() {
         //初始化活动信息
-        final String theme = mActivityDto.getString("theme");
+        mTheme = mActivityDto.getString("theme");
         final String type = mActivityDto.getString("type");
         final String style = mActivityDto.getString("style");
         final String applyStartTime = mActivityDto.getString("starttime");
         final String applyEndTime = mActivityDto.getString("endtime");
         final String startTime = mActivityDto.getString("detailStartTime");
         final String endTime = mActivityDto.getString("detailEndTime");
-        final Integer amount = mActivityDto.getInteger("amount");
+        mAmount = mActivityDto.getInteger("amount");
         final String content = mActivityDto.getString("content");
         final String location = mActivityDto.getString("location");
         final String city = mActivityDto.getString("city");
         final String county = mActivityDto.getString("county");
         final String school = mActivityDto.getString("school");
-        mActivityTheme.setText(theme);
+        mActivityTheme.setText(mTheme);
         mActivityType.setText(type);
         mActivityStyle.setText(style);
         mActivityApplyStartTime.setText(applyStartTime);
         mActivityApplyEndTime.setText(applyEndTime);
         mActivityStartTime.setText(startTime);
         mActivityEndTime.setText(endTime);
-        mActivityAmount.setText("金豆" + String.valueOf(amount));
+        mActivityAmount.setText("金豆" + String.valueOf(mAmount));
         mActivityContent.setText(content);
         if (!StringUtils.isEmpty(school)) {
             mActivityLocation.setText(school);

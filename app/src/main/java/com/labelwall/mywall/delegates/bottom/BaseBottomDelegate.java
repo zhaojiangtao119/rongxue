@@ -39,13 +39,15 @@ public abstract class BaseBottomDelegate extends WallDelegate implements View.On
     //点击bean字体变色
     private int mClickedColor = Color.RED;
 
+    private static Integer mIndex = 0;
+
     @BindView(R2.id.bottom_bar)
     LinearLayoutCompat mBottomBar = null;
 
     //设置bean与delegate的值
     public abstract LinkedHashMap<BottomTabBean, BottomItemDelegate> setItems(ItemBuilder builder);
 
-    public abstract int setIndexDelegate();
+    public abstract int setIndexDelegate(Integer index);
 
     @ColorInt
     public abstract int setClickedColor();
@@ -57,7 +59,7 @@ public abstract class BaseBottomDelegate extends WallDelegate implements View.On
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mCurrentDelegate = setIndexDelegate();
+        mCurrentDelegate = setIndexDelegate(mIndex);
         if (setClickedColor() != 0) {
             mClickedColor = setClickedColor();
         }
@@ -71,6 +73,15 @@ public abstract class BaseBottomDelegate extends WallDelegate implements View.On
             TAB_BEANS.add(key);
             ITEM_DELEGATES.add(value);
         }
+    }
+
+    public static Integer setIndex(Integer index) {
+        if (index == null) {
+            mIndex = 0;
+        } else {
+            mIndex = index;
+        }
+        return mIndex;
     }
 
     @Override

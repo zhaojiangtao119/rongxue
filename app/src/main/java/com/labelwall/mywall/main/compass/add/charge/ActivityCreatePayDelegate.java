@@ -85,7 +85,7 @@ public class ActivityCreatePayDelegate extends WallDelegate {
                 .params("userId", USER_ID)
                 .params("orderPrice", mSelectJindouNum)
                 .params("orderInfo", activityTitle)
-                .params("type", 0)
+                .params("type", 0)//0创建活动
                 .success(new ISuccess() {
                     @Override
                     public void onSuccess(String response) {
@@ -93,8 +93,13 @@ public class ActivityCreatePayDelegate extends WallDelegate {
                         final int status = jsonResponse.getInteger("status");
                         final String message = jsonResponse.getString("msg");
                         final JSONObject data = jsonResponse.getJSONObject("data");
-                        //跳转到订单详情页面
-                        getSupportDelegate().startWithPop(new ActivityCreateOrderDetailDelegate(data, ACTIVITY_PARAMS));
+                        if (status == 0) {
+                            //跳转到订单详情页面
+                            getSupportDelegate()
+                                    .startWithPop(new ActivityCreateOrderDetailDelegate(data, ACTIVITY_PARAMS));
+                        } else {
+                            Toast.makeText(_mActivity, message, Toast.LENGTH_SHORT).show();
+                        }
                     }
                 })
                 .build()
