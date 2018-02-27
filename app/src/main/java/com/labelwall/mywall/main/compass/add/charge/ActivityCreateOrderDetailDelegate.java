@@ -82,6 +82,7 @@ public class ActivityCreateOrderDetailDelegate extends WallDelegate {
                                         //将图片的url存储到DB
                                         updateActivityInfo(activityId, url);
                                     }
+
                                     @Override
                                     public void fail(String key, ResponseInfo info) {
 
@@ -113,9 +114,8 @@ public class ActivityCreateOrderDetailDelegate extends WallDelegate {
                             Toast.makeText(_mActivity, message, Toast.LENGTH_SHORT).show();
                         } else if (status == 0) {
                             Toast.makeText(_mActivity, "创建成功", Toast.LENGTH_SHORT).show();
-                            // TODO 跳转到“我的”活动，跳转有问题？？？
                             //TODO 页面跳转，问题：在网络请求过程中跳转页面，该页面涉及到了网络请求，则无法发送该请求
-                            getSupportDelegate().start(new ActivityMyDelegate());
+                            getSupportDelegate().startWithPop(new ActivityMyDelegate());
                         }
                     }
                 })

@@ -246,7 +246,9 @@ public class ActivityCreateDelegate extends WallDelegate {
         } else if (free == 1) {
             //TODO 操作之前需要验证用户的填写的时间是否合适，验证当前用户的关联事件是否存在时间上的冲突
             //使用RxJava+Retrofit请求，解决Retrofit链式请求的回调问题
-            final Observable<String> observable = RestCreator.getRxRestService().post("activity/validate", mCreateActivityParams);
+            final Observable<String> observable = RestCreator
+                    .getRxRestService()
+                    .post("activity/validate", mCreateActivityParams);
             observable.subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe(new Observer<String>() {
@@ -302,8 +304,6 @@ public class ActivityCreateDelegate extends WallDelegate {
                         if (status == 1) {
                             Toast.makeText(_mActivity, message, Toast.LENGTH_SHORT).show();
                         } else if (status == 0) {
-                            Toast.makeText(_mActivity, "创建成功", Toast.LENGTH_SHORT).show();
-                            // TODO 跳转到“我的”活动，跳转有问题？？？
                             getSupportDelegate().startWithPop(new ActivityMyDelegate());
                         }
                     }

@@ -91,7 +91,7 @@ public class RestCreator {
                 RetrofitHolder.RETROFIT_CLIENT.create(RxRestService.class);
     }
 
-    //获取RestService对象
+    //获取RxRestService对象
     public static RxRestService getRxRestService() {
         return RxRestServiceHolder.RX_REST_SERVICE;
     }
