@@ -38,9 +38,20 @@ import permissions.dispatcher.RuntimePermissions;
 public abstract class PermissionCheckerDelegate extends BaseDelegate {
 
     //不是直接调用方法
+    //需要权限，权限名Manifest.permission.CAMERA
     @NeedsPermission(Manifest.permission.CAMERA)
     void startCamera() {
         WallCamera.start(this);
+    }
+
+    //SD卡的读写权限
+    @NeedsPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE)
+    void checkWrite() {
+
+    }
+
+    @NeedsPermission(Manifest.permission.READ_EXTERNAL_STORAGE)
+    void checkRed() {
     }
 
     //真正调用的方法
@@ -48,16 +59,6 @@ public abstract class PermissionCheckerDelegate extends BaseDelegate {
         PermissionCheckerDelegatePermissionsDispatcher.startCameraWithCheck(this);//请求相机的权限
         PermissionCheckerDelegatePermissionsDispatcher.checkWriteWithCheck(this);//请求sd卡写权限
         PermissionCheckerDelegatePermissionsDispatcher.checkRedWithCheck(this);//请求sd卡的读权限
-    }
-
-    //扫描二维码（不直接调用）
-    @NeedsPermission(Manifest.permission.CAMERA)
-    void startScan(BaseDelegate delegate) {
-        delegate.getSupportDelegate().startForResult(new ScannerDelegate(), RequestCode.SCAN);
-    }
-
-    public void startScanWithCheck(BaseDelegate delegate) {
-        PermissionCheckerDelegatePermissionsDispatcher.startScanWithCheck(this, delegate);
     }
 
     @OnPermissionDenied(Manifest.permission.CAMERA)
@@ -73,87 +74,6 @@ public abstract class PermissionCheckerDelegate extends BaseDelegate {
     @OnNeverAskAgain(Manifest.permission.CAMERA)
     void onCameraNever() {
         Toast.makeText(getContext(), "永久拒绝权限", Toast.LENGTH_SHORT).show();
-    }
-
-    private void showRationaleDialog(final PermissionRequest request) {
-        new AlertDialog.Builder(getContext())
-                .setPositiveButton("同意使用", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        request.proceed();
-                    }
-                })
-                .setNegativeButton("拒绝使用", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        request.cancel();
-                    }
-                })
-                .setCancelable(false)
-                .setMessage("权限管理")
-                .show();
-    }
-
-    //请求权限的返回结果
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        PermissionCheckerDelegatePermissionsDispatcher.onRequestPermissionsResult(this, requestCode, grantResults);
-    }
-
-    //接收图片上传回调回来的数据
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if (resultCode == RESULT_OK) {
-            switch (requestCode) {
-                case RequestCode.TAKE_PHOTO:
-                    //获取拍摄图片的Uri
-                    final Uri resultUri = CameraImageBean.getInstance().getPath();
-                    //剪裁图片：参数1：原始路径，参数2：剪裁完存储的路径。剪裁的图片路径覆盖之前的图片路径
-                    UCrop.of(resultUri, resultUri)
-                            .withMaxResultSize(400, 400)
-                            .start(getContext(), this);
-                    break;
-                case RequestCode.PICK_PHOTO:
-                    if (data != null) {
-                        //需要创建一个文件
-                        //从相册选择后需要有个路径存放剪裁过的图片
-                        final Uri pickPath = data.getData();//相册图片的原路径
-                        final String pickCrop = WallCamera.createCropFile().getPath();
-                        UCrop.of(pickPath, Uri.parse(pickCrop))
-                                .withMaxResultSize(400, 400)
-                                .start(getContext(), this);
-                    }
-                    break;
-                case RequestCode.CROP_PHOTO:
-                    //剪裁的回调处理（全局的回调），将剪裁的图片存储在全局的回调中
-                    final Uri cropUri = UCrop.getOutput(data);
-                    //将剪裁的图片uri存储在全局的回调中
-                    @SuppressWarnings("unchecked")
-                    final IGlobalCallback<Uri> callback = CallbackManager
-                            .getInstance()
-                            .getCallback(CallbackType.ON_CROP);
-                    if (callback != null) {
-                        callback.executeCallback(cropUri);
-                    }
-                    break;
-                case RequestCode.CROP_ERROR:
-                    Toast.makeText(getContext(), "剪裁出错", Toast.LENGTH_SHORT).show();
-                    break;
-                default:
-                    break;
-            }
-        }
-    }
-
-    @NeedsPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE)
-    void checkWrite() {
-
-    }
-
-    @NeedsPermission(Manifest.permission.READ_EXTERNAL_STORAGE)
-    void checkRed() {
     }
 
     @OnPermissionDenied(Manifest.permission.WRITE_EXTERNAL_STORAGE)
@@ -184,5 +104,91 @@ public abstract class PermissionCheckerDelegate extends BaseDelegate {
     @OnShowRationale(Manifest.permission.READ_EXTERNAL_STORAGE)
     void onRedRationale(PermissionRequest request) {
         showRationaleDialog(request);
+    }
+
+    private void showRationaleDialog(final PermissionRequest request) {
+        new AlertDialog.Builder(getContext())
+                .setPositiveButton("同意使用", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        request.proceed();
+                    }
+                })
+                .setNegativeButton("拒绝使用", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        request.cancel();
+                    }
+                })
+                .setCancelable(false)
+                .setMessage("权限管理")
+                .show();
+    }
+
+    //扫描二维码权限（不直接调用）
+    @NeedsPermission(Manifest.permission.CAMERA)
+    void startScan(BaseDelegate delegate) {
+        delegate.getSupportDelegate().startForResult(new ScannerDelegate(), RequestCode.SCAN);
+    }
+
+    //真正调用的方法
+    public void startScanWithCheck(BaseDelegate delegate) {
+        PermissionCheckerDelegatePermissionsDispatcher.startScanWithCheck(this, delegate);
+    }
+
+    //处理请求权限的返回结果
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        PermissionCheckerDelegatePermissionsDispatcher.onRequestPermissionsResult(this, requestCode, grantResults);
+    }
+
+    //接收图片上传回调回来的数据
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (resultCode == RESULT_OK) {
+            switch (requestCode) {
+                case RequestCode.TAKE_PHOTO:
+                    //获取拍摄图片的Uri
+                    final Uri resultUri = CameraImageBean.getInstance().getPath();
+                    //剪裁图片：参数1：原始路径，参数2：剪裁完存储的路径。
+                    // 剪裁的图片路径覆盖之前的图片路径
+                    UCrop.of(resultUri, resultUri)
+                            .withMaxResultSize(400, 400)
+                            .start(getContext(), this);
+                    break;
+                case RequestCode.PICK_PHOTO:
+                    if (data != null) {
+                        //需要创建一个文件
+                        //相册图片的原路径
+                        final Uri pickPath = data.getData();
+                        //从相册选择后需要有个路径存放剪裁过的图片
+                        final String pickCrop = WallCamera.createCropFile().getPath();
+                        UCrop.of(pickPath, Uri.parse(pickCrop))
+                                .withMaxResultSize(400, 400)
+                                .start(getContext(), this);
+                    }
+                    break;
+                case RequestCode.CROP_PHOTO:
+                    //剪裁的回调处理（全局的回调），将剪裁的图片存储在全局的回调中
+                    final Uri cropUri = UCrop.getOutput(data);
+                    //将剪裁的图片uri存储在全局的回调中
+
+                    //通过Tag获取回调接口，并执行接口中的方法
+                    final IGlobalCallback<Uri> callback = CallbackManager
+                            .getInstance()
+                            .getCallback(CallbackType.ON_CROP);
+                    if (callback != null) {
+                        callback.executeCallback(cropUri);
+                    }
+                    break;
+                case RequestCode.CROP_ERROR:
+                    Toast.makeText(getContext(), "剪裁出错", Toast.LENGTH_SHORT).show();
+                    break;
+                default:
+                    break;
+            }
+        }
     }
 }

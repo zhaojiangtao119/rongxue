@@ -13,6 +13,7 @@ import com.labelwall.mywall.delegates.launcher.LauncherDelegate;
 import com.labelwall.mywall.delegates.launcher.OnLauncherFinishTag;
 import com.labelwall.mywall.delegates.sign.ISignListener;
 import com.labelwall.mywall.delegates.sign.SignInDelegate;
+import com.labelwall.mywall.main.MainPageDelegate;
 import com.labelwall.mywall.main.WallBottomDelegate;
 
 import cn.jpush.android.api.JPushInterface;
@@ -74,7 +75,7 @@ public class WallActivity extends ProxyActivity
         switch (tag) {
             case SIGNED:
                 Toast.makeText(this, "用户登录了", Toast.LENGTH_SHORT).show();
-                getSupportDelegate().start(new WallBottomDelegate());
+                getSupportDelegate().start(new MainPageDelegate());
                 break;
             case NOT_SIGNED:
                 Toast.makeText(this, "用户未登录", Toast.LENGTH_SHORT).show();

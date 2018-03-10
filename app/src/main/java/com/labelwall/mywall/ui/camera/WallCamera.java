@@ -11,10 +11,10 @@ import com.labelwall.mywall.util.file.FileUtil;
  */
 
 public class WallCamera {
-    //剪裁的图片文件
+    //创建保存剪裁的图片文件
     public static Uri createCropFile() {
-        return Uri.parse(FileUtil.createFile("crop_image",
-                FileUtil.getFileNameByTime("IMG", "jpg")).getPath());
+        //createFile(文件路径，文件名)
+        return Uri.parse(FileUtil.createFile("crop_image",FileUtil.getFileNameByTime("IMG", "jpg")).getPath());
     }
 
     public static void start(PermissionCheckerDelegate delegate) {

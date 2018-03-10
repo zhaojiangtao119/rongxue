@@ -62,16 +62,18 @@ public class UserDelegate extends BottomItemDelegate {
     @OnClick(R2.id.img_user_avatar)
     void changeUserAvatar() {
         startCameraWithCheck();
-        //图片剪裁的回调
-        CallbackManager manager = CallbackManager.getInstance().addCallback(CallbackType.ON_CROP, new IGlobalCallback<Uri>() {
-            @Override
-            public void executeCallback(Uri args) {
-                Glide.with(_mActivity)
-                        .load(args)
-                        .apply(OPTIONS)
-                        .into(mUserAvatar);
-            }
-        });
+        //通过全局的回调来获取剪裁后的图片Uri
+        CallbackManager callbackManager = CallbackManager
+                .getInstance()
+                .addCallback(CallbackType.ON_CROP, new IGlobalCallback() {
+                    @Override
+                    public void executeCallback(Object args) {
+                        Glide.with(_mActivity)
+                                .load(args)
+                                .apply(OPTIONS)
+                                .into(mUserAvatar);
+                    }
+                });
     }
 
     @OnClick(R2.id.tc_all_account_arrow)

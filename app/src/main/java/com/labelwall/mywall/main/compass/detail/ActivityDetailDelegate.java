@@ -134,6 +134,7 @@ public class ActivityDetailDelegate extends WallDelegate implements AppBarLayout
         final String activityInfo = activityDto.toString();
         getSupportDelegate().loadRootFragment(R.id.frame_activity_info,
                 ActivityDetailInfoDelegate.create(activityInfo, mActivityId));
+        
     }
 
     private void initActivityPoster(JSONObject activityDto) {

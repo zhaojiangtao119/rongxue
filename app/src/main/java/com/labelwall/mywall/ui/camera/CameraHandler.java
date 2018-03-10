@@ -1,6 +1,7 @@
 package com.labelwall.mywall.ui.camera;
 
 import android.app.AlertDialog;
+import android.app.Dialog;
 import android.content.ContentValues;
 import android.content.Intent;
 import android.graphics.Color;
@@ -37,6 +38,7 @@ public class CameraHandler implements View.OnClickListener {
 
     //显示文件选择的dialog
     public final void beginCameraDialog() {
+        //设置Dialog属性
         DIALOG.show();
         final Window window = DIALOG.getWindow();
         if (window != null) {
@@ -73,25 +75,30 @@ public class CameraHandler implements View.OnClickListener {
         }
     }
 
+    //启动相机
     private void takePhoto() {
         final String currentPhotoName = getPhotoName();
         final Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);//拍照意图
-
         final File tempFile = new File(FileUtil.CAMERA_PHOTO_DIR, currentPhotoName);//临时文件
+        /*
+           改写系统相机完成拍照后将图片存储到指定的uri路径中
+           intent.putExtra(MediaStore.EXTRA_OUTPUT, uri);
+        */
         //兼容7.0+的写法
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
             final ContentValues contentValues = new ContentValues(1);
             contentValues.put(MediaStore.Images.Media.DATA, tempFile.getPath());
             final Uri uri = DELEGATE.getContext().getContentResolver().
                     insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, contentValues);
-            //需要将url路径转化为实际路径
+            //需要将uri路径转化为实际路径
             final File realFile = FileUtils.getFileByPath(FileUtil.getRealFilePath(DELEGATE.getContext(), uri));
             final Uri realUri = Uri.fromFile(realFile);
-            //存储Uri
+            //存储Uri到CameraImageBean
             CameraImageBean.getInstance().setPath(realUri);
             intent.putExtra(MediaStore.EXTRA_OUTPUT, uri);
         } else {
             final Uri fileUri = Uri.fromFile(tempFile);
+            //将创建的文件Uri设置到CameraImageBean对象中存储起来
             CameraImageBean.getInstance().setPath(fileUri);
             intent.putExtra(MediaStore.EXTRA_OUTPUT, fileUri);
         }
@@ -99,11 +106,12 @@ public class CameraHandler implements View.OnClickListener {
     }
 
     private String getPhotoName() {
+        //IMG前缀，jpg后缀
         return FileUtil.getFileNameByTime("IMG", "jpg");
     }
 
     private void pickPhoto() {
-        final Intent intent = new Intent();
+        final Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
         intent.setType("image/*");
         intent.setAction(Intent.ACTION_GET_CONTENT);//获取内容
         intent.addCategory(Intent.CATEGORY_OPENABLE);

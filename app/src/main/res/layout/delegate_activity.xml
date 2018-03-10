@@ -13,10 +13,11 @@
 
         <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="match_parent"
+            android:layout_marginTop="5dp">
 
             <android.support.v7.widget.AppCompatTextView
-                android:id="@+id/tv_activity_my"
+                android:id="@+id/tv_activity_location"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:layout_alignParentLeft="true"
@@ -27,6 +28,7 @@
                 android:textColor="@android:color/black"
                 android:textSize="18sp" />
 
+
             <android.support.v7.widget.AppCompatTextView
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
@@ -36,6 +38,18 @@
                 android:text="@string/activity_list"
                 android:textColor="@android:color/black"
                 android:textSize="20sp" />
+
+            <android.support.v7.widget.AppCompatTextView
+                android:id="@+id/tv_activity_my"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_toLeftOf="@+id/icon_activity_add"
+                android:layout_marginRight="20dp"
+                android:layout_marginTop="15dp"
+                android:gravity="center"
+                android:text="@string/activity_my"
+                android:textColor="@android:color/black"
+                android:textSize="18sp" />
 
             <com.joanzapata.iconify.widget.IconTextView
                 android:id="@+id/icon_activity_add"

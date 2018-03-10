@@ -36,24 +36,30 @@ public final class FileUtil {
     //格式化的模板
     private static final String TIME_FORMAT = "_yyyyMMdd_HHmmss";
 
+    //SD卡的目录，根目录
     private static final String SDCARD_DIR =
             Environment.getExternalStorageDirectory().getPath();
+
+    private String sd_path = Environment.getExternalStorageDirectory().getPath();
+    private String camera_apth = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM).getPath() + "/Camera/";
 
     //默认本地上传图片目录
     public static final String UPLOAD_PHOTO_DIR =
             Environment.getExternalStorageDirectory().getPath() + "/a_upload_photos/";
 
-    //网页缓存地址
+    //网页缓存地址目录
     public static final String WEB_CACHE_DIR =
             Environment.getExternalStorageDirectory().getPath() + "/app_web_cache/";
 
-    //系统相机目录
+    //系统相机目录sd卡/DCIM/Camera
     public static final String CAMERA_PHOTO_DIR =
             Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM).getPath() + "/Camera/";
 
+    //格式化图片的名称
     private static String getTimeFormatName(String timeFormatHeader) {
+        //系统当前时间
         final Date date = new Date(System.currentTimeMillis());
-        //必须要加上单引号
+        //必须要加上单引号，格式化时间，区域
         final SimpleDateFormat dateFormat = new SimpleDateFormat("'" + timeFormatHeader + "'" + TIME_FORMAT, Locale.getDefault());
         return dateFormat.format(date);
     }
@@ -64,9 +70,11 @@ public final class FileUtil {
      * @return 返回时间格式化后的文件名
      */
     public static String getFileNameByTime(String timeFormatHeader, String extension) {
+        //组装文件名称 IMG+当前时间+文件后缀
         return getTimeFormatName(timeFormatHeader) + "." + extension;
     }
 
+    //创建路径
     @SuppressWarnings("ResultOfMethodCallIgnored")
     private static File createDir(String sdcardDirName) {
         //拼接成SD卡中完整的dir
@@ -367,7 +375,7 @@ public final class FileUtil {
     public static String getRealPathFromUri(Context context, Uri contentUri) {
         Cursor cursor = null;
         try {
-            String[] proj = { MediaStore.Images.Media.DATA };
+            String[] proj = {MediaStore.Images.Media.DATA};
             cursor = context.getContentResolver().query(contentUri, proj, null, null, null);
             int column_index = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
             cursor.moveToFirst();

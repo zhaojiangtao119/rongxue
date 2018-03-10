@@ -2,16 +2,18 @@ package com.labelwall.mywall.util.callback;
 
 import java.util.WeakHashMap;
 
+import io.reactivex.Observable;
+
 /**
  * Created by Administrator on 2018-01-13.
- * 全局的回调
+ * 全局的回调管理
  */
 
 public class CallbackManager {
 
-    private static final WeakHashMap<Object, IGlobalCallback> CALLBACKS = new WeakHashMap<>();
+    private final WeakHashMap<Object, IGlobalCallback> CALLBACK = new WeakHashMap<>();
 
-    private static class Holder {
+    public static class Holder {
         private static final CallbackManager INSTANCE = new CallbackManager();
     }
 
@@ -19,12 +21,12 @@ public class CallbackManager {
         return Holder.INSTANCE;
     }
 
-    public CallbackManager addCallback(Object tag, IGlobalCallback callback) {
-        CALLBACKS.put(tag, callback);
+    public CallbackManager addCallback(CallbackType tag, IGlobalCallback callback) {
+        CALLBACK.put(tag, callback);
         return this;
     }
 
-    public IGlobalCallback getCallback(Object tag) {
-        return CALLBACKS.get(tag);
+    public IGlobalCallback getCallback(CallbackType tag) {
+        return CALLBACK.get(tag);
     }
 }

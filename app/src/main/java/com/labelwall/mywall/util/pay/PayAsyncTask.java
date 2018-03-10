@@ -39,7 +39,8 @@ public class PayAsyncTask extends AsyncTask<String, Void, String> {
         return payTask.pay(alPaySign, true);
     }
 
-    //支付宝同步的将支付结果返回给客户端，异步的将支付结果返回给服务端由服务端进行验签，作为最终的支付结果
+    //支付宝同步的将支付结果返回给客户端，
+    // 异步的将支付结果返回给服务端由服务端进行验签，作为最终的支付结果
     @Override
     protected void onPostExecute(String result) {
         super.onPostExecute(result);

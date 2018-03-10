@@ -8,5 +8,4 @@ package com.labelwall.mywall.util.callback;
 public interface IGlobalCallback<T> {
 
     void executeCallback(T args);
-
 }
