@@ -11,6 +11,7 @@ import com.labelwall.mywall.R2;
 import com.labelwall.mywall.app.AccountManager;
 import com.labelwall.mywall.app.IUserChecker;
 import com.labelwall.mywall.delegates.base.WallDelegate;
+import com.labelwall.mywall.delegates.sign.SignInDelegate;
 import com.labelwall.mywall.util.storage.WallPreference;
 import com.labelwall.mywall.util.timer.BaseTimerTask;
 import com.labelwall.mywall.util.timer.ITimerLisenter;
@@ -79,7 +80,9 @@ public class LauncherDelegate extends WallDelegate implements ITimerLisenter {
      */
     private void checkIsShowScroll() {
         if (!WallPreference.getAppFlag(ScrollLauncherTag.HAS_FRIST_LAUNCHER_APP.name())) {
-            getSupportDelegate().start(new LauncherScrollDelegate(), SINGLETASK);//启动轮播图
+//            getSupportDelegate().start(new LauncherScrollDelegate(), SINGLETASK);//启动轮播图
+            WallPreference.setAppFlag(ScrollLauncherTag.HAS_FRIST_LAUNCHER_APP.name(), true);
+            getSupportDelegate().start(new SignInDelegate());
         } else {
             //todo 检查用户是否已经登陆
             AccountManager.checkAccount(new IUserChecker() {

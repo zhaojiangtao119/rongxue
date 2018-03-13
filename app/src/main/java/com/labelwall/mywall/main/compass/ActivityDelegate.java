@@ -72,6 +72,8 @@ public class ActivityDelegate extends BottomItemDelegate {
     }
 
     private void initLocation() {
+        //动态获取权限
+        startLocation();
         locationClient = new AMapLocationClient(this.getContext());
         locationClientOption = getDefaultOption();
         locationClient.setLocationOption(locationClientOption);

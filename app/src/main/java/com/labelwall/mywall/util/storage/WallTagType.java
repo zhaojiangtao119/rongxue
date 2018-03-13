@@ -6,4 +6,5 @@ package com.labelwall.mywall.util.storage;
 
 public enum WallTagType {
     CURRENT_USER_ID,
+    JPUSH_ALIAS
 }

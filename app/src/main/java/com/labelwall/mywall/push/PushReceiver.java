@@ -16,14 +16,14 @@ import cn.jpush.android.api.JPushInterface;
 
 /**
  * Created by Administrator on 2018-01-18.
- * 广播接收器
+ * 极光推送，广播接收器
  */
 
 public class PushReceiver extends BroadcastReceiver {
 
     @Override
     public void onReceive(Context context, Intent intent) {
-
+        //获取极光推送的基本消息
         final Bundle bundle = intent.getExtras();
         final Set<String> keys = bundle.keySet();
         final JSONObject json = new JSONObject();
@@ -56,6 +56,7 @@ public class PushReceiver extends BroadcastReceiver {
     private void onOpenNotification(Context context, Bundle bundle) {
         final String extra = bundle.getString(JPushInterface.EXTRA_EXTRA);
         final Bundle openActivityBundle = new Bundle();
+        //点击通知后进入App的那个页面
         final Intent intent = new Intent(context, WallActivity.class);
         intent.putExtras(openActivityBundle);
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);

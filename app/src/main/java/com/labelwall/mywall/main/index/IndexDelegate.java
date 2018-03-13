@@ -25,6 +25,7 @@ import com.labelwall.mywall.R;
 import com.labelwall.mywall.R2;
 import com.labelwall.mywall.delegates.base.WallDelegate;
 import com.labelwall.mywall.delegates.bottom.BottomItemDelegate;
+import com.labelwall.mywall.main.MainPageDialog;
 import com.labelwall.mywall.main.WallBottomDelegate;
 import com.labelwall.mywall.main.index.topic.CreateTopicDelegate;
 import com.labelwall.mywall.ui.recycler.BaseDecoration;
@@ -64,6 +65,12 @@ public class IndexDelegate extends BottomItemDelegate {
         parentDelegate.getSupportDelegate().start(new CreateTopicDelegate(parentDelegate));
     }
 
+    @OnClick(R2.id.tv_dialog_type)
+    void onClickDialogType() {
+        mDialog.initDialog();
+    }
+
+    private MainPageDialog mDialog = null;
 
     @Override
     public Object setLayout() {
@@ -72,6 +79,7 @@ public class IndexDelegate extends BottomItemDelegate {
 
     @Override
     public void onBindView(@Nullable Bundle savedInstanceState, View rootView) {
+        mDialog = new MainPageDialog(this);
         converterData();
     }
 

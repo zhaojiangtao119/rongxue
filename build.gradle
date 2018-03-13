@@ -13,7 +13,7 @@ buildscript {
 
 allprojects {
     repositories {
-        jcenter()
+        jcenter()//引入极光推送的jar
         mavenCentral()
         maven { url "https://jitpack.io" }
     }

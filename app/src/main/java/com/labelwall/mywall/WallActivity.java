@@ -37,7 +37,7 @@ public class WallActivity extends ProxyActivity
         StatusBarCompat.translucentStatusBar(this, true);
     }
 
-   @Override
+    @Override
     protected void onPause() {
         super.onPause();
         JPushInterface.onPause(this);
@@ -57,7 +57,7 @@ public class WallActivity extends ProxyActivity
     @Override
     public void onSignInSuccess() {
         Toast.makeText(this, "登录成功", Toast.LENGTH_SHORT).show();
-        getSupportDelegate().start(new WallBottomDelegate());
+        getSupportDelegate().start(new MainPageDelegate());
     }
 
     @Override
@@ -78,9 +78,8 @@ public class WallActivity extends ProxyActivity
                 getSupportDelegate().start(new MainPageDelegate());
                 break;
             case NOT_SIGNED:
-                Toast.makeText(this, "用户未登录", Toast.LENGTH_SHORT).show();
                 //startWithPop(): start的同时清除掉栈中上一个元素
-                getSupportDelegate().startWithPop(new SignInDelegate());
+                getSupportDelegate().start(new SignInDelegate());
                 break;
             default:
                 break;

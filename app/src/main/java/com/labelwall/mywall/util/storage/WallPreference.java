@@ -93,4 +93,15 @@ public class WallPreference {
     public static String getCustomAppProfile(String key) {
         return getAppPreference().getString(key, "");
     }
+
+    public static void setJPushAlias(String key, String value) {
+        getAppPreference()
+                .edit()
+                .putString(key, value)
+                .apply();
+    }
+
+    public static String getJPushAlias(String key) {
+        return getAppPreference().getString(key, "");
+    }
 }

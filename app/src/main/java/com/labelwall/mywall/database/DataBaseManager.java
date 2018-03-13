@@ -30,7 +30,7 @@ public class DataBaseManager {
         return this;
     }
 
-
+    //初始化数据库：1.创建数据库 2.创建表 3.初始化session 4.初始化dao
     private void initDao(Context context) {
         final ReleaseOpenHelper helper = new ReleaseOpenHelper(context, "mywall.db");
         final Database db = helper.getWritableDb();//创建数据库：mywall.db

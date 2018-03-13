@@ -15,13 +15,17 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.labelwall.mywall.R;
 import com.labelwall.mywall.R2;
+import com.labelwall.mywall.database.DataBaseManager;
+import com.labelwall.mywall.database.UserProfile;
 import com.labelwall.mywall.delegates.base.WallDelegate;
 import com.labelwall.mywall.main.WallBottomDelegate;
+import com.labelwall.mywall.main.compass.ActivityJPushTag;
 import com.labelwall.mywall.main.compass.add.ActivityCreateInfoItem;
 import com.labelwall.mywall.main.compass.detail.ActivityDetailDelegate;
 import com.labelwall.mywall.main.compass.detail.ActivityDetailInfoDelegate;
 import com.labelwall.mywall.main.compass.my.ActivityMyDelegate;
 import com.labelwall.mywall.main.user.account.add.ActivityAccountJindouAdapter;
+import com.labelwall.mywall.push.JPushAliasTagSequence;
 import com.labelwall.mywall.util.net.RestClient;
 import com.labelwall.mywall.util.net.callback.ISuccess;
 import com.labelwall.mywall.util.qiniu.QnUploadHelper;
@@ -93,6 +97,8 @@ public class ActivityCreateOrderDetailDelegate extends WallDelegate {
 
                                         }
                                     });
+                                    //创建JPush Tag
+                                    setAcitivtyTag(activityId);
                                 }
                             } else {
                                 Toast.makeText(_mActivity, message, Toast.LENGTH_SHORT).show();
@@ -220,6 +226,20 @@ public class ActivityCreateOrderDetailDelegate extends WallDelegate {
             mPayOrder.setText("支付并参加活动");
         } else {
             mPayOrder.setText("支付并创建活动");
+        }
+    }
+
+    public void setAcitivtyTag(Integer acitivtyTag) {
+        //获取当前用户的信息
+        List<UserProfile> userProfileList = DataBaseManager
+                .getInstance()
+                .getDao()
+                .queryRaw("where _id=?", new String[]{String.valueOf(USER_ID)});
+        if (userProfileList != null && userProfileList.size() > 0) {
+            String username = userProfileList.get(0).getUsername();
+            String tag = acitivtyTag + username;
+            ActivityJPushTag.getInstance()
+                    .addJPushTag(getContext(), JPushAliasTagSequence.ACTION_TAG_ADD, tag);
         }
     }
 }

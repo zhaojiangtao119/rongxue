@@ -70,6 +70,7 @@
             android:screenOrientation="portrait"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
 
+        <!--JPush Start-->
         <!-- Required SDK 核心功能 -->
         <!-- 可配置android:process参数将PushService放在其他进程中 -->
         <service
@@ -93,7 +94,7 @@
             <intent-filter>
                 <action android:name="cn.jpush.android.intent.DaemonService" />
 
-                <category android:name="com.diabin.fastec.example" />
+                <category android:name="com.labelwall.mywall" />
             </intent-filter>
         </service>
 
@@ -104,7 +105,7 @@
             <intent-filter android:priority="1000">
                 <action android:name="cn.jpush.android.intent.NOTIFICATION_RECEIVED_PROXY" />
 
-                <category android:name="com.diabin.fastec.example" />
+                <category android:name="com.labelwall.mywall" />
             </intent-filter>
             <intent-filter>
                 <action android:name="android.intent.action.USER_PRESENT" />
@@ -131,7 +132,7 @@
                 <action android:name="cn.jpush.android.ui.PushActivity" />
 
                 <category android:name="android.intent.category.DEFAULT" />
-                <category android:name="com.diabin.fastec.example" />
+                <category android:name="com.labelwall.mywall" />
             </intent-filter>
         </activity>
 
@@ -149,7 +150,6 @@
             android:name=".push.PushReceiver"
             android:enabled="true">
             <intent-filter>
-
                 <!-- Required 用户注册SDK的intent -->
                 <action android:name="cn.jpush.android.intent.REGISTRATION" />
                 <!-- Required 用户接收SDK消息的intent -->
@@ -161,7 +161,14 @@
                 <!-- 接收网络变化 连接/断开 since 1.6.3 -->
                 <action android:name="cn.jpush.android.intent.CONNECTION" />
 
-                <category android:name="com.diabin.fastec.example" />
+                <category android:name="com.labelwall.mywall" />
+            </intent-filter>
+        </receiver>
+
+        <receiver android:name="com.labelwall.mywall.push.JPushAliasTagReceiver">
+            <intent-filter>
+                <action android:name="cn.jpush.android.intent.RECEIVE_MESSAGE" />
+                <category android:name="com.labelwall.mywall"></category>
             </intent-filter>
         </receiver>
 
@@ -177,8 +184,8 @@
         <!-- Required. AppKey copied from Portal -->
         <meta-data
             android:name="JPUSH_APPKEY"
-            android:value="8cf6b1624024a6f51e957a48" />
-        <!-- 极光推送结束 -->
+            android:value="d19bde325ffdf168a4b67005" />
+        <!-- JPush end -->
 
 
         <!-- 支付宝 -->

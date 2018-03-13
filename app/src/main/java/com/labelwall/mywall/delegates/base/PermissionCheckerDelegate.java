@@ -143,6 +143,26 @@ public abstract class PermissionCheckerDelegate extends BaseDelegate {
         PermissionCheckerDelegatePermissionsDispatcher.onRequestPermissionsResult(this, requestCode, grantResults);
     }
 
+    /**
+     * 请求定位的权限
+     */
+    @NeedsPermission(Manifest.permission.ACCESS_COARSE_LOCATION)
+    void startInternatLocation() {
+
+    }
+
+    @NeedsPermission(Manifest.permission.ACCESS_FINE_LOCATION)
+    void startGPSLocation() {
+
+    }
+
+    //调用该方法
+    public void startLocation() {
+        PermissionCheckerDelegatePermissionsDispatcher.startGPSLocationWithCheck(this);
+        PermissionCheckerDelegatePermissionsDispatcher.startInternatLocationWithCheck(this);
+    }
+
+
     //接收图片上传回调回来的数据
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -191,4 +211,6 @@ public abstract class PermissionCheckerDelegate extends BaseDelegate {
             }
         }
     }
+
+
 }

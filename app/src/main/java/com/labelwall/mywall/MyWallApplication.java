@@ -37,15 +37,13 @@ public class MyWallApplication extends Application {
                 .withIcon(new FontAwesomeModule())//font awesome Module
                 .withIcon(new FontEcModule())//自定义的字体图标
                 .withInterceptor(new DebugInterceptor("location", R.raw.test))
-                .withApiHost("http://gbp7tg.natappfree.cc/zhaopin/")
+                .withApiHost("http://murhcp.natappfree.cc/zhaopin/")
                 .configure();
         //初始化数据库
         DataBaseManager.getInstance().init(this);
-
+        //初始化JPush
         JPushInterface.setDebugMode(true);
         JPushInterface.init(this);
-
-        initStetho();
     }
 
     public static MyWallApplication getApplication() {
@@ -54,13 +52,5 @@ public class MyWallApplication extends Application {
 
     public static Context getContext() {
         return appContext;
-    }
-
-    private void initStetho() {
-        Stetho.initialize(
-                Stetho.newInitializerBuilder(this)
-                        .enableDumpapp(Stetho.defaultDumperPluginsProvider(this))
-                        .enableWebKitInspector(Stetho.defaultInspectorModulesProvider(this))
-                        .build());
     }
 }

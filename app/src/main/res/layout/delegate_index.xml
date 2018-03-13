@@ -35,7 +35,6 @@
         android:layout_width="60dp"
         android:layout_height="60dp"
         android:layout_alignParentBottom="true"
-        android:layout_alignParentEnd="true"
         android:layout_alignParentRight="true"
         android:layout_marginBottom="10dp"
         android:layout_marginEnd="10dp"
@@ -43,6 +42,19 @@
         android:background="@drawable/border_circle_add"
         android:gravity="center"
         android:text="{fa-plus}"
-        android:textColor="@android:color/white"
-        />
+        android:textColor="@android:color/white" />
+
+    <TextView
+        android:id="@+id/tv_dialog_type"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentLeft="true"
+        android:layout_marginBottom="10dp"
+        android:layout_marginEnd="10dp"
+        android:layout_marginRight="15dp"
+        android:background="@drawable/border_circle_add"
+        android:gravity="center"
+        android:text="TYPE"
+        android:textColor="@android:color/white" />
 </RelativeLayout>

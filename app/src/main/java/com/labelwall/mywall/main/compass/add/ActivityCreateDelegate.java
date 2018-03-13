@@ -22,7 +22,10 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.RequestOptions;
 import com.labelwall.mywall.R;
 import com.labelwall.mywall.R2;
+import com.labelwall.mywall.database.DataBaseManager;
+import com.labelwall.mywall.database.UserProfile;
 import com.labelwall.mywall.delegates.base.WallDelegate;
+import com.labelwall.mywall.main.compass.ActivityJPushTag;
 import com.labelwall.mywall.main.compass.add.charge.ActivityCreatePayDelegate;
 import com.labelwall.mywall.main.compass.my.ActivityMyDelegate;
 import com.labelwall.mywall.main.user.UserClickListener;
@@ -34,6 +37,7 @@ import com.labelwall.mywall.main.user.list.ListItemType;
 import com.labelwall.mywall.main.user.profile.UserProfileDelegate;
 import com.labelwall.mywall.main.user.profile.location.JsonBean;
 import com.labelwall.mywall.main.user.settings.SettingsDelegate;
+import com.labelwall.mywall.push.JPushAliasTagSequence;
 import com.labelwall.mywall.util.callback.CallbackManager;
 import com.labelwall.mywall.util.callback.CallbackType;
 import com.labelwall.mywall.util.callback.IGlobalCallback;
@@ -236,6 +240,9 @@ public class ActivityCreateDelegate extends WallDelegate {
                                         }
                                     });
                                 }
+
+                                //创建成功后设置该活动的JPush Tag
+                                setAcitivtyTag(activityId);
                             } else {
                                 Toast.makeText(_mActivity, message, Toast.LENGTH_SHORT).show();
                             }
@@ -408,5 +415,19 @@ public class ActivityCreateDelegate extends WallDelegate {
         //设置监听事件
         mRecyclerView.addOnItemTouchListener(
                 new ActivityCreateClickListener(this, options1Item, options2Item, options3Item));
+    }
+
+    public void setAcitivtyTag(Integer acitivtyTag) {
+        //获取当前用户的信息
+        List<UserProfile> userProfileList = DataBaseManager
+                .getInstance()
+                .getDao()
+                .queryRaw("where _id=?", new String[]{String.valueOf(USER_ID)});
+        if (userProfileList != null && userProfileList.size() > 0) {
+            String username = userProfileList.get(0).getUsername();
+            String tag = acitivtyTag + username;
+            ActivityJPushTag.getInstance()
+                    .addJPushTag(getContext(), JPushAliasTagSequence.ACTION_TAG_ADD, tag);
+        }
     }
 }

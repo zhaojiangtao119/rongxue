@@ -13,14 +13,14 @@ android {
         versionName "1.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
 
+        //JPush
         ndk {
             //选择要添加的对应cpu类型的.so库。
             abiFilters 'armeabi', 'armeabi-v7a', 'armeabi-v8a', 'x86', 'x86_64', 'mips', 'mips64'
         }
-
         manifestPlaceholders = [
                 JPUSH_PKGNAME: applicationId,
-                JPUSH_APPKEY : "8cf6b1624024a6f51e957a48",
+                JPUSH_APPKEY : "d19bde325ffdf168a4b67005",
                 JPUSH_CHANNEL: "developer-default",
         ]
     }
@@ -100,8 +100,8 @@ dependencies {
     //工具包
     compile 'com.blankj:utilcode:1.7.1'
     //极光推送
-    compile 'cn.jiguang.sdk:jpush:3.0.1'
-    compile 'cn.jiguang.sdk:jcore:1.1.0'
+    compile 'cn.jiguang.sdk:jpush:3.1.1'
+    compile 'cn.jiguang.sdk:jcore:1.1.9'
     //圆形图片
     compile 'de.hdodenhof:circleimageview:2.1.0'
     //pickerView选择省市县
