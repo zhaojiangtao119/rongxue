@@ -54,7 +54,7 @@ public class ActivityRefreshHandler implements SwipeRefreshLayout.OnRefreshListe
     public void firshActivityPage() {
         //加载首页数据
         RestClient.builder()
-                .url("activity/query/" + BEAN.getPageIndex() + "/10")
+                .url("/activity/query/" + BEAN.getPageIndex() + "/10")
                 .params("userId", USER_ID)
                 .success(new ISuccess() {
                     @Override
@@ -83,7 +83,7 @@ public class ActivityRefreshHandler implements SwipeRefreshLayout.OnRefreshListe
             REFRESH_LAYOUT.setRefreshing(false);
         } else {
             RestClient.builder()
-                    .url("activity/query/" + BEAN.getPageIndex() + "/10")
+                    .url("/activity/query/" + BEAN.getPageIndex() + "/10")
                     .refreshLayout(REFRESH_LAYOUT)
                     .params("userId", USER_ID)
                     .success(new ISuccess() {

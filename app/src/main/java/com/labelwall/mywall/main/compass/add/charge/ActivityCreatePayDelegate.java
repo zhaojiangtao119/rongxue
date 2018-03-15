@@ -96,7 +96,7 @@ public class ActivityCreatePayDelegate extends WallDelegate {
                         if (status == 0) {
                             //跳转到订单详情页面
                             getSupportDelegate()
-                                    .startWithPop(new ActivityCreateOrderDetailDelegate(data, ACTIVITY_PARAMS));
+                                    .startWithPop(new ActivityCreateOrderDetailDelegate(data, ACTIVITY_PARAMS, null));
                         } else {
                             Toast.makeText(_mActivity, message, Toast.LENGTH_SHORT).show();
                         }

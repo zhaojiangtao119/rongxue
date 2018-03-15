@@ -240,7 +240,6 @@ public class ActivityCreateDelegate extends WallDelegate {
                                         }
                                     });
                                 }
-
                                 //创建成功后设置该活动的JPush Tag
                                 setAcitivtyTag(activityId);
                             } else {

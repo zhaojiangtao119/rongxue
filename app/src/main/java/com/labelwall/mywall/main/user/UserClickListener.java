@@ -30,16 +30,16 @@ public class UserClickListener extends SimpleClickListener {
         int id = bean.getId();
         switch (id) {
             case UserSettingItem.USER_PROFILE:
-                DELEGATE.getParentDelegate().getSupportDelegate().start(bean.getDelegate());
+                DELEGATE.getSupportDelegate().start(bean.getDelegate());
                 break;
             case UserSettingItem.ADDRESS:
-                DELEGATE.getParentDelegate().getSupportDelegate().start(bean.getDelegate());
+                DELEGATE.getSupportDelegate().start(bean.getDelegate());
                 break;
             case UserSettingItem.SYSTEM:
-                DELEGATE.getParentDelegate().getSupportDelegate().start(bean.getDelegate());
+                DELEGATE.getSupportDelegate().start(bean.getDelegate());
                 break;
             case UserSettingItem.ACTIVITY_ACCOUNT:
-                DELEGATE.getParentDelegate().getSupportDelegate().start(bean.getDelegate());
+                DELEGATE.getSupportDelegate().start(bean.getDelegate());
             default:
                 break;
         }

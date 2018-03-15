@@ -9,34 +9,22 @@
         android:layout_height="60dp"
         android:background="@color/app_title">
 
-        <!--<RelativeLayout
+        <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
             <android.support.v7.widget.AppCompatTextView
-                android:id="@+id/tv_activity_account_title"
+                android:id="@+id/tv_near_user"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentBottom="true"
                 android:layout_centerInParent="true"
                 android:layout_marginBottom="5dp"
                 android:gravity="center|bottom"
-                android:text="@string/acitivity_pay"
+                android:text="附近的人"
                 android:textColor="@android:color/black"
                 android:textSize="20sp" />
-
-            <android.support.v7.widget.AppCompatTextView
-                android:id="@+id/tv_account_add"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignBottom="@+id/tv_activity_account_title"
-                android:layout_alignParentRight="true"
-                android:layout_marginRight="10dp"
-                android:gravity="center"
-                android:text="@string/activity_account_add"
-                android:textColor="@android:color/black"
-                android:textSize="16sp" />
-        </RelativeLayout>-->
+        </RelativeLayout>
     </android.support.v7.widget.Toolbar>
 
     <android.support.v7.widget.RecyclerView

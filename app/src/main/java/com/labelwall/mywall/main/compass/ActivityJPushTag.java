@@ -14,7 +14,7 @@ import cn.jpush.android.api.JPushInterface;
 
 public class ActivityJPushTag {
 
-    private Set<String> tags = new HashSet<>();
+    private Set<String> mTags = new HashSet<>();
 
     private static class Holder {
         private static final ActivityJPushTag INSTANCE = new ActivityJPushTag();
@@ -26,10 +26,24 @@ public class ActivityJPushTag {
 
     //添加活动的Tag到App
     public void addJPushTag(Context context, int sequence, String tag) {
-        if (tags.size() > 0) {
-            tags.clear();
+        if (mTags.size() > 0) {
+            mTags.clear();
         }
-        tags.add(tag);
-        JPushInterface.addTags(context, sequence, tags);
+        mTags.add(tag);
+        JPushInterface.addTags(context, sequence, mTags);
+    }
+
+    //删除指定活动的tag
+    public void delJPushTag(Context context, int sequence, String tag) {
+        if (mTags.size() > 0) {
+            mTags.clear();
+        }
+        mTags.add(tag);
+        JPushInterface.deleteTags(context, sequence, mTags);
+    }
+
+    //查询指定tag与当前用户的绑定状态
+    public void checkTagState(Context context, int sequence, String tag) {
+        JPushInterface.checkTagBindState(context, sequence, tag);
     }
 }

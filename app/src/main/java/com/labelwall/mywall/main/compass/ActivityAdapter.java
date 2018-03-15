@@ -105,7 +105,7 @@ public class ActivityAdapter extends MultipleRecyclerViewAdapter {
                         //活动创建者的id
                         final Integer userId = item.getField(UserProfileField.USER_ID);
                         if (userId != USER_ID) {
-                            //TODO 判断该活动是否是当前用户参加的活动，跳转
+                            //判断该活动是否是当前用户参加了的该活动，跳转
                             validateActivity(activityId);
                         } else {
                             DELEGATE.getSupportDelegate().start(ActivityDetailMyDelegate.create(activityId));

@@ -68,7 +68,20 @@ public class TagAliasOperatorHelper {
         }
     }
 
-    //添加一个alias和tag操作成功的回调
+    public void onCheckTagStateResult(Context context, JPushMessage jPushMessage) {
+        final int errorCode = jPushMessage.getErrorCode();
+        if (errorCode == 0) {
+            if (mIOperatorTagListener != null) {
+                mIOperatorTagListener.onOperatorSuccess();
+            }
+        } else {
+            if (mIOperatorTagListener != null) {
+                mIOperatorTagListener.onOperatorFail(errorCode);
+            }
+        }
+    }
+
+    //添加一个alias和tag操作成功，失败的回调
 
     private IOperatorTagListener mIOperatorTagListener;
     private IOperatorAliasListener mIOperatorAliasListener;

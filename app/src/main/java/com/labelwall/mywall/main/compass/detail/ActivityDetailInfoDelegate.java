@@ -16,7 +16,10 @@ import com.bumptech.glide.request.RequestOptions;
 import com.labelwall.mywall.R;
 import com.labelwall.mywall.R2;
 import com.labelwall.mywall.delegates.base.WallDelegate;
+import com.labelwall.mywall.main.compass.ActivityJPushTag;
 import com.labelwall.mywall.main.compass.add.charge.ActivityCreateOrderDetailDelegate;
+import com.labelwall.mywall.push.JPushAliasTagSequence;
+import com.labelwall.mywall.push.TagAliasOperatorHelper;
 import com.labelwall.mywall.util.net.RestClient;
 import com.labelwall.mywall.util.net.callback.ISuccess;
 import com.labelwall.mywall.util.storage.WallPreference;
@@ -62,6 +65,9 @@ public class ActivityDetailInfoDelegate extends WallDelegate {
     @BindView(R2.id.tv_activity_apply_join)
     AppCompatTextView mJoinActivity = null;
 
+    private String mActivityTag = null;
+    private TagAliasOperatorHelper mTagAliasHelper = TagAliasOperatorHelper.getInstance();
+
 
     @OnClick(R2.id.tv_activity_apply_join)
     void onJoinActivity() {
@@ -81,6 +87,22 @@ public class ActivityDetailInfoDelegate extends WallDelegate {
                             } else {
                                 Toast.makeText(_mActivity, message, Toast.LENGTH_SHORT).show();
                             }
+                            //TODO 删除JPush的该活动Tag，删除前checke该Tag的绑定情况
+                            ActivityJPushTag.getInstance().checkTagState(getContext(),
+                                    JPushAliasTagSequence.ACTION_TAG_CHECK, mActivityTag);
+                            mTagAliasHelper.setOperatorTagListener(new TagAliasOperatorHelper.IOperatorTagListener() {
+                                @Override
+                                public void onOperatorSuccess() {
+                                    //删除该tag
+                                    ActivityJPushTag.getInstance().delJPushTag(getContext(),
+                                            JPushAliasTagSequence.ACTION_TAG_DELETE, mActivityTag);
+                                }
+
+                                @Override
+                                public void onOperatorFail(int errorCode) {
+
+                                }
+                            });
                         }
                     })
                     .build()
@@ -101,6 +123,9 @@ public class ActivityDetailInfoDelegate extends WallDelegate {
                                 } else if (status == 2) {
                                     Toast.makeText(_mActivity, message, Toast.LENGTH_SHORT).show();
                                 }
+                                //TODO 添加JPush的该活动Tag
+                                ActivityJPushTag.getInstance().addJPushTag(getContext(),
+                                        JPushAliasTagSequence.ACTION_TAG_ADD, mActivityTag);
                             }
                         })
                         .build()
@@ -151,8 +176,9 @@ public class ActivityDetailInfoDelegate extends WallDelegate {
                         final JSONObject data = jsonResponse.getJSONObject("data");
                         //跳转到订单详情页面
                         if (status == 0) {
-                            //跳转到订单详情页面
-                            getParentDelegate().getSupportDelegate().startWithPop(new ActivityCreateOrderDetailDelegate(data, null));
+                            //跳转到加入活动订单详情页面
+                            getParentDelegate().getSupportDelegate()
+                                    .startWithPop(new ActivityCreateOrderDetailDelegate(data, null, mActivityTag));
                         } else {
                             Toast.makeText(_mActivity, message, Toast.LENGTH_SHORT).show();
                         }
@@ -180,9 +206,8 @@ public class ActivityDetailInfoDelegate extends WallDelegate {
     }
 
     ActivityDetailInfoDelegate() {
-        
-    }
 
+    }
 
     @Override
     public Object setLayout() {
@@ -230,6 +255,7 @@ public class ActivityDetailInfoDelegate extends WallDelegate {
         final String city = mActivityDto.getString("city");
         final String county = mActivityDto.getString("county");
         final String school = mActivityDto.getString("school");
+        mActivityTag = mActivityDto.getString("tag");
         mActivityTheme.setText(mTheme);
         mActivityType.setText(type);
         mActivityStyle.setText(style);

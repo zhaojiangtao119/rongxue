@@ -123,8 +123,11 @@ public class ActivityCreateOrderDetailDelegate extends WallDelegate {
                             final int status = jsonResponse.getInteger("status");
                             final String message = jsonResponse.getString("msg");
                             if (status == 0) {
-                                //TODO 加入成功，跳转到活动详情页面吧
+                                //跳转到活动详情页面
                                 joinActivitySccess();
+                                //加入活动成功，设置该活动tag
+                                ActivityJPushTag.getInstance()
+                                        .addJPushTag(getContext(), JPushAliasTagSequence.ACTION_TAG_ADD, TAG);
                             } else {
                                 Toast.makeText(_mActivity, message, Toast.LENGTH_SHORT).show();
                             }
@@ -183,11 +186,15 @@ public class ActivityCreateOrderDetailDelegate extends WallDelegate {
     private Integer mOrderPrice = null;
     private Integer mActivityId = null;
     private Integer mOrderId = null;
+    private final String TAG;
     private final long USER_ID = WallPreference.getCurrentUserId(WallTagType.CURRENT_USER_ID.name());
 
-    public ActivityCreateOrderDetailDelegate(JSONObject orderParams, Map<String, Object> activityParams) {
+    public ActivityCreateOrderDetailDelegate(JSONObject orderParams,
+                                             Map<String, Object> activityParams,
+                                             String activityTag) {
         this.ORDER_PARAMS = orderParams;
         this.ACTIVITY_PARAMS = activityParams;
+        this.TAG = activityTag;
     }
 
     @Override

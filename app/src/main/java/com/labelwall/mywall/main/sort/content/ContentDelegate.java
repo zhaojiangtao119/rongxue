@@ -65,7 +65,7 @@ public class ContentDelegate extends WallDelegate {
 
     @Override
     public void onBindView(@Nullable Bundle savedInstanceState, View rootView) {
-        final WallDelegate wallDelegate = getParentDelegate().getParentDelegate();
+        final WallDelegate wallDelegate = getParentDelegate();
         mRefreshHandler = ContentRefreshHandler
                 .create(wallDelegate, mRefreshLayout, mRecyclerView, new ContentDataConverter(), mContentId, mKeyword);
         initRefreshLayout();

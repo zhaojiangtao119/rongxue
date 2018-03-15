@@ -1,13 +1,23 @@
 package com.labelwall.mywall.main.compass;
 
+import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.AppCompatTextView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
+import android.util.Log;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
+import android.widget.Toast;
 
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
 import com.amap.api.location.AMapLocation;
 import com.amap.api.location.AMapLocationClient;
 import com.amap.api.location.AMapLocationClientOption;
@@ -15,19 +25,38 @@ import com.amap.api.location.AMapLocationListener;
 import com.joanzapata.iconify.widget.IconTextView;
 import com.labelwall.mywall.R;
 import com.labelwall.mywall.R2;
+import com.labelwall.mywall.app.MyWall;
+import com.labelwall.mywall.database.DataBaseManager;
+import com.labelwall.mywall.database.UserProfile;
 import com.labelwall.mywall.delegates.base.WallDelegate;
 import com.labelwall.mywall.delegates.bottom.BottomItemDelegate;
 import com.labelwall.mywall.main.compass.add.ActivityCreateDelegate;
+import com.labelwall.mywall.main.compass.detail.ActivityDetailDelegate;
 import com.labelwall.mywall.main.compass.my.ActivityMyDelegate;
+import com.labelwall.mywall.util.locate.AMapLocationHelper;
+import com.labelwall.mywall.util.net.RestClient;
+import com.labelwall.mywall.util.net.RestCreator;
+import com.labelwall.mywall.util.net.callback.ISuccess;
+import com.labelwall.mywall.util.storage.WallPreference;
+import com.labelwall.mywall.util.storage.WallTagType;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import butterknife.BindView;
 import butterknife.OnClick;
+import io.reactivex.Observable;
+import io.reactivex.Observer;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.Disposable;
+import io.reactivex.schedulers.Schedulers;
 
 /**
  * Created by Administrator on 2018-01-04.
  */
 
-public class ActivityDelegate extends BottomItemDelegate {
+public class ActivityDelegate extends BottomItemDelegate implements AMapLocationListener {
 
     @BindView(R2.id.srl_activity_list)
     SwipeRefreshLayout mRefreshLayout = null;
@@ -37,19 +66,22 @@ public class ActivityDelegate extends BottomItemDelegate {
     @BindView(R2.id.tv_activity_location)
     AppCompatTextView mLocationText;
 
-    private AMapLocationClient locationClient = null;
-    private AMapLocationClientOption locationClientOption = null;
+    private AMapLocationHelper mAMapLocationHelper = null;
 
     private ActivityRefreshHandler mRefreshHandler = null;
+    private final long USER_ID = WallPreference.getCurrentUserId(WallTagType.CURRENT_USER_ID.name());
+
+    private final Handler HANDLER = MyWall.getHandler();
+    private AMapLocation mAMapLocation = null;
 
     @OnClick(R2.id.tv_activity_my)
     void onClickMyActivity() {//我的活动
-        getParentDelegate().getSupportDelegate().start(new ActivityMyDelegate());
+        getSupportDelegate().start(new ActivityMyDelegate());
     }
 
     @OnClick(R2.id.icon_activity_add)
     void onClickStartActivity() {//创建活动
-        getParentDelegate().getSupportDelegate().start(new ActivityCreateDelegate());
+        getSupportDelegate().start(new ActivityCreateDelegate());
     }
 
     @Override
@@ -62,69 +94,73 @@ public class ActivityDelegate extends BottomItemDelegate {
         initRefreshLayout();
         initRecyclerView();
         //初始化定位
-        initLocation();
+        mAMapLocationHelper = new AMapLocationHelper(getContext(), this);
+        mAMapLocationHelper.initLocation();
     }
 
     @Override
     public void onResume() {
         super.onResume();
-        locationClient.startLocation();
+        mAMapLocationHelper.startLocationNow();
     }
-
-    private void initLocation() {
-        //动态获取权限
-        startLocation();
-        locationClient = new AMapLocationClient(this.getContext());
-        locationClientOption = getDefaultOption();
-        locationClient.setLocationOption(locationClientOption);
-        locationClient.setLocationListener(locationListener);
-    }
-
-    AMapLocationListener locationListener = new AMapLocationListener() {
-        @Override
-        public void onLocationChanged(AMapLocation location) {
-            if (location != null) {
-                if (location.getErrorCode() == 0) {
-                    //获取定位城市
-                    mLocationText.setText(location.getCity());
-                } else {
-                    //
-                    mLocationText.setText("未知位置");
-                }
-            }
-        }
-    };
 
     @Override
     public void onDestroy() {
         super.onDestroy();
-        if (locationClient != null) {
-            locationClient.onDestroy();
-            locationClient = null;
-            locationClientOption = null;
+        if (mAMapLocationHelper != null) {
+            mAMapLocationHelper.destroyLocationNow();
         }
     }
 
-    private AMapLocationClientOption getDefaultOption() {
-        AMapLocationClientOption option = new AMapLocationClientOption();
-        option.setLocationMode(AMapLocationClientOption.AMapLocationMode.Hight_Accuracy);//可选，设置定位模式，可选的模式有高精度、仅设备、仅网络。默认为高精度模式
-        option.setGpsFirst(false);//可选，设置是否gps优先，只在高精度模式下有效。默认关闭
-        option.setHttpTimeOut(30000);//可选，设置网络请求超时时间。默认为30秒。在仅设备模式下无效
-        option.setInterval(2000);
-        option.setNeedAddress(true);//可选，设置是否返回逆地理地址信息。默认是true
-        option.setOnceLocation(false);//可选，设置是否单次定位。默认是false
-        option.setOnceLocationLatest(false);//可选，设置是否等待wifi刷新，默认为false.如果设置为true,会自动变为单次定位，持续定位时不要使用
-        AMapLocationClientOption.setLocationProtocol(AMapLocationClientOption.AMapLocationProtocol.HTTP);//可选， 设置网络请求的协议。可选HTTP或者HTTPS。默认为HTTP
-        option.setSensorEnable(false);//可选，设置是否使用传感器。默认是false
-        option.setWifiScan(true); //可选，设置是否开启wifi扫描。默认为true，如果设置为false会同时停止主动刷新，停止以后完全依赖于系统刷新，定位位置可能存在误差
-        option.setLocationCacheEnable(true); //可选，设置是否使用缓存定位，默认为true
-        return option;
+    @Override
+    public void onLocationChanged(final AMapLocation location) {
+        if (location != null) {
+            //定位成功
+            if (location.getErrorCode() == 0) {
+                //获取定位城市
+                mLocationText.setText(location.getCity());
+                Log.e("LOCATION_TAG", location.toString());
+                //存储当前用户的位置
+                //mAMapLocation = location;
+                saveCurrentUserLocation(location);
+            } else {
+                mLocationText.setText("未知位置");
+            }
+        }
+    }
+
+    private void saveCurrentUserLocation(AMapLocation location) {
+        //请求参数：经度，纬度，userId
+        final double longitude = location.getLongitude();
+        final double latitude = location.getLatitude();
+        StringBuilder stringBuilder = new StringBuilder();
+        stringBuilder.append(longitude).append(",").append(latitude);
+        List<UserProfile> userProfileList = DataBaseManager
+                .getInstance()
+                .getDao()
+                .queryRaw("where _id=?", new String[]{String.valueOf(USER_ID)});
+        UserProfile userProfile = userProfileList.get(0);
+        String jsonStr = JSON.toJSONString(userProfile);
+        Log.e("GAODE", jsonStr + "," + stringBuilder.toString());
+        RestClient.builder()
+                .url("nearby/insert")
+                .params("userProfile", jsonStr)
+                .params("address", stringBuilder.toString())
+                .success(new ISuccess() {
+                    @Override
+                    public void onSuccess(String response) {
+                        //TODO
+                    }
+                })
+                .build()
+                .post();
+
     }
 
     @Override
     public void onLazyInitView(@Nullable Bundle savedInstanceState) {
         super.onLazyInitView(savedInstanceState);
-        WallDelegate wallDelegate = getParentDelegate();
+        WallDelegate wallDelegate = this;
         mRefreshHandler = ActivityRefreshHandler
                 .create(mRefreshLayout, mRecyclerView, new ActivityDataConverter(), wallDelegate);
         mRefreshHandler.firshActivityPage();
@@ -143,6 +179,4 @@ public class ActivityDelegate extends BottomItemDelegate {
         );
         mRefreshLayout.setProgressViewOffset(true, 80, 100);
     }
-
-
 }

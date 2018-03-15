@@ -20,6 +20,7 @@ import com.labelwall.mywall.delegates.base.WallDelegate;
 import com.labelwall.mywall.delegates.bottom.BottomItemDelegate;
 import com.labelwall.mywall.main.WallBottomDelegate;
 import com.labelwall.mywall.main.cart.order.OrderDetailDelegate;
+import com.labelwall.mywall.main.sort.SortDelegate;
 import com.labelwall.mywall.main.user.address.AdressDelegate;
 import com.labelwall.mywall.ui.recycler.MultipleItemEntity;
 import com.labelwall.mywall.util.callback.CallbackManager;
@@ -202,13 +203,8 @@ public class ShopCartDelegate extends BottomItemDelegate
                         //TODO
                         //Toast.makeText(getContext(), "要去购物", Toast.LENGTH_SHORT).show();
                         //跳转到商品页面
-                        final int sortTab = 1;
-                        final WallBottomDelegate wallBottomDelegate = getParentDelegate();
-                        final BottomItemDelegate sortDelegate = wallBottomDelegate.getItemDelegates().get(sortTab);
-                        wallBottomDelegate
-                                .getSupportDelegate()
-                                .showHideFragment(sortDelegate, ShopCartDelegate.this);
-                        wallBottomDelegate.changeColor(sortTab);
+                        final SortDelegate sortDelegate = new SortDelegate();
+                        getSupportDelegate().startWithPop(sortDelegate);
                     }
                 });
             }
@@ -238,11 +234,9 @@ public class ShopCartDelegate extends BottomItemDelegate
                         final Integer status = data.getInteger("status");
                         final Long orderNo = orderVo.getLong("orderNo");
                         if (status == 0 && orderVo != null) {//订单生成成功
-                            final WallDelegate wallDelegate = getParentDelegate();
-                            wallDelegate.getSupportDelegate().start(new OrderDetailDelegate(orderNo));
+                            getSupportDelegate().start(new OrderDetailDelegate(orderNo));
                         } else if (status == 2) {//TODO 订单生成失败，没有默认的配送地址
-                            final WallDelegate wallDelegate = getParentDelegate();
-                            wallDelegate.getSupportDelegate().start(new AdressDelegate(null));
+                            getSupportDelegate().start(new AdressDelegate(null));
                         }
                     }
                 })

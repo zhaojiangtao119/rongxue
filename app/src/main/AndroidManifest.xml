@@ -158,6 +158,8 @@
                 <action android:name="cn.jpush.android.intent.NOTIFICATION_RECEIVED" />
                 <!-- Required 用户打开自定义通知栏的intent -->
                 <action android:name="cn.jpush.android.intent.NOTIFICATION_OPENED" />
+
+                <action android:name="cn.jpush.android.intent.NOTIFICATION_CLICK_ACTION" />
                 <!-- 接收网络变化 连接/断开 since 1.6.3 -->
                 <action android:name="cn.jpush.android.intent.CONNECTION" />
 

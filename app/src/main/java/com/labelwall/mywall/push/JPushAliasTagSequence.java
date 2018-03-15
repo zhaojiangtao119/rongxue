@@ -26,7 +26,7 @@ public class JPushAliasTagSequence {
     /**
      * 查询别名
      */
-    public static final int ACTION_ALIAS_GET = 15;
+    public static final int ACTION_ALIAS_CHECK = 15;
 
     /**
      * 增加Tag
@@ -47,6 +47,6 @@ public class JPushAliasTagSequence {
     /**
      * 查询Tag
      */
-    public static final int ACTION_TAG_GET = 25;
+    public static final int ACTION_TAG_CHECK = 25;
 
 }

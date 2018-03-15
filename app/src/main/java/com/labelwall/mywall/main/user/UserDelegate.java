@@ -78,7 +78,7 @@ public class UserDelegate extends BottomItemDelegate {
 
     @OnClick(R2.id.tc_all_account_arrow)
     void onClickOrderList() {//加载所有的订单
-        getParentDelegate().getSupportDelegate().start(new OrderListDelegate());
+        getSupportDelegate().start(new OrderListDelegate());
     }
 
     @Override

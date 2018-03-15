@@ -27,6 +27,7 @@ public class JPushAliasTagReceiver extends JPushMessageReceiver {
         Log.e("JPush Tag", "action - onTagOperatorResult, sequence:" + sequence + ",tags:" + jPushMessage.getTags());
         Log.e("JPush Tag", "tags size:" + jPushMessage.getTags().size());
         Log.e("JPush Tag", "ErrorCode:" + jPushMessage.getErrorCode());
+        TagAliasOperatorHelper.getInstance().onTagOperatorResult(context, jPushMessage);
         super.onTagOperatorResult(context, jPushMessage);
     }
 
@@ -38,7 +39,7 @@ public class JPushAliasTagReceiver extends JPushMessageReceiver {
      */
     @Override
     public void onCheckTagOperatorResult(Context context, JPushMessage jPushMessage) {
-
+        TagAliasOperatorHelper.getInstance().onCheckTagStateResult(context, jPushMessage);
         super.onCheckTagOperatorResult(context, jPushMessage);
     }
 
@@ -54,6 +55,7 @@ public class JPushAliasTagReceiver extends JPushMessageReceiver {
         Log.e("JPush Alias", "action - onTagOperatorResult, sequence:" + sequence + ",tags:" + jPushMessage.getAlias());
         Log.e("JPush Alias", "tags size:" + jPushMessage.getAlias().length());
         Log.e("JPush Alias", "ErrorCode:" + jPushMessage.getErrorCode());
+        TagAliasOperatorHelper.getInstance().onAliasOperatorResult(context, jPushMessage);
         super.onAliasOperatorResult(context, jPushMessage);
     }
 
@@ -67,5 +69,4 @@ public class JPushAliasTagReceiver extends JPushMessageReceiver {
     public void onMobileNumberOperatorResult(Context context, JPushMessage jPushMessage) {
         super.onMobileNumberOperatorResult(context, jPushMessage);
     }
-
 }

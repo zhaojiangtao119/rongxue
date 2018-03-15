@@ -4,6 +4,7 @@ import org.greenrobot.greendao.annotation.Entity;
 import org.greenrobot.greendao.annotation.Generated;
 import org.greenrobot.greendao.annotation.Id;
 
+import java.io.Serializable;
 import java.util.Date;
 
 /**
@@ -55,11 +56,11 @@ public class UserProfile {
 
     @Generated(hash = 77367964)
     public UserProfile(long id, String username, String password, String head,
-            String email, String phone, Date schoolDate, String schoolName,
-            String locationProvince, String locationCity, String locationCounty,
-            Integer provinceId, Integer cityId, Integer countyId, Integer schoolId,
-            String createTimeStr, String updateTimeStr, Integer gender,
-            String birthday) {
+                       String email, String phone, Date schoolDate, String schoolName,
+                       String locationProvince, String locationCity, String locationCounty,
+                       Integer provinceId, Integer cityId, Integer countyId, Integer schoolId,
+                       String createTimeStr, String updateTimeStr, Integer gender,
+                       String birthday) {
         this.id = id;
         this.username = username;
         this.password = password;
