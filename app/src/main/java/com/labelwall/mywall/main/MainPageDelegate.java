@@ -36,6 +36,7 @@ import com.labelwall.mywall.main.sort.SortDelegate;
 import com.labelwall.mywall.main.user.UserDelegate;
 import com.labelwall.mywall.util.locate.AMapLocationHelper;
 import com.labelwall.mywall.util.net.RestClient;
+import com.labelwall.mywall.util.net.callback.IFailure;
 import com.labelwall.mywall.util.net.callback.ISuccess;
 import com.labelwall.mywall.util.storage.WallPreference;
 import com.labelwall.mywall.util.storage.WallTagType;
@@ -63,19 +64,28 @@ public class MainPageDelegate extends BottomItemDelegate implements AMapLocation
 
     @OnClick(R2.id.tv_near_user)
     void onClickNearUser() {
+        //再进行一次定位
         //获取周围用户
-        mAMapLocationHelper.startLocationNow();
         getNearUser();
     }
 
     private void getNearUser() {
-        //在进行一次定位
         RestClient.builder()
-                .url("")
+                .url("nearby/find/near")
+                .params("userProfile", mUserProfile)
+                .params("address", mAddress)
                 .success(new ISuccess() {
                     @Override
                     public void onSuccess(String response) {
-
+                        int i = 0;
+                        Log.e("LOCATION_TAG", response);
+                    }
+                })
+                .failure(new IFailure() {
+                    @Override
+                    public void onFailure() {
+                        int i = 1;
+                        Log.e("LOCATION_TAG", "asd");
                     }
                 })
                 .build()
@@ -88,6 +98,8 @@ public class MainPageDelegate extends BottomItemDelegate implements AMapLocation
     private final long USER_ID = WallPreference.getCurrentUserId(WallTagType.CURRENT_USER_ID.name());
 
     private AMapLocationHelper mAMapLocationHelper = null;
+    private String mUserProfile = null;
+    private String mAddress = null;
 
     @Override
     public Object setLayout() {
@@ -98,8 +110,12 @@ public class MainPageDelegate extends BottomItemDelegate implements AMapLocation
     public void onBindView(@Nullable Bundle savedInstanceState, @NonNull View rootView) {
         mDialog = new MainPageDialog(this);
         initRecyclerView();
+
+        //获取定位权限
+        startLocation();
         mAMapLocationHelper = new AMapLocationHelper(getContext(), this);
         mAMapLocationHelper.initLocation();
+        mAMapLocationHelper.startLocationNow();
     }
 
     private void initRecyclerView() {
@@ -120,7 +136,6 @@ public class MainPageDelegate extends BottomItemDelegate implements AMapLocation
                 //获取定位城市
                 Log.e("LOCATION_TAG", location.toString());
                 //存储当前用户的位置
-                //mAMapLocation = location;
                 saveCurrentUserLocation(location);
             } else {
 
@@ -133,26 +148,26 @@ public class MainPageDelegate extends BottomItemDelegate implements AMapLocation
         final double longitude = location.getLongitude();
         final double latitude = location.getLatitude();
         StringBuilder stringBuilder = new StringBuilder();
-        stringBuilder.append(longitude).append(",").append(latitude);
+        stringBuilder.append(latitude).append(",").append(longitude);
         List<UserProfile> userProfileList = DataBaseManager
                 .getInstance()
                 .getDao()
                 .queryRaw("where _id=?", new String[]{String.valueOf(USER_ID)});
         UserProfile userProfile = userProfileList.get(0);
-        String jsonStr = JSON.toJSONString(userProfile);
-        Log.e("GAODE", jsonStr + "," + stringBuilder.toString());
-        RestClient.builder()
+        mAddress = stringBuilder.toString();
+        mUserProfile = JSON.toJSONString(userProfile);
+        Log.e("GAODE", mUserProfile + "," + stringBuilder.toString());
+       /* RestClient.builder()
                 .url("nearby/insert")
                 .params("userProfile", jsonStr)
-                .params("address", stringBuilder.toString())
+                .params("address", mAddress)
                 .success(new ISuccess() {
                     @Override
                     public void onSuccess(String response) {
-                        //TODO
+                        Log.e("LOCATION_TAG", response);
                     }
                 })
                 .build()
-                .post();
-
+                .post();*/
     }
 }

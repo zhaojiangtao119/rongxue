@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.AppCompatTextView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -65,6 +66,8 @@ public class ActivityDelegate extends BottomItemDelegate implements AMapLocation
 
     @BindView(R2.id.tv_activity_location)
     AppCompatTextView mLocationText;
+    @BindView(R2.id.tb_activity_menu)
+    Toolbar mToolbar;
 
     private AMapLocationHelper mAMapLocationHelper = null;
 
@@ -72,16 +75,45 @@ public class ActivityDelegate extends BottomItemDelegate implements AMapLocation
     private final long USER_ID = WallPreference.getCurrentUserId(WallTagType.CURRENT_USER_ID.name());
 
     private final Handler HANDLER = MyWall.getHandler();
-    private AMapLocation mAMapLocation = null;
 
-    @OnClick(R2.id.tv_activity_my)
-    void onClickMyActivity() {//我的活动
-        getSupportDelegate().start(new ActivityMyDelegate());
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setHasOptionsMenu(true);
     }
 
-    @OnClick(R2.id.icon_activity_add)
-    void onClickStartActivity() {//创建活动
-        getSupportDelegate().start(new ActivityCreateDelegate());
+    @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        ((AppCompatActivity) getActivity()).setSupportActionBar(mToolbar);
+        //当你从fragmentA切换到fragmentB，这时候正常的，再回到fragmentA的时候，发现A的menu消失了，
+        //解决方法
+        mToolbar.inflateMenu(R.menu.activity_menu);
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        inflater.inflate(R.menu.activity_menu, menu);
+        super.onCreateOptionsMenu(menu, inflater);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+        switch (id) {
+            case R.id.activity_toolbar_my_activity:
+                getSupportDelegate().start(new ActivityMyDelegate());
+                break;
+            case R.id.activity_toolbar_create_activity:
+                getSupportDelegate().start(new ActivityCreateDelegate());
+                break;
+            case R.id.activity_toolbar_nearby_user:
+                Toast.makeText(_mActivity, item.getTitle(), Toast.LENGTH_SHORT).show();
+                break;
+            default:
+                break;
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     @Override
@@ -94,6 +126,7 @@ public class ActivityDelegate extends BottomItemDelegate implements AMapLocation
         initRefreshLayout();
         initRecyclerView();
         //初始化定位
+        startLocation();
         mAMapLocationHelper = new AMapLocationHelper(getContext(), this);
         mAMapLocationHelper.initLocation();
     }
@@ -121,7 +154,7 @@ public class ActivityDelegate extends BottomItemDelegate implements AMapLocation
                 mLocationText.setText(location.getCity());
                 Log.e("LOCATION_TAG", location.toString());
                 //存储当前用户的位置
-                //mAMapLocation = location;
+                Log.e("LOCATION", location.toString());
                 saveCurrentUserLocation(location);
             } else {
                 mLocationText.setText("未知位置");
@@ -134,7 +167,7 @@ public class ActivityDelegate extends BottomItemDelegate implements AMapLocation
         final double longitude = location.getLongitude();
         final double latitude = location.getLatitude();
         StringBuilder stringBuilder = new StringBuilder();
-        stringBuilder.append(longitude).append(",").append(latitude);
+        stringBuilder.append(latitude).append(",").append(longitude);
         List<UserProfile> userProfileList = DataBaseManager
                 .getInstance()
                 .getDao()

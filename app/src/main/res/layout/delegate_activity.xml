@@ -1,18 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:background="@color/app_background"
     android:orientation="vertical"
     android:theme="@style/AppTheme.NoActionBar">
 
     <android.support.v7.widget.Toolbar
+        android:id="@+id/tb_activity_menu"
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
-        android:background="@color/app_title"
-        >
+        android:background="@color/app_title">
 
         <RelativeLayout
             android:layout_width="match_parent"
@@ -27,10 +27,8 @@
                 android:layout_marginLeft="20dp"
                 android:layout_marginTop="15dp"
                 android:gravity="center"
-                android:text="@string/activity_my"
                 android:textColor="@android:color/black"
                 android:textSize="18sp" />
-
 
             <android.support.v7.widget.AppCompatTextView
                 android:layout_width="match_parent"
@@ -41,39 +39,6 @@
                 android:text="@string/activity_list"
                 android:textColor="@android:color/black"
                 android:textSize="20sp" />
-
-            <android.support.v7.widget.AppCompatTextView
-                android:id="@+id/tv_activity_my"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:layout_marginRight="20dp"
-                android:layout_marginTop="15dp"
-                android:layout_toLeftOf="@+id/icon_activity_add"
-                android:gravity="center"
-                android:text="@string/activity_my"
-                android:textColor="@android:color/black"
-                android:textSize="18sp" />
-
-            <com.joanzapata.iconify.widget.IconTextView
-                android:id="@+id/icon_activity_add"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:layout_alignParentRight="true"
-                android:layout_marginRight="20dp"
-                android:layout_marginTop="15dp"
-                android:gravity="center"
-                android:text="{fa-plus-square-o}"
-                android:textColor="@android:color/black"
-                android:textSize="30sp"
-                tools:ignore="HardcodedText" />
-            <!--<TextView
-                android:id="@+id/test_user_address"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="附近的人"
-                android:layout_alignParentRight="true"
-                android:textSize=""/>
--->
         </RelativeLayout>
 
     </android.support.v7.widget.Toolbar>

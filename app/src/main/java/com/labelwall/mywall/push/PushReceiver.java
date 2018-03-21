@@ -21,7 +21,7 @@ import cn.jpush.android.api.JPushInterface;
 
 /**
  * Created by Administrator on 2018-01-18.
- * 极光推送，广播接收器
+ * 极光推送，广播接收器，处理推送消息和通过的结果
  */
 
 public class PushReceiver extends BroadcastReceiver {
@@ -39,8 +39,6 @@ public class PushReceiver extends BroadcastReceiver {
             final Object val = bundle.get(key);
             json.put(key, val);
         }
-
-        WallLogger.json("PushReceiver", json.toJSONString());
 
         final String pushAction = intent.getAction();
         if (pushAction.equals(JPushInterface.ACTION_NOTIFICATION_RECEIVED)) {

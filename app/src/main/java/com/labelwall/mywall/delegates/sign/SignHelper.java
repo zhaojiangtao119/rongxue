@@ -6,6 +6,7 @@ import android.os.Handler;
 import android.os.Message;
 import android.text.TextUtils;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
@@ -13,10 +14,15 @@ import com.labelwall.mywall.app.AccountManager;
 import com.labelwall.mywall.app.MyWall;
 import com.labelwall.mywall.database.DataBaseManager;
 import com.labelwall.mywall.database.UserProfile;
+import com.labelwall.mywall.main.live.util.TencentLiveUserAccount;
 import com.labelwall.mywall.push.JPushAliasTagSequence;
 import com.labelwall.mywall.push.TagAliasOperatorHelper;
 import com.labelwall.mywall.util.storage.WallPreference;
 import com.labelwall.mywall.util.storage.WallTagType;
+import com.tencent.TIMCallBack;
+import com.tencent.TIMFriendshipManager;
+import com.tencent.ilivesdk.ILiveCallBack;
+import com.tencent.ilivesdk.core.ILiveLoginManager;
 
 import java.util.Date;
 import java.util.HashSet;
@@ -204,8 +210,73 @@ public class SignHelper {
         //已经登录成功，执行登录成功的回调。
         AccountManager.setSignState(true);//设置用户登录成功的标志
         signListener.onSignInSuccess();//执行登陆成功的回调
-
         // 登录极光推送别名alias，使用当前用户的用户名
         setAppAllias(username);
+        // 登录Tencent直播的sdk
+        /*LoginTencentLive(username, TencentLiveUserAccount.getTencentIdentifier(),
+                TencentLiveUserAccount.getTencentPassword());*/
+    }
+
+    private static void LoginTencentLive(final String username, final String account, final String password) {
+        //调用腾讯IM登录
+        ILiveLoginManager.getInstance().tlsLogin(account, password, new ILiveCallBack<String>() {
+            @Override
+            public void onSuccess(String data) {
+                //登陆成功。
+                loginLive(account, data);
+            }
+
+            @Override
+            public void onError(String module, int errCode, String errMsg) {
+                //登录失败
+                if (errCode == 229) {
+                    //用户注册到Tencent直播的sdk上，不对结果进行处理
+                    registerTencentLive(username, account, password);
+                }
+            }
+        });
+    }
+
+    private static void loginLive(String accountStr, String data) {
+        ILiveLoginManager.getInstance().iLiveLogin(accountStr, data, new ILiveCallBack() {
+            @Override
+            public void onSuccess(Object data) {
+                //最终登录成功
+            }
+
+            @Override
+            public void onError(String module, int errCode, String errMsg) {
+                //登录失败
+            }
+        });
+    }
+
+    //判断用户是否注册了Tencent直播的sdk，如没有则注册，
+    private static void registerTencentLive(final String username, String account, String password) {
+        ILiveLoginManager.getInstance().tlsRegister(account, password, new ILiveCallBack() {
+            @Override
+            public void onSuccess(Object data) {
+                //修改Tencent Live上的nickName，将用户名设置为nickname
+                setNickName(username);
+            }
+
+            @Override
+            public void onError(String module, int errCode, String errMsg) {
+                Log.e("TENCENT_2", errMsg + "," + errCode);
+            }
+        });
+    }
+
+    private static void setNickName(String nickname) {
+        TIMFriendshipManager.getInstance().setNickName(nickname, new TIMCallBack() {
+            @Override
+            public void onError(int errCode, String errMsg) {
+                Log.e("TENCENT_3", errMsg + "," + errCode);
+            }
+
+            @Override
+            public void onSuccess() {
+            }
+        });
     }
 }

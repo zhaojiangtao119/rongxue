@@ -16,6 +16,7 @@ import com.labelwall.mywall.delegates.base.WallDelegate;
 import com.labelwall.mywall.main.cart.ShopCartDelegate;
 import com.labelwall.mywall.main.compass.ActivityDelegate;
 import com.labelwall.mywall.main.index.IndexDelegate;
+import com.labelwall.mywall.main.live.create.CreateLiveDelegate;
 import com.labelwall.mywall.main.sort.SortDelegate;
 import com.labelwall.mywall.main.user.UserDelegate;
 
@@ -84,7 +85,7 @@ public class MainPageDialog implements View.OnClickListener {
                 DIALOG.dismiss();
                 break;
             case R.id.tv_6:
-                DELEGATE.getSupportDelegate().startWithPop(new MainPageDelegate());
+                DELEGATE.getSupportDelegate().start(new CreateLiveDelegate());
                 DIALOG.dismiss();
                 break;
             default:

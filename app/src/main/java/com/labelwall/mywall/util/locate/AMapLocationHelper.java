@@ -50,6 +50,7 @@ public class AMapLocationHelper {
 
     //开始定位
     public void startLocationNow() {
+
         mLocationClient.startLocation();
     }
 

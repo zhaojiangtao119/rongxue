@@ -155,5 +155,4 @@ public class DividerGridItemDecoration extends RecyclerView.ItemDecoration {
         }
         return false;
     }
-
 }

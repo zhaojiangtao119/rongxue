@@ -44,6 +44,11 @@ public abstract class PermissionCheckerDelegate extends BaseDelegate {
         WallCamera.start(this);
     }
 
+    @NeedsPermission(Manifest.permission.CAMERA)
+    void startLiveCamera() {
+
+    }
+
     //SD卡的读写权限
     @NeedsPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE)
     void checkWrite() {
@@ -61,16 +66,38 @@ public abstract class PermissionCheckerDelegate extends BaseDelegate {
         PermissionCheckerDelegatePermissionsDispatcher.checkRedWithCheck(this);//请求sd卡的读权限
     }
 
+    //权限被拒绝调用的方法
     @OnPermissionDenied(Manifest.permission.CAMERA)
     void onCameraDenied() {
         Toast.makeText(getContext(), "不允许拍照", Toast.LENGTH_SHORT).show();
     }
 
+    //向用户解释为什么需要该权限
     @OnShowRationale(Manifest.permission.CAMERA)
     void onCameraRationale(PermissionRequest request) {
         showRationaleDialog(request);
     }
 
+    private void showRationaleDialog(final PermissionRequest request) {
+        new AlertDialog.Builder(getContext())
+                .setPositiveButton("同意使用", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        request.proceed();
+                    }
+                })
+                .setNegativeButton("拒绝使用", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        request.cancel();
+                    }
+                })
+                .setCancelable(false)
+                .setMessage("权限管理")
+                .show();
+    }
+
+    //勾选了不再提示禁止后调用的方法
     @OnNeverAskAgain(Manifest.permission.CAMERA)
     void onCameraNever() {
         Toast.makeText(getContext(), "永久拒绝权限", Toast.LENGTH_SHORT).show();
@@ -106,24 +133,6 @@ public abstract class PermissionCheckerDelegate extends BaseDelegate {
         showRationaleDialog(request);
     }
 
-    private void showRationaleDialog(final PermissionRequest request) {
-        new AlertDialog.Builder(getContext())
-                .setPositiveButton("同意使用", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        request.proceed();
-                    }
-                })
-                .setNegativeButton("拒绝使用", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        request.cancel();
-                    }
-                })
-                .setCancelable(false)
-                .setMessage("权限管理")
-                .show();
-    }
 
     //扫描二维码权限（不直接调用）
     @NeedsPermission(Manifest.permission.CAMERA)
@@ -161,6 +170,33 @@ public abstract class PermissionCheckerDelegate extends BaseDelegate {
         PermissionCheckerDelegatePermissionsDispatcher.startGPSLocationWithCheck(this);
         PermissionCheckerDelegatePermissionsDispatcher.startInternatLocationWithCheck(this);
     }
+
+    /**
+     * 集成腾讯互动直播需要的权限
+     */
+    @NeedsPermission(Manifest.permission.RECORD_AUDIO)
+    void startRecordAudio() {
+
+    }
+
+    @NeedsPermission(Manifest.permission.READ_PHONE_STATE)
+    void startReadPhoneState() {
+
+    }
+
+    @NeedsPermission(value = {Manifest.permission.RECORD_AUDIO,
+            Manifest.permission.READ_PHONE_STATE,
+            Manifest.permission.WRITE_EXTERNAL_STORAGE,
+            Manifest.permission.READ_EXTERNAL_STORAGE,
+            Manifest.permission.CAMERA})
+    void startTencentLive() {
+
+    }
+
+    public void startTencentLiveCheck(){
+        PermissionCheckerDelegatePermissionsDispatcher.startTencentLiveWithCheck(this);
+    }
+
 
 
     //接收图片上传回调回来的数据

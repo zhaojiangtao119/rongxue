@@ -103,14 +103,14 @@
 
     <!--activity活动-->
     <string name="activity_list">活动列表</string>
-    <string name="activity_my">我的</string>
+    <string name="activity_my">我的活动</string>
     <string name="activity_detail">活动详情</string>
     <string name="activity_apply_time">报名时间</string>
     <string name="activity_time">活动时间</string>
     <string name="join_activity">加入活动</string>
     <string name="delete_activity">放弃活动</string>
     <string name="agree_join_activity">同意加入</string>
-
     <string name="create_activity">创建活动</string>
+    <string name="nearby_user">附近的人</string>
 
 </resources>
